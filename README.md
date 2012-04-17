@@ -7,7 +7,10 @@ or similar cases.
 
 ### Building other modules not included in this distribution
 
-Use the `$SRCS` make variable to build and install modules.
+Just drop the file in here, and it will be built/installed.
+
+Alternatively just to build a single module, use the `$SRCS`
+make variable to build and install modules.
 
 ```
 $ make SRCS=fileyouwanttocompile.c

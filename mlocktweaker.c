@@ -35,9 +35,8 @@ void _moddeinit(module_unload_intent_t intent)
 	hook_del_channel_register(handle_channel_register);
 }
 
-static void handle_channel_register(void *vptr)
+static void handle_channel_register(hook_channel_req_t *hdata)
 {
-	hook_channel_req_t *hdata = vptr;
 	mychan_t *mc = hdata->mc;
 	unsigned int *target;
 	char *it, *str = MLOCK_CHANGE;

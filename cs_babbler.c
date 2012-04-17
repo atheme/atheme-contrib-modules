@@ -44,10 +44,8 @@ DECLARE_MODULE_V1
 );
 
 static void
-on_channel_message(void *p)
+on_channel_message(hook_cmessage_data_t *data)
 {
-	hook_cmessage_data_t *data = p;
-
 	if (data != NULL && data->msg != NULL)
 	{
 		mychan_t *mc = MYCHAN_FROM(data->c);

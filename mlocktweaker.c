@@ -22,7 +22,7 @@ DECLARE_MODULE_V1
 	"William Pitcock <nenolod@atheme.org>"
 );
 
-static void handle_channel_register(void *vptr);
+static void handle_channel_register(hook_channel_req_t *hdata);
 
 void _modinit(module_t *m)
 {

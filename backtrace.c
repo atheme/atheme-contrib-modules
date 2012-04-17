@@ -1,5 +1,7 @@
-#include <execinfo.h>
 #include "atheme.h"
+
+#ifdef __Linux__
+#include <execinfo.h>
 
 DECLARE_MODULE_V1
 (
@@ -34,6 +36,7 @@ void _moddeinit(module_unload_intent_t intent)
 {
 	signal(SIGSEGV, NULL);
 }
+#endif
 
 /* vim:cinoptions=>s,e0,n0,f0,{0,}0,^0,=s,ps,t0,c3,+s,(2s,us,)20,*30,gs,hs
  * vim:ts=8

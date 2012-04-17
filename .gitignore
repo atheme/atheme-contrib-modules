@@ -9,6 +9,8 @@ core
 *.o
 *.so
 *.so.*
+*.dll
+*.dll.*
 *.d
 .depend
 .depend-done

@@ -7,6 +7,8 @@
  */
 
 #include "atheme.h"
+
+#ifdef __FreeBSD__
 #include <sys/event.h>
 
 DECLARE_MODULE_V1
@@ -93,6 +95,7 @@ static void os_cmd_procwatch(sourceinfo_t *si, int parc, char *parv[])
 	}
 	command_success_nodata(si, "Added pid %ld to list.", v);
 }
+#endif
 
 /* vim:cinoptions=>s,e0,n0,f0,{0,}0,^0,=s,ps,t0,c3,+s,(2s,us,)20,*30,gs,hs
  * vim:ts=8

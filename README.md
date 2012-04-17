@@ -30,7 +30,7 @@ a pull request on GitHub.
 
 Repeats what others users in a channel say back to a specific
 user. Useful for users that claim they have entire channels on
-ignore. NOT COMPILED BY DEFAULT.
+ignore.
 
 #### cs_badwords.c
 
@@ -123,19 +123,19 @@ NOT COMPILED BY DEFAULT.
 #### ircd_crypto_trans.c
 
 A encryption module for IRCServices weird password encryption scheme, useful
-for transitioning to crypto/posix.  NOT COMPILED BY DEFAULT.
+for transitioning to crypto/posix. 
 
 #### mlocktweaker.c
 
 Sets the mlock to all new channels to something specified in
 the source code of the module. See line 16 of the module's
-code for what to edit. NOT COMPILED BY DEFAULT.
+code for what to edit.
 
 #### ns_ajoin.c
 
 Allows users to set a AJOIN/autojoin list of channels that Atheme
 will automatically join them to upon identify. Only works on
-ShadowIRCd, InspIRCd and UnrealIRCd. NOT COMPILED BY DEFAULT.
+ShadowIRCd, InspIRCd and UnrealIRCd.
 
 #### ns_cleannick.c
 
@@ -209,14 +209,14 @@ source code for details.
 
 #### os_defcon.c
 
-Allows you to use DEFCON-based security on your network.
-*HIGHLY* NOT RECOMMENDED AND NOT COMPILED BY DEFAULT.
+Allows you to use DEFCON-based security on your network.  This may be
+useful to people migrating from Anope.
 
 #### os_helpme.c
 
 Sets usermode +h on all users listed with the general:helper
 soper priv upon recieving soper status. Requires an IRCd that has
-+h (helper) usermode support. NOT COMPILED BY DEFAULT.
++h (helper) usermode support.
 
 #### os_joinmon.c
 
@@ -241,7 +241,7 @@ NeoStats' SecureServ.
 #### os_procwatch.c
 
 Watch a specified process and log a message when it finishes
-running. Requires kqueue (FreeBSD). NOT COMPILED BY DEFAULT.
+running. Requires kqueue (FreeBSD).
 
 #### os_savechanmodes.c
 

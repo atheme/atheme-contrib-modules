@@ -47,17 +47,21 @@ static void handle_channel_register(hook_channel_req_t *hdata)
 	target = &mc->mlock_on;
 	it = str;
 
-	switch(*it++ != '\0')
+	while (*it != '\0')
 	{
-		case '+':
-			target = &mc->mlock_on;
-			break;
-		case '-':
-			target = &mc->mlock_off;
-			break;
-		default:
-			*target |= mode_to_flag(*it);
-			break;
+		switch (*it)
+		{
+			case '+':
+				target = &mc->mlock_on;
+				break;
+			case '-':
+				target = &mc->mlock_off;
+				break;
+			default:
+				*target |= mode_to_flag(*it);
+				break;
+		}
+		++it;
 	}
 
 	mc->mlock_off &= ~mc->mlock_on;

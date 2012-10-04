@@ -28,8 +28,14 @@
  * of Atheme to compile a subset of the Atheme 7.1 API, if such API features
  * are unavailable.
  */
+#define compat_sendemail sendemail
+
 #if CURRENT_ABI_REVISION < 710000
 typedef char *stringref;
+
+#undef compat_sendemail
+#define compat_sendemail(user, myuser, type, email, content) \
+	sendemail(user, type, myuser, content)
 #endif
 
 #endif

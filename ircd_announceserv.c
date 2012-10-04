@@ -34,10 +34,10 @@ command_t as_activate = { "ACTIVATE", N_("Activate the requested announcement fo
 command_t as_cancel = { "CANCEL", N_("Cancels your requested announcement."), AC_AUTHENTICATED, 0, as_cmd_cancel, { .path = "contrib/as_cancel" } };
 
 struct asreq_ {
-	char *nick;
+	stringref nick;
 	char *subject;
 	time_t announce_ts;
-	char *creator;
+	stringref creator;
 	char *text;
 };
 
@@ -176,7 +176,7 @@ static void as_cmd_request(sourceinfo_t *si, int parc, char *parv[])
 {
 	char *subject = parv[0];
 	char *text = parv[1];
-	char *target;
+	stringref target;
 	char *subject2;
 	char buf [BUFSIZE];
 	mowgli_node_t *n;
@@ -283,9 +283,9 @@ static void as_cmd_activate(sourceinfo_t *si, int parc, char *parv[])
 			mowgli_node_delete(n, &as_reqlist);
 
 			free(subject2);
-			free(l->nick);
+			strshare_unref(l->nick);
 			free(l->subject);
-			free(l->creator);
+			strshare_unref(l->creator);
 			free(l->text);
 			free(l);
 
@@ -321,9 +321,9 @@ static void as_cmd_reject(sourceinfo_t *si, int parc, char *parv[])
 			logcommand(si, CMDLOG_REQUEST, "REJECT: \2%s\2", nick);
 
 			mowgli_node_delete(n, &as_reqlist);
-			free(l->nick);
+			strshare_unref(l->nick);
 			free(l->subject);
-			free(l->creator);
+			strshare_unref(l->creator);
 			free(l->text);
 			free(l);
 			return;
@@ -362,7 +362,7 @@ static void as_cmd_cancel(sourceinfo_t *si, int parc, char *parv[])
 {
 	asreq_t *l;
 	mowgli_node_t *n;
-	char *target;
+	stringref target;
 
 	target = entity(si->smu)->name;
 

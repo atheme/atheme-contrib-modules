@@ -5,7 +5,7 @@
  * Reads data from a child process via a pipe.
  */
 
-#include "atheme.h"
+#include "atheme-compat.h"
 #include "datastream.h"
 
 #ifndef _WIN32

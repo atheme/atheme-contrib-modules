@@ -6,7 +6,7 @@
  * The kqueue is added to the main poll loop.
  */
 
-#include "atheme.h"
+#include "atheme-compat.h"
 
 #ifdef __FreeBSD__
 #include <sys/event.h>

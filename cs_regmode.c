@@ -5,7 +5,7 @@
  * Set/unset DALnet channel mode +r on registration/deregistration.
  */
 
-#include "atheme.h"
+#include "atheme-compat.h"
 
 DECLARE_MODULE_V1
 (

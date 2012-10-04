@@ -5,7 +5,7 @@
  * This file contains code for delaying user registration
  */
 
-#include "atheme.h"
+#include "atheme-compat.h"
 #include "conf.h"
 #include <limits.h>
 

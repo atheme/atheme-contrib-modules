@@ -5,7 +5,7 @@
  * This file contains the main() routine.
  */
 
-#include "atheme.h"
+#include "atheme-compat.h"
 
 DECLARE_MODULE_V1
 (

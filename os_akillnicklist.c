@@ -24,7 +24,7 @@
  * Thanks for reading my crappy docs, and have a nice day.
  */
 
-#include "atheme.h"
+#include "atheme-compat.h"
 
 DECLARE_MODULE_V1
 (

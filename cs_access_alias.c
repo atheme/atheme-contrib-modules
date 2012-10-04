@@ -7,7 +7,7 @@
  * $Id$
  */
 
-#include "atheme.h"
+#include "atheme-compat.h"
 #include "template.h"
 
 DECLARE_MODULE_V1

@@ -1,4 +1,4 @@
-#include "atheme.h"
+#include "atheme-compat.h"
 
 #ifndef _WIN32
 

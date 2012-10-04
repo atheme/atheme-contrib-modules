@@ -5,7 +5,7 @@
  * Sends a customized welcome message on nickname registration.
  */
 
-#include "atheme.h"
+#include "atheme-compat.h"
 #include "conf.h"
 
 DECLARE_MODULE_V1

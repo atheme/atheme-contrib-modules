@@ -6,7 +6,7 @@
  *
  */
 
-#include "atheme.h"
+#include "atheme-compat.h"
 #include "../chanserv/chanserv.h"
 
 DECLARE_MODULE_V1

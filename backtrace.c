@@ -1,4 +1,4 @@
-#include "atheme.h"
+#include "atheme-compat.h"
 
 #ifdef __Linux__
 #include <execinfo.h>

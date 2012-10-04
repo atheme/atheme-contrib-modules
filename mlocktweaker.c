@@ -6,7 +6,7 @@
  *
  */
 
-#include "atheme.h"
+#include "atheme-compat.h"
 
 /*
  * Set this to the string of mlock changes you want to make.

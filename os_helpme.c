@@ -2,7 +2,7 @@
  * elly+atheme@leptoquark.net
  */
 
-#include "atheme.h"
+#include "atheme-compat.h"
 #include "uplink.h"		/* sts() */
 
 

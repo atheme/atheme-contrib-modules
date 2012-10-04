@@ -7,7 +7,7 @@
  *
  */
 
-#include "atheme.h"
+#include "atheme-compat.h"
 #include "uplink.h"
 
 DECLARE_MODULE_V1

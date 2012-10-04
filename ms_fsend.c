@@ -6,7 +6,7 @@
  *
  */
 
-#include "atheme.h"
+#include "atheme-compat.h"
 
 /* MEMOLEN + 8, so the "[FORCE] " string will fit */
 #define FMEMOLEN 308

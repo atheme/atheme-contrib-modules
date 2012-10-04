@@ -5,7 +5,7 @@
  * Looks for users and performs actions on them.
  */
 
-#include "atheme.h"
+#include "atheme-compat.h"
 #include <limits.h>
 
 DECLARE_MODULE_V1

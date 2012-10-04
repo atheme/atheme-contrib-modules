@@ -10,7 +10,7 @@
  * setting to time out/expire.
  *
  */
-#include "atheme.h"
+#include "atheme-compat.h"
 #define DEFCON_CMODE "R"
 
 DECLARE_MODULE_V1

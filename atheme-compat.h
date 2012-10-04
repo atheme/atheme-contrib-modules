@@ -28,7 +28,7 @@
  * of Atheme to compile a subset of the Atheme 7.1 API, if such API features
  * are unavailable.
  */
-#ifdef CURRENT_ABI_REVISION < 710000
+#if CURRENT_ABI_REVISION < 710000
 typedef char *stringref;
 #endif
 

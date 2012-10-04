@@ -10,7 +10,7 @@
  * but would not remove the user, but the user cannot (fully) reconnect.
  */
 
-#include "atheme.h"
+#include "atheme-compat.h"
 
 DECLARE_MODULE_V1
 (

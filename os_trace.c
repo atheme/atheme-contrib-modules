@@ -677,7 +677,7 @@ static trace_action_t *trace_akill_prepare(sourceinfo_t *si, char **args)
 
 static void trace_akill_exec(user_t *u, trace_action_t *act)
 {
-	char *kuser, *khost;
+	const char *kuser, *khost;
 	trace_action_akill_t *a = (trace_action_akill_t *) act;
 
 	return_if_fail(u != NULL);

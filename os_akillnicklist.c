@@ -100,7 +100,7 @@ aknl_nickhook(hook_user_nick_t *data)
 {
 	user_t *u;
 	bool doit = false;
-	char *username;
+	const char *username;
 
 	return_if_fail(data != NULL);
 	return_if_fail(data->u != NULL);

@@ -17,7 +17,7 @@ DECLARE_MODULE_V1
 
 static void command_roulette(sourceinfo_t *si, int parc, char *parv[]);
 
-command_t cmd_roulette = { "ROULETTE", N_("A game of Russian Roulette."), AC_NONE, 0, command_roulette, { .path = "contrib/roulette" } };
+command_t cmd_roulette = { "ROULETTE", N_("A game of Russian Roulette."), AC_NONE, 2, command_roulette, { .path = "contrib/roulette" } };
 
 void _modinit(module_t * m)
 {
@@ -64,7 +64,7 @@ static void command_roulette(sourceinfo_t *si, int parc, char *parv[])
 	};
 
 	srand(time(NULL));
-	gs_command_report(si, "%s", roulette_responses[rand() % 6 == 0]);
+	gs_command_report(si, "%s", roulette_responses[rand() % 6 != 0]);
 }
 
 /* vim:cinoptions=>s,e0,n0,f0,{0,}0,^0,=s,ps,t0,c3,+s,(2s,us,)20,*30,gs,hs

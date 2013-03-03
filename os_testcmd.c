@@ -23,7 +23,7 @@ struct testcmddata
 
 static void os_cmd_testcmd(sourceinfo_t *si, int parc, char *parv[]);
 
-static void testcmd_command_fail(sourceinfo_t *si, faultcode_t code, const char *message);
+static void testcmd_command_fail(sourceinfo_t *si, cmd_faultcode_t code, const char *message);
 static void testcmd_command_success_nodata(sourceinfo_t *si, const char *message);
 static void testcmd_command_success_string(sourceinfo_t *si, const char *result, const char *message);
 
@@ -47,7 +47,7 @@ void _moddeinit(module_unload_intent_t intent)
 	service_named_unbind_command("operserv", &os_testcmd);
 }
 
-static void testcmd_command_fail(sourceinfo_t *si, faultcode_t code, const char *message)
+static void testcmd_command_fail(sourceinfo_t *si, cmd_faultcode_t code, const char *message)
 {
 	struct testcmddata *udata = si->callerdata;
 

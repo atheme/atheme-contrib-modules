@@ -27,9 +27,7 @@ static void waitreg_hook(hook_user_register_check_t *hdata)
 	if (hdata->si->su == NULL)
 		return;
 
-	unsigned int nickage = CURRTIME - hdata->si->su->ts;
-
-	if (nickage < waitreg_time)
+	if (hdata->si->su->ts >= CURRTIME - waitreg_time)
 	{
 		command_fail(hdata->si, fault_badparams, _("You can not register your nick so soon after connecting. Please wait a while and try again."));
 		hdata->approved++;

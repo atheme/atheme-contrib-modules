@@ -1,6 +1,6 @@
 #include "atheme-compat.h"
 
-#ifdef __Linux__
+#if defined( __linux__) || defined(__Linux__)
 #include <execinfo.h>
 
 DECLARE_MODULE_V1

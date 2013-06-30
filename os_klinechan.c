@@ -49,6 +49,7 @@ static void klinechan_check_join(hook_channel_joinpart_t *hdata)
 	chanuser_t *cu = hdata->cu;
 	service_t *svs;
 	char reason[256];
+	const char *khost;
 
 	svs = service_find("operserv");
 	if (svs == NULL)
@@ -62,6 +63,7 @@ static void klinechan_check_join(hook_channel_joinpart_t *hdata)
 
 	if (metadata_find(mc, "private:klinechan:closer"))
 	{
+		khost = cu->user->ip ? cu->user->ip : cu->user->host;
 		if (has_priv_user(cu->user, PRIV_JOIN_STAFFONLY))
 			notice(svs->me->nick, cu->user->nick,
 					"Warning: %s klines normal users",
@@ -70,7 +72,7 @@ static void klinechan_check_join(hook_channel_joinpart_t *hdata)
 		{
 			char buf[BUFSIZE];
 			snprintf(buf, sizeof(buf), "Not klining *@%s due to klinechan %s (user %s!%s@%s is exempt)",
-					cu->user->host, cu->chan->name,
+					khost, cu->chan->name,
 					cu->user->nick, cu->user->user, cu->user->host);
 			wallops_sts(buf);
 		}
@@ -79,10 +81,10 @@ static void klinechan_check_join(hook_channel_joinpart_t *hdata)
 			snprintf(reason, sizeof reason, "Joining %s",
 					cu->chan->name);
 			slog(LG_INFO, "klinechan_check_join(): klining \2*@%s\2 (user \2%s!%s@%s\2 joined \2%s\2)",
-					cu->user->host, cu->user->nick,
+					khost, cu->user->nick,
 					cu->user->user, cu->user->host,
 					cu->chan->name);
-			kline_sts("*", "*", cu->user->host, 86400, reason);
+			kline_sts("*", "*", khost, 86400, reason);
 		}
 	}
 }

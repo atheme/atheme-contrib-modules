@@ -8,12 +8,13 @@
 
 #include "atheme-compat.h"
 
-/*
- * Set this to the string of mlock changes you want to make.
- * This is in addition to the default mlock, so -nt if you want to
- * remove those mlocks, etcetera.
+/* Changed to allow for dynamic configuration, to configure this, set 
+ * chanserv::mlocktweak to the mode string you want set on channels as 
+ * they are registered. Keep in mind that +nt will be applied as well, 
+ * so if you do not want +n or +t, negate them in the configuration.
+ * - Quora
  */
-#define MLOCK_CHANGE "-t+c"
+char * mlocktweak;
 
 DECLARE_MODULE_V1
 (
@@ -26,12 +27,14 @@ static void handle_channel_register(hook_channel_req_t *hdata);
 
 void _modinit(module_t *m)
 {
+	add_dupstr_conf_item("MLOCKTWEAK", &chansvs.me->conf_table, 0, &mlocktweak, "-t+c");
 	hook_add_event("channel_register");
 	hook_add_first_channel_register(handle_channel_register);
 }
 
 void _moddeinit(module_unload_intent_t intent)
 {
+	del_conf_item("MLOCKTWEAK", &chansvs.me->conf_table);
 	hook_del_channel_register(handle_channel_register);
 }
 
@@ -39,13 +42,12 @@ static void handle_channel_register(hook_channel_req_t *hdata)
 {
 	mychan_t *mc = hdata->mc;
 	unsigned int *target;
-	char *it, *str = MLOCK_CHANGE;
+	char *it = mlocktweak;
 
 	if (mc == NULL)
 		return;
 
 	target = &mc->mlock_on;
-	it = str;
 
 	while (*it != '\0')
 	{

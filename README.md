@@ -164,6 +164,12 @@ encrypted and you want to set SOPER passwords.
 
 Generates a random password.
 
+#### ns_goodmail.c
+
+Maintains a whitelist of email domains that are allowed to
+register NickServ nicks.  This allows you to say only
+\*@example.com email address can register nicks.
+
 #### ns_guestnoreg.c
 
 Disallows the registration of nicks beginning with a string

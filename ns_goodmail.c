@@ -18,8 +18,8 @@ DECLARE_MODULE_V1
 static void check_registration(hook_user_register_check_t *hdata);
 static void ns_cmd_goodmail(sourceinfo_t *si, int parc, char *parv[]);
 
-static void write_bedb(database_handle_t *db);
-static void db_h_be(database_handle_t *db, const char *type);
+static void write_gedb(database_handle_t *db);
+static void db_h_ge(database_handle_t *db, const char *type);
 
 command_t ns_goodmail = { "GOODMAIL", N_("Restrict registration to certain email addresses."), PRIV_USER_ADMIN, 3, ns_cmd_goodmail, { .path = "contrib/ns_goodmail" } };
 
@@ -45,9 +45,9 @@ void _modinit(module_t *m)
 
 	hook_add_event("user_can_register");
 	hook_add_user_can_register(check_registration);
-	hook_add_db_write(write_bedb);
+	hook_add_db_write(write_gedb);
 
-	db_register_type_handler("BE", db_h_be);
+	db_register_type_handler("GE", db_h_ge);
 
 	service_named_bind_command("nickserv", &ns_goodmail);
 }
@@ -55,14 +55,14 @@ void _modinit(module_t *m)
 void _moddeinit(module_unload_intent_t intent)
 {
 	hook_del_user_can_register(check_registration);
-	hook_del_db_write(write_bedb);
+	hook_del_db_write(write_gedb);
 
-	db_unregister_type_handler("BE");
+	db_unregister_type_handler("GE");
 
 	service_named_unbind_command("nickserv", &ns_goodmail);
 }
 
-static void write_bedb(database_handle_t *db)
+static void write_gedb(database_handle_t *db)
 {
 	mowgli_node_t *n;
 
@@ -70,7 +70,7 @@ static void write_bedb(database_handle_t *db)
 	{
 		goodmail_t *l = n->data;
 
-		db_start_row(db, "BE");
+		db_start_row(db, "GE");
 		db_write_word(db, l->mail);
 		db_write_time(db, l->mail_ts);
 		db_write_word(db, l->creator);
@@ -79,7 +79,7 @@ static void write_bedb(database_handle_t *db)
 	}
 }
 
-static void db_h_be(database_handle_t *db, const char *type)
+static void db_h_ge(database_handle_t *db, const char *type)
 {
 	const char *mail = db_sread_word(db);
 	time_t mail_ts = db_sread_time(db);

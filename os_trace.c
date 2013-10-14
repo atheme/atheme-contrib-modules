@@ -293,8 +293,10 @@ static bool trace_channel_exec(user_t *u, void *q)
 	trace_query_channel_domain_t *domain = (trace_query_channel_domain_t *) q;
 
 	return_val_if_fail(domain != NULL, false);
-	return_val_if_fail(domain->channel != NULL, false);
 	return_val_if_fail(u != NULL, false);
+
+	if (domain->channel == NULL)
+		return false;
 
 	return (chanuser_find(domain->channel, u) != NULL);
 }

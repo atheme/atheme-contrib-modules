@@ -52,3 +52,4 @@ extra.mk
 tags
 .deps
 aclocal.m4
+*.dep

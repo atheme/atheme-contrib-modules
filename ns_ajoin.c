@@ -19,6 +19,12 @@ DECLARE_MODULE_V1
 
 static void ajoin_on_identify(user_t *u);
 
+static void ns_cmd_ajoin_syntaxerr(sourceinfo_t *si)
+{
+	command_fail(si, fault_badparams, STR_INSUFFICIENT_PARAMS, "AJOIN");
+	command_fail(si, fault_badparams, "Syntax: AJOIN <list|add|del|clear> [#channel]");
+}
+
 static void ns_cmd_ajoin(sourceinfo_t *si, int parc, char *parv[])
 {
 	char buf[512];
@@ -26,11 +32,7 @@ static void ns_cmd_ajoin(sourceinfo_t *si, int parc, char *parv[])
 	metadata_t *md;
 
 	if (!parv[0])
-	{
-		command_fail(si, fault_badparams, STR_INSUFFICIENT_PARAMS, "AJOIN");
-		command_fail(si, fault_badparams, "Syntax: AJOIN <list|add|del> [#channel]");
-		return;
-	}
+		return ns_cmd_ajoin_syntaxerr(si);
 
 	if (!strcasecmp(parv[0], "LIST"))
 	{
@@ -51,11 +53,7 @@ static void ns_cmd_ajoin(sourceinfo_t *si, int parc, char *parv[])
 	else if (!strcasecmp(parv[0], "ADD"))
 	{
 		if (!parv[1])
-		{
-			command_fail(si, fault_badparams, STR_INSUFFICIENT_PARAMS, "AJOIN");
-			command_fail(si, fault_badparams, "Syntax: AJOIN <list|add|del|clear> [#channel]");
-			return;
-		}
+			return ns_cmd_ajoin_syntaxerr(si);
 
 		if ((md = metadata_find(si->smu, "private:autojoin")))
 		{
@@ -99,11 +97,7 @@ static void ns_cmd_ajoin(sourceinfo_t *si, int parc, char *parv[])
 	else if (!strcasecmp(parv[0], "DEL"))
 	{
 		if (!parv[1])
-		{
-			command_fail(si, fault_badparams, STR_INSUFFICIENT_PARAMS, "AJOIN");
-			command_fail(si, fault_badparams, "Syntax: AJOIN <list|add|del|clear> [#channel]");
-			return;
-		}
+			return ns_cmd_ajoin_syntaxerr(si);
 
 		if (!(md = metadata_find(si->smu, "private:autojoin")))
 		{

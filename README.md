@@ -210,7 +210,8 @@ source code for details.
 #### os_defcon.c
 
 Allows you to use DEFCON-based security on your network.  This may be
-useful to people migrating from Anope.
+useful to people migrating from Anope. **Note:** This module taints
+Atheme. You need to enable `allow_taint` in the config to use it.
 
 #### os_helpme.c
 

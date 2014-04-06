@@ -1,0 +1,35 @@
+Help for GOODMAIL:
+
+GOODMAIL allows you to maintain a whitelist of email addresses that
+are allowed to be used to register accounts.  Any email not on this
+list will not be allowed to be registered.
+
+These email addresses are saved to the Atheme database and are kept
+between services restarts.
+
+In GOODMAIL ADD, you are able to use glob matching to whitelist email
+addresses that match a pattern.
+
+Syntax: GOODMAIL ADD <email> [reason]
+
+Examples:
+    /msg &nick& GOODMAIL ADD jdhore1@gmail.com bar reason
+    /msg &nick& GOODMAIL ADD *@aol.com bar reason
+    /msg &nick& GOODMAIL ADD *@*.tk foo reason
+
+GOODMAIL DEL allows you to remove entries from the list of currently
+whitelisted email addresses.
+
+Syntax: GOODMAIL DEL <email>
+
+Examples:
+    /msg &nick& GOODMAIL DEL foo@bar.com
+    /msg &nick& GOODMAIL DEL *@aol.com
+
+GOODMAIL LIST allows you to list the currently whitelisted email
+addresses.
+
+Syntax: GOODMAIL LIST
+
+Examples:
+    /msg &nick& GOODMAIL LIST

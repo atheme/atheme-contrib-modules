@@ -106,7 +106,7 @@ static void hook_user_identify(user_t *u)
 {
 	/* if they have an existing cloak, don't do anything */
 	if ((metadata_find(u->myuser, "private:usercloak")) || (me.hidehostsuffix == NULL))
-		return;	
+		return;
 
 	/* they do not, add one. */
 	user_add_host(u->myuser);

@@ -75,7 +75,7 @@ static void cs_cmd_fregister(sourceinfo_t *si, int parc, char *parv[])
 		command_fail(si, fault_notverified, _("You need to verify your email address before you may register channels."));
 		return;
 	}
-	
+
 	/* make sure it isn't already registered */
 	if ((mc = mychan_find(name)))
 	{
@@ -85,7 +85,7 @@ static void cs_cmd_fregister(sourceinfo_t *si, int parc, char *parv[])
 			command_fail(si, fault_alreadyexists, _("\2%s\2 is already registered."), mc->name);
 		return;
 	}
-	
+
 	/* make sure the channel exists */
 	if (!(c = channel_find(name)))
 	{

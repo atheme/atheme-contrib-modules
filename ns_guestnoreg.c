@@ -5,7 +5,7 @@
  * This file contains code for blocking registrations of guest nicks.
  * Particularly for use with webchat clients.
  *
- * To actually use this, add a something like the following to 
+ * To actually use this, add a something like the following to
  * the nickserv {} block of your atheme.conf:
  * guestnicks {
  *      "mib_";

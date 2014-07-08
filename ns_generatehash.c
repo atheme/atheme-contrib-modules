@@ -19,7 +19,7 @@ static void ns_cmd_generatehash(sourceinfo_t *si, int parc, char *parv[]);
 
 command_t ns_generatehash = { "GENERATEHASH", "Generates a hash for SOPER.",
                         AC_NONE, 1, ns_cmd_generatehash, { .path = "contrib/generatehash" } };
-                                                                                   
+
 void _modinit(module_t *m)
 {
 	service_named_bind_command("nickserv", &ns_generatehash);
@@ -38,7 +38,7 @@ static void ns_cmd_generatehash(sourceinfo_t *si, int parc, char *parv[])
 	if (parc < 1)
 	{
 		command_fail(si, fault_needmoreparams, STR_INSUFFICIENT_PARAMS, "GENERATEHASH");
-		command_fail(si, fault_needmoreparams, _("Syntax: GENERATEHASH <password>")); 
+		command_fail(si, fault_needmoreparams, _("Syntax: GENERATEHASH <password>"));
 		return;
 	}
 

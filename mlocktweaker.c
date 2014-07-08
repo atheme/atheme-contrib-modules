@@ -8,9 +8,9 @@
 
 #include "atheme-compat.h"
 
-/* Changed to allow for dynamic configuration, to configure this, set 
- * chanserv::mlocktweak to the mode string you want set on channels as 
- * they are registered. Keep in mind that +nt will be applied as well, 
+/* Changed to allow for dynamic configuration, to configure this, set
+ * chanserv::mlocktweak to the mode string you want set on channels as
+ * they are registered. Keep in mind that +nt will be applied as well,
  * so if you do not want +n or +t, negate them in the configuration.
  * - Quora
  */

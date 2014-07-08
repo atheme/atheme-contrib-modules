@@ -100,7 +100,7 @@ char *reason_extract(char **args)
 			(*args)++;
 			break;
 		}
-		
+
 		(*args)++;
 	}
 
@@ -132,7 +132,7 @@ static void *trace_regexp_prepare(char **args)
 	domain = scalloc(sizeof(trace_query_regexp_domain_t), 1);
 	domain->pattern = regex_extract(*args, &(*args), &domain->flags);
 	domain->regex = regex_create(domain->pattern, domain->flags);
-	
+
 	return domain;
 }
 
@@ -221,7 +221,7 @@ static void *trace_glob_prepare(char **args)
 {
 	char *pattern;
 	trace_query_glob_domain_t *domain;
-	
+
 	return_val_if_fail(args != NULL, NULL);
 	return_val_if_fail(*args != NULL, NULL);
 
@@ -232,7 +232,7 @@ static void *trace_glob_prepare(char **args)
 	domain->pattern = sstrdup(pattern);
 
 	*args = strtok(NULL, "");
-	
+
 	return domain;
 }
 
@@ -622,7 +622,7 @@ static trace_action_t *trace_akill_prepare(sourceinfo_t *si, char **args)
 	/* Extract a token, but only if there's one to remove.
 	 * Otherwise, this would clip a word off the reason. */
 	token = 0;
-	s = *args; 
+	s = *args;
 	if (!strncasecmp(s, "!T", 2) || !strncasecmp(s, "!P", 2))
 	{
 		if (s[2] == ' ')
@@ -658,17 +658,17 @@ static trace_action_t *trace_akill_prepare(sourceinfo_t *si, char **args)
 			;
 		else
 			duration = 0;
-		
+
 		if (duration == 0)
 			return NULL;
 	}
 	else if (token == 'p')
 		duration = 0;
-	
+
 	reason = reason_extract(args);
 	if (reason == NULL)
 		return NULL;
-	
+
 	a = scalloc(sizeof(trace_action_akill_t), 1);
 	trace_action_init(&a->base, si);
 	a->duration = duration;
@@ -843,7 +843,7 @@ static void os_cmd_trace(sourceinfo_t *si, int parc, char *parv[])
 	MOWGLI_ITER_FOREACH_SAFE(n, tn, crit.head)
 	{
 		trace_query_domain_t *q = (trace_query_domain_t *) n->data;
-		q->cons->cleanup(q);		
+		q->cons->cleanup(q);
 	}
 	actcons->cleanup(act, succeeded);
 

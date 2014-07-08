@@ -126,7 +126,7 @@ static void ns_cmd_ajoin(sourceinfo_t *si, int parc, char *parv[])
 						// First character of a potential match; remember it's location
 						itempos = i;
 					}
-		 
+
 					j++;
 					if (!remove1[j])
 					{
@@ -138,15 +138,15 @@ static void ns_cmd_ajoin(sourceinfo_t *si, int parc, char *parv[])
 					j = 0;
 			}
 		}
-		 
+
 		if (remove1[j])
 		{
 			command_fail(si, fault_badparams, "%s is not on your AJOIN list.", parv[1]);
 			return;
 		}
-		 
+
 		listlen = i;
-		 
+
 		// listlen is the length of the list, rmlen is the length of the item to remove, itempos is the beginning of that item.
 		if (!list[itempos + rmlen])
 		{

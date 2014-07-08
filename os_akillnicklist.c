@@ -119,7 +119,7 @@ aknl_nickhook(hook_user_nick_t *data)
 	if (*username == '~')
 		username++;
 
-	if (mowgli_patricia_retrieve(akillalllist, u->nick) != NULL && 
+	if (mowgli_patricia_retrieve(akillalllist, u->nick) != NULL &&
 	    mowgli_patricia_retrieve(akillalllist, username) != NULL &&
 	    mowgli_patricia_retrieve(akillalllist, u->gecos) != NULL)
 		doit = true;

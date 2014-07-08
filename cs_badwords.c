@@ -274,7 +274,7 @@ static void cs_cmd_badwords(sourceinfo_t *si, int parc, char *parv[])
 					bw = n->data;
 
 					if (!irccasecmp(bw->badword, word))
-					{	
+					{
 						command_success_nodata(si, _("\2%s\2 has already been entered into the bad word list."), word);
 						return;
 					}
@@ -319,7 +319,7 @@ static void cs_cmd_badwords(sourceinfo_t *si, int parc, char *parv[])
 			command_fail(si, fault_nosuch_target, _("There are no badwords set in this channel."));
 			return;
 		}
-	
+
 		MOWGLI_ITER_FOREACH_SAFE(n, tn, l->head)
 		{
 			bw = n->data;
@@ -346,13 +346,13 @@ static void cs_cmd_badwords(sourceinfo_t *si, int parc, char *parv[])
 	{
 		char buf[BUFSIZE];
 		struct tm tm;
-		
+
 		if (!chanacs_source_has_flag(mc, si, CA_ACLVIEW))
 		{
 			command_fail(si, fault_noprivs, _("You are not authorized to perform this command."));
 			return;
 		}
-		
+
 		if (l == NULL)
 		{
 			command_fail(si, fault_nosuch_target, _("There are no badwords set in this channel."));

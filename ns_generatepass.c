@@ -19,7 +19,7 @@ static void ns_cmd_generatepass(sourceinfo_t *si, int parc, char *parv[]);
 
 command_t ns_generatepass = { "GENERATEPASS", "Generates a random password.",
                         AC_NONE, 1, ns_cmd_generatepass, { .path = "contrib/generatepass" } };
-                                                                                   
+
 void _modinit(module_t *m)
 {
 	service_named_bind_command("nickserv", &ns_generatepass);
@@ -34,7 +34,7 @@ static void ns_cmd_generatepass(sourceinfo_t *si, int parc, char *parv[])
 {
 	int n = 0;
 	char *newpass;
-   
+
 	if (parc >= 1)
 		n = atoi(parv[0]);
 

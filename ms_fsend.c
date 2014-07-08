@@ -44,20 +44,20 @@ static void ms_cmd_fsend(sourceinfo_t *si, int parc, char *parv[])
 	mowgli_node_t *n;
 	mymemo_t *memo;
 	service_t *memoserv;
-	
+
 	/* Grab args */
 	char *target = parv[0];
 	char *m = parv[1];
-	
+
 	/* Arg validation */
 	if (!target || !m)
 	{
-		command_fail(si, fault_needmoreparams, 
+		command_fail(si, fault_needmoreparams,
 			STR_INSUFFICIENT_PARAMS, "FSEND");
-		
-		command_fail(si, fault_needmoreparams, 
+
+		command_fail(si, fault_needmoreparams,
 			"Syntax: FSEND <user> <memo>");
-		
+
 		return;
 	}
 
@@ -79,9 +79,9 @@ static void ms_cmd_fsend(sourceinfo_t *si, int parc, char *parv[])
 	/* Check for memo text length -- includes/common.h */
 	if (strlen(m) >= MEMOLEN)
 	{
-		command_fail(si, fault_badparams, 
+		command_fail(si, fault_badparams,
 			"Please make sure your memo is less than %d characters", MEMOLEN);
-		
+
 		return;
 	}
 
@@ -93,7 +93,7 @@ static void ms_cmd_fsend(sourceinfo_t *si, int parc, char *parv[])
 		command_fail(si, fault_badparams, _("Your memo contains invalid characters."));
 		return;
 	}
-	
+
 	memoserv = service_find("memoserv");
 	if (memoserv == NULL)
 		memoserv = si->service;
@@ -101,17 +101,17 @@ static void ms_cmd_fsend(sourceinfo_t *si, int parc, char *parv[])
 	if (*target != '#' && *target != '!')
 	{
 		/* See if target is valid */
-		if (!(tmu = myuser_find_ext(target))) 
+		if (!(tmu = myuser_find_ext(target)))
 		{
-			command_fail(si, fault_nosuch_target, 
+			command_fail(si, fault_nosuch_target,
 				"\2%s\2 is not registered.", target);
-		
+
 			return;
 		}
 
 		si->smu->memo_ratelimit_num++;
 		si->smu->memo_ratelimit_time = CURRTIME;
-	
+
 		/* Check to make sure target inbox not full */
 		if (tmu->memos.count >= me.mdlimit)
 		{
@@ -121,7 +121,7 @@ static void ms_cmd_fsend(sourceinfo_t *si, int parc, char *parv[])
 		}
 
 		logcommand(si, CMDLOG_ADMIN, "FSEND: to \2%s\2", entity(tmu)->name);
-	
+
 		/* Malloc and populate struct */
 		memo = smalloc(sizeof(mymemo_t));
 		memo->sent = CURRTIME;
@@ -129,7 +129,7 @@ static void ms_cmd_fsend(sourceinfo_t *si, int parc, char *parv[])
 		mowgli_strlcpy(memo->sender,entity(si->smu)->name,NICKLEN);
 		mowgli_strlcpy(memo->text, "[FORCE] ", FMEMOLEN);
 		mowgli_strlcat(memo->text, m, FMEMOLEN);
-	
+
 		/* Create a linked list node and add to memos */
 		n = mowgli_node_create();
 		mowgli_node_add(memo, n, &tmu->memos);
@@ -140,7 +140,7 @@ static void ms_cmd_fsend(sourceinfo_t *si, int parc, char *parv[])
 		{
 			compat_sendemail(si->su, tmu, EMAIL_MEMO, tmu->email, memo->text);
 	        }
-	
+
 		/* Note: do not disclose other nicks they're logged in with
 		 * -- jilles
 		 *

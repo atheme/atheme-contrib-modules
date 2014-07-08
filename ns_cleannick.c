@@ -65,7 +65,7 @@ static void clean_nickname(user_t *u)
 	while (*p++)
 	{
 		if (IsUpper(*p))
-			*p = ToLower(*p);		
+			*p = ToLower(*p);
 	}
 
 	if (is_nickname_lame(nickbuf))

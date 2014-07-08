@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2006 William Pitcock, et al.
  * Rights to this code are as documented in doc/LICENSE.
- * 
+ *
  * LoveServ implementation.
  *
  */

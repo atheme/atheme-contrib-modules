@@ -30,11 +30,11 @@ static void testcmd_command_success_string(sourceinfo_t *si, const char *result,
 command_t os_testcmd = { "TESTCMD", "Executes a command without a user_t.",
                         AC_NONE, 3, os_cmd_testcmd, { .path = "contrib/testcmd" } };
 
-struct sourceinfo_vtable testcmd_vtable = { 
-	.description = "testcmd", 
-	.cmd_fail = testcmd_command_fail, 
-	.cmd_success_nodata = testcmd_command_success_nodata, 
-	.cmd_success_string = testcmd_command_success_string 
+struct sourceinfo_vtable testcmd_vtable = {
+	.description = "testcmd",
+	.cmd_fail = testcmd_command_fail,
+	.cmd_success_nodata = testcmd_command_success_nodata,
+	.cmd_success_string = testcmd_command_success_string
 };
 
 void _modinit(module_t *m)

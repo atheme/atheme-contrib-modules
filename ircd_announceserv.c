@@ -10,7 +10,7 @@
 DECLARE_MODULE_V1
 (
 	"contrib/ircd_announceserv", false, _modinit, _moddeinit,
-	PACKAGE_STRING, 
+	PACKAGE_STRING,
 	"JD and Taros"
 );
 

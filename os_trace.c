@@ -579,7 +579,7 @@ static void trace_kill_exec(user_t *u, trace_action_t *act)
 		return;
 	if (u->myuser && is_soper(u->myuser))
 		return;
-	if ((svs = service_find("operserv")) != NULL)
+	if ((svs = service_find("operserv")) == NULL)
 		return;
 
 	act->matched = true;

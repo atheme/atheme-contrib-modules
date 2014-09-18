@@ -62,9 +62,9 @@ static void my_rhandler(connection_t * cptr)
 {
         char buf[BUFSIZE * 2];
 
-        if (!my_read(cptr, buf))
+        if (my_read(cptr, buf) <= 0)
 		connection_close(cptr);
-
+	else
         do_packet(buf);
 }
 

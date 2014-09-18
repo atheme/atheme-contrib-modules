@@ -630,9 +630,11 @@ move_wumpus(void *unused)
 			/* player_t *p has been eaten and is no longer in the game */
 			resign_player(p);
 		}
-
-		/* prepare for the next turn */
-		p->has_moved = false;
+		else
+		{
+			/* prepare for the next turn */
+			p->has_moved = false;
+		}
 	}
 
 	/* report any wumpus kills */

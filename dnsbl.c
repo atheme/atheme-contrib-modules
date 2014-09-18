@@ -444,6 +444,7 @@ static int dnsbl_config_handler(mowgli_config_file_entry_t *ce)
 	{
 		char *line = sstrdup(cce->varname);
 		new_blacklist(line);
+		free(line);
 	}
 
 	return 0;

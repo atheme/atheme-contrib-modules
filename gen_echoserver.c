@@ -60,7 +60,7 @@ static void my_rhandler(connection_t * cptr)
 
         if (!my_read(cptr, buf))
 		connection_close(cptr);
-
+	else
         do_packet(cptr, buf);
 }
 

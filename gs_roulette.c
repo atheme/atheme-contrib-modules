@@ -59,8 +59,8 @@ static void gs_command_report(sourceinfo_t *si, const char *fmt, ...)
 static void command_roulette(sourceinfo_t *si, int parc, char *parv[])
 {
 	static const char *roulette_responses[2] = {
-		N_("*BANG*"),
-		N_("*CLICK*")
+		N_("*CLICK*"),
+		N_("*BANG*")
 	};
 
 	srand(time(NULL));

@@ -646,7 +646,7 @@ static trace_action_t *trace_akill_prepare(sourceinfo_t *si, char **args)
 			return NULL;
 
 		duration = (atol(s) * 60);
-		while (isdigit(*s))
+		while (isdigit((unsigned char)*s))
 		s++;
 		if (*s == 'h' || *s == 'H')
 			duration *= 60;

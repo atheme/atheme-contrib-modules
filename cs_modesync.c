@@ -25,7 +25,7 @@ on_channel_mode(hook_channel_mode_t *data)
 	return_if_fail(data != NULL);
 	return_if_fail(data->c != NULL);
 
-	mc = MYCHAN_FROM(data->c);
+	mc = mychan_from(data->c);
 
 	if (mc == NULL || mc->flags & MC_NOSYNC)
 		return;

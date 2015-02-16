@@ -151,7 +151,7 @@ static void on_channel_message(hook_cmessage_data_t *data)
 	mowgli_node_t *n;
 	mowgli_list_t *l;
 
-	mychan_t *mc = MYCHAN_FROM(data->c);
+	mychan_t *mc = mychan_from(data->c);
 
 	if (mc == NULL)
 		return;

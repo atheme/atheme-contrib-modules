@@ -48,7 +48,7 @@ on_channel_message(hook_cmessage_data_t *data)
 {
 	if (data != NULL && data->msg != NULL)
 	{
-		mychan_t *mc = MYCHAN_FROM(data->c);
+		mychan_t *mc = mychan_from(data->c);
 		metadata_t *md;
 
 		if (!mc)

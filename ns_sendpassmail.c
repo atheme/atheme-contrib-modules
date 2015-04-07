@@ -121,8 +121,6 @@ static void ns_cmd_sendpassmail(sourceinfo_t *si, int parc, char *parv[])
 	char cmdtext[NICKLEN + 20];
 
 	struct sendpassmail_state state;
-	state.email_canonical = canonicalize_email(email);
-	state.origin = si;
 
 	if (!email)
 	{
@@ -130,6 +128,9 @@ static void ns_cmd_sendpassmail(sourceinfo_t *si, int parc, char *parv[])
 		command_fail(si, fault_needmoreparams, _("Syntax: SENDPASSMAIL <email>"));
 		return;
 	}
+
+	state.email_canonical = canonicalize_email(email);
+	state.origin = si;
 
 	myentity_foreach_t(ENT_USER, sendpassmail_foreach_cb, &state);
 	strshare_unref(state.email_canonical);

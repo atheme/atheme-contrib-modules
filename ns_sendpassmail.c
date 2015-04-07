@@ -132,6 +132,11 @@ static void ns_cmd_sendpassmail(sourceinfo_t *si, int parc, char *parv[])
 	state.email_canonical = canonicalize_email(email);
 	state.origin = si;
 
+	if (!validemail(email)) {
+		command_fail(si, fault_badparams, _("\2%s\2 is not a valid email address."), email);
+		return;
+	}
+
 	myentity_foreach_t(ENT_USER, sendpassmail_foreach_cb, &state);
 	strshare_unref(state.email_canonical);
 

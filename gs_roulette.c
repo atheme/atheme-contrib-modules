@@ -63,7 +63,6 @@ static void command_roulette(sourceinfo_t *si, int parc, char *parv[])
 		N_("*CLICK*")
 	};
 
-	srand(time(NULL));
 	gs_command_report(si, "%s", roulette_responses[rand() % 6 == 0]);
 }
 

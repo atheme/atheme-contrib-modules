@@ -74,16 +74,10 @@ static bool source_is_tor(sourceinfo_t *si)
 		return false;
 	}
 
-	slog(LG_DEBUG, "source_is_tor(): checking '%s'", s->name);
-
 	MOWGLI_ITER_FOREACH(n, torservers.head)
 	{
-		slog(LG_DEBUG, "source_is_tor(): ... against '%s'", n->data);
 		if (!strcasecmp(s->name, n->data))
-		{
-			slog(LG_DEBUG, "source_is_tor(): found match");
 			return true;
-		}
 	}
 
 	return false;
@@ -100,11 +94,9 @@ static void can_login_hook(hook_user_login_check_t *req)
 static int tor_config_handler(mowgli_config_file_entry_t *ce)
 {
 	mowgli_config_file_entry_t *cce;
-	slog(LG_DEBUG, "tor_config_handler(%p)", ce);
 
 	MOWGLI_ITER_FOREACH(cce, ce->entries)
 	{
-		slog(LG_DEBUG, "tor_config_handler(): varname '%s'", cce->varname);
 		mowgli_node_add(sstrdup(cce->varname),
 				mowgli_node_create(),
 				&torservers);

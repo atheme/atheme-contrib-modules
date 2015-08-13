@@ -202,6 +202,11 @@ static void on_channel_message(hook_cmessage_data_t *data)
 					kick(chansvs.me->me, data->c, data->u, kickstring);
 					return;
 				}
+				else if (!strcasecmp("WARN", bw->action))
+				{
+                    notice(chansvs.nick, data->u->nick, "Foul language is prohibited on %s.", data->c->name);
+                    return;
+                }
 				else if (!strcasecmp("QUIET", bw->action))
 				{
 					char hostbuf[BUFSIZE];
@@ -275,7 +280,7 @@ static void cs_cmd_badwords(sourceinfo_t *si, int parc, char *parv[])
 			return;
 		}
 
-		if(!strcasecmp("KICK", action) || !strcasecmp("KICKBAN", action) || !strcasecmp("BAN", action) || (!strcasecmp("QUIET", action) && ircd != NULL && strchr(ircd->ban_like_modes, 'q')))
+		if(!strcasecmp("KICK", action) || !strcasecmp("KICKBAN", action) || !strcasecmp("WARN", action) || !strcasecmp("BAN", action) || (!strcasecmp("QUIET", action) && ircd != NULL && strchr(ircd->ban_like_modes, 'q')))
 		{
 			if (l != NULL)
 			{

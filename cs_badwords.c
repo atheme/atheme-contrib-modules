@@ -16,12 +16,14 @@ DECLARE_MODULE_V1
 static void on_channel_message(hook_cmessage_data_t *data);
 static void cs_cmd_badwords(sourceinfo_t *si, int parc, char *parv[]);
 static void cs_set_cmd_blockbadwords(sourceinfo_t *si, int parc, char *parv[]);
+static void cs_set_cmd_blockbadwordsops(sourceinfo_t *si, int parc, char *parv[]);
 
 static void write_badword_db(database_handle_t *db);
 static void db_h_bw(database_handle_t *db, const char *type);
 
 command_t cs_badwords = { "BADWORDS", N_("Manage the list of channel bad words."), AC_AUTHENTICATED, 4, cs_cmd_badwords, { .path = "contrib/badwords" } };
 command_t cs_set_blockbadwords = { "BLOCKBADWORDS", N_("Set whether users can say badwords in channel or not."), AC_NONE, 2, cs_set_cmd_blockbadwords, { .path = "contrib/set_blockbadwords" } };
+command_t cs_set_blockbadwordsops = { "BLOCKBADWORDSOPS", N_("Set whether ops can say badwords in channel or not."), AC_NONE, 2, cs_set_cmd_blockbadwordsops, { .path = "contrib/set_blockbadwordsops" } };
 
 struct badword_ {
 	char *badword;
@@ -56,6 +58,7 @@ void _modinit(module_t *m)
 
 	service_named_bind_command("chanserv", &cs_badwords);
 	command_add(&cs_set_blockbadwords, *cs_set_cmdtree);
+	command_add(&cs_set_blockbadwordsops, *cs_set_cmdtree);
 }
 
 void _moddeinit(module_unload_intent_t intent)
@@ -67,6 +70,7 @@ void _moddeinit(module_unload_intent_t intent)
 
 	service_named_unbind_command("chanserv", &cs_badwords);
 	command_delete(&cs_set_blockbadwords, *cs_set_cmdtree);
+	command_delete(&cs_set_blockbadwordsops, *cs_set_cmdtree);
 }
 
 static inline mowgli_list_t *badwords_list_of(mychan_t *mc)
@@ -170,6 +174,12 @@ static void on_channel_message(hook_cmessage_data_t *data)
 		MOWGLI_ITER_FOREACH(n, l->head)
 		{
 			bw = n->data;
+            chanuser_t *cu;
+            cu = chanuser_find(data->c, data->u);
+            if (cu == NULL)
+                return;
+            if ((metadata_find(mc, "blockbadwordsops") != NULL) && ((CSTATUS_OP | CSTATUS_PROTECT | CSTATUS_OWNER) & cu->modes))
+                return;
 
 			if (!match(bw->badword, data->msg))
 			{
@@ -440,6 +450,66 @@ static void cs_set_cmd_blockbadwords(sourceinfo_t *si, int parc, char *parv[])
 	}
 }
 
+static void cs_set_cmd_blockbadwordsops(sourceinfo_t *si, int parc, char *parv[])
+{
+	mychan_t *mc;
+
+	if (!(mc = mychan_find(parv[0])))
+	{
+		command_fail(si, fault_nosuch_target, _("Channel \2%s\2 is not registered."), parv[0]);
+		return;
+	}
+
+	if (!parv[1])
+	{
+		command_fail(si, fault_needmoreparams, STR_INSUFFICIENT_PARAMS, "SET BLOCKBADWORDSOPS");
+		return;
+	}
+
+	if (!chanacs_source_has_flag(mc, si, CA_SET))
+	{
+		command_fail(si, fault_noprivs, _("You are not authorized to perform this command."));
+		return;
+	}
+
+	if (!strcasecmp("ON", parv[1]))
+	{
+		metadata_t *md = metadata_find(mc, "blockbadwordsops");
+
+		if (md)
+		{
+			command_fail(si, fault_nochange, _("The \2%s\2 flag is already set for channel \2%s\2."), "BLOCKBADWORDSOPS", mc->name);
+			return;
+		}
+
+		metadata_add(mc, "blockbadwordsops", "on");
+
+		logcommand(si, CMDLOG_SET, "SET:BLOCKBADWORDSOPS:ON: \2%s\2", mc->name);
+		command_success_nodata(si, _("The \2%s\2 flag has been set for channel \2%s\2."), "BLOCKBADWORDSOPS", mc->name);
+		return;
+	}
+	else if (!strcasecmp("OFF", parv[1]))
+	{
+		metadata_t *md = metadata_find(mc, "blockbadwordsops");
+
+		if (!md)
+		{
+			command_fail(si, fault_nochange, _("The \2%s\2 flag is not set for channel \2%s\2."), "BLOCKBADWORDSOPS", mc->name);
+			return;
+		}
+
+		metadata_delete(mc, "blockbadwordsops");
+
+		logcommand(si, CMDLOG_SET, "SET:BLOCKBADWORDSOPS:OFF: \2%s\2", mc->name);
+		command_success_nodata(si, _("The \2%s\2 flag has been removed for channel \2%s\2."), "BLOCKBADWORDSOPS", mc->name);
+		return;
+	}
+	else
+	{
+		command_fail(si, fault_badparams, STR_INVALID_PARAMS, "BLOCKBADWORDSOPS");
+		return;
+	}
+}
 /* vim:cinoptions=>s,e0,n0,f0,{0,}0,^0,=s,ps,t0,c3,+s,(2s,us,)20,*30,gs,hs
  * vim:ts=8
  * vim:sw=8

@@ -174,12 +174,12 @@ static void on_channel_message(hook_cmessage_data_t *data)
 		MOWGLI_ITER_FOREACH(n, l->head)
 		{
 			bw = n->data;
-            chanuser_t *cu;
-            cu = chanuser_find(data->c, data->u);
-            if (cu == NULL)
-                return;
-            if ((metadata_find(mc, "blockbadwordsops") != NULL) && ((CSTATUS_OP | CSTATUS_PROTECT | CSTATUS_OWNER) & cu->modes))
-                return;
+			chanuser_t *cu;
+			cu = chanuser_find(data->c, data->u);
+			if (cu == NULL)
+				return;
+			if ((metadata_find(mc, "blockbadwordsops") != NULL) && ((CSTATUS_OP | CSTATUS_PROTECT | CSTATUS_OWNER) & cu->modes))
+				return;
 
 			if (!match(bw->badword, data->msg))
 			{
@@ -204,9 +204,9 @@ static void on_channel_message(hook_cmessage_data_t *data)
 				}
 				else if (!strcasecmp("WARN", bw->action))
 				{
-                    notice(chansvs.nick, data->u->nick, "Foul language is prohibited on %s.", data->c->name);
-                    return;
-                }
+					notice(chansvs.nick, data->u->nick, "Foul language is prohibited on %s.", data->c->name);
+					return;
+				}
 				else if (!strcasecmp("QUIET", bw->action))
 				{
 					char hostbuf[BUFSIZE];

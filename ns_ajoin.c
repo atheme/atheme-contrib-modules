@@ -201,7 +201,7 @@ static void ajoin_on_identify(user_t *u)
 	chan = strtok(buf, " ,");
 	while (chan != NULL)
 	{
-		if(ircd->type == PROTOCOL_SHADOWIRCD)
+		if(ircd->type == PROTOCOL_ELEMENTAL_IRCD)
 		{
 			sts(":%s ENCAP * SVSJOIN %s %s", ME, CLIENT_NAME(u), chan);
 		}

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2016 Atheme Development Group <http://atheme.github.io>
  * Copyright (c) 2010 JD Horelick <jdhore1@gmail.com>
  * Rights to this code are as defined in doc/LICENSE.
  *
@@ -17,7 +18,7 @@ DECLARE_MODULE_V1
 (
 	"contrib/os_defcon", false, _modinit, _moddeinit,
 	PACKAGE_STRING,
-	"Atheme Development Group <http://www.atheme.org>"
+	"Atheme Development Group <http://atheme.github.io>"
 );
 
 static void os_cmd_defcon(sourceinfo_t *si, int parc, char *parv[]);
@@ -92,6 +93,7 @@ static void defcon_nochanreg(hook_channel_register_check_t *hdatac)
 static void defcon_useradd(hook_user_nick_t *data)
 {
 	user_t *u = data->u;
+	kline_t *k;
 
 	if (!u)
 		return;
@@ -103,7 +105,7 @@ static void defcon_useradd(hook_user_nick_t *data)
 	{
 		slog(LG_INFO, "DEFCON:KLINE: %s!%s@%s", u->nick, u->user, u->host);
 		if (! (u->flags & UF_KLINESENT)) {
-			kline_sts("*", u->user, u->host, 900, "This network is currently not accepting connections, please try again later.");
+			k = kline_add(u->user, u->host, "This network is currently not accepting connections, please try again later.", 900, "*");
 			u->flags |= UF_KLINESENT;
 		}
 	}

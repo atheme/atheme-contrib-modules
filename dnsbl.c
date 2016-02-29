@@ -2,6 +2,7 @@
  * charybdis: A slightly useful ircd.
  * blacklist.c: Manages DNS blacklist entries and lookups
  *
+ * Copyright (C) 2016 Atheme Development Group <http://atheme.github.io>
  * Copyright (C) 2006-2008 charybdis development team
  *
  * Redistribution and use in source and binary forms, with or without
@@ -48,7 +49,7 @@ DECLARE_MODULE_V1
 (
 	"contrib/dnsbl", false, _modinit, _moddeinit,
 	PACKAGE_STRING,
-	"Atheme Development Group <http://www.atheme.org>"
+	"Atheme Development Group <http://atheme.github.io>"
 );
 
 mowgli_list_t blacklist_list = { NULL, NULL, 0 };
@@ -483,6 +484,7 @@ static void check_dnsbls(hook_user_nick_t *data)
 static void dnsbl_hit(user_t *u, struct Blacklist *blptr)
 {
 	service_t *svs;
+	kline_t *k;
 
 	svs = service_find("operserv");
 
@@ -505,7 +507,7 @@ static void dnsbl_hit(user_t *u, struct Blacklist *blptr)
 			slog(LG_INFO, "DNSBL: k-lining \2%s\2!%s@%s [%s] who is listed in DNS Blacklist %s.", u->nick, u->user, u->host, u->gecos, blptr->host);
 			/* abort_blacklist_queries(u); */
 			notice(svs->nick, u->nick, "Your IP address %s is listed in DNS Blacklist %s", u->ip, blptr->host);
-			kline_sts("*", "*", u->host, 86400, "Banned (DNS Blacklist)");
+			k = kline_add(u->user, u->host, "Banned (DNS Blacklist)", 86400, "*");
 			u->flags |= UF_KLINESENT;
 		}
 		return;

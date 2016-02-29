@@ -1,8 +1,10 @@
 /*
- * Copyright (c) 2005-2007 Atheme Development Group
+ * Copyright (c) 2005-2016 Atheme Development Group
  * Rights to this code are as documented in doc/LICENSE.
  *
  * Autokline channels.
+ *
+ * Default AKILL Time: 24 Hours (86400 seconds)
  *
  */
 
@@ -12,7 +14,7 @@ DECLARE_MODULE_V1
 (
 	"contrib/os_klinechan", false, _modinit, _moddeinit,
 	PACKAGE_STRING,
-	"Jilles Tjoelker <http://www.stack.nl/~jilles/irc/>"
+	"Atheme Development Group <http://atheme.github.io>"
 );
 
 static void os_cmd_klinechan(sourceinfo_t *si, int parc, char *parv[]);
@@ -50,6 +52,7 @@ static void klinechan_check_join(hook_channel_joinpart_t *hdata)
 	service_t *svs;
 	char reason[256];
 	const char *khost;
+	kline_t *k;
 
 	svs = service_find("operserv");
 	if (svs == NULL)
@@ -89,7 +92,7 @@ static void klinechan_check_join(hook_channel_joinpart_t *hdata)
 					cu->user->user, cu->user->host,
 					cu->chan->name);
 
-			kline_sts("*", "*", khost, 86400, reason);
+			k = kline_add(cu->user->user, khost, reason, 86400, "*");
 			cu->user->flags |= UF_KLINESENT;
 		}
 	}

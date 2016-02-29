@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2016 Atheme Development Group <http://atheme.github.io>
  * Copyright (c) 2010 William Pitcock, et al.
  * The rights to this code are as documented under doc/LICENSE.
  *
@@ -30,7 +31,7 @@ DECLARE_MODULE_V1
 (
 	"contrib/os_akillnicklist", false, _modinit, _moddeinit,
 	"0.1",
-	"Atheme Development Group <http://www.atheme.org>"
+	"Atheme Development Group <http://atheme.github.io>"
 );
 
 static mowgli_patricia_t *akillalllist = NULL;
@@ -101,6 +102,7 @@ aknl_nickhook(hook_user_nick_t *data)
 	user_t *u;
 	bool doit = false;
 	const char *username;
+	kline_t *k;
 
 	return_if_fail(data != NULL);
 
@@ -138,7 +140,7 @@ aknl_nickhook(hook_user_nick_t *data)
 
 	if (! (u->flags & UF_KLINESENT)) {
 		slog(LG_INFO, "AKNL: k-lining \2%s\2!%s@%s [%s] due to appearing to be a possible spambot", u->nick, u->user, u->host, u->gecos);
-		kline_sts("*", "*", u->host, 86400, "Possible spambot");
+		k = kline_add(u->user, u->host, "Possible spambot", 86400, "*");
 		u->flags |= UF_KLINESENT;
 	}
 }

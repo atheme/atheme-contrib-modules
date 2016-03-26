@@ -12,7 +12,7 @@ DECLARE_MODULE_V1
 (
 	"contrib/os_trace", false, _modinit, _moddeinit,
 	"Copyright (c) 2010 William Pitcock <nenolod@atheme.org>",
-	"Atheme Development Group <http://www.atheme.org>"
+	VENDOR_STRING
 );
 
 static char *reason_extract(char **args);

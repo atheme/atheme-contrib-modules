@@ -15,7 +15,7 @@ DECLARE_MODULE_V1
 (
 	"contrib/ns_fregister", false, _modinit, _moddeinit,
 	PACKAGE_STRING,
-	"Atheme Development Group <http://www.atheme.org>"
+	VENDOR_STRING
 );
 
 static void ns_cmd_fregister(sourceinfo_t *si, int parc, char *parv[]);

@@ -12,7 +12,7 @@ DECLARE_MODULE_V1
 (
 	"contrib/cs_regnotice", false, _modinit, _moddeinit,
         PACKAGE_STRING,
-        "Atheme Development Group <http://www.atheme.org>"
+        VENDOR_STRING
 );
 
 static mowgli_list_t regnotices = { NULL, NULL, 0 };

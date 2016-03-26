@@ -11,7 +11,7 @@ DECLARE_MODULE_V1
 (
 	"contrib/ns_forbid", false, _modinit, _moddeinit,
 	PACKAGE_STRING,
-	"Atheme Development Group <http://www.atheme.org>"
+	VENDOR_STRING
 );
 
 #define FORBID_EMAIL "noemail"

@@ -8,7 +8,7 @@ DECLARE_MODULE_V1
 (
 	"contrib/on_db_save", false, _modinit, _moddeinit,
 	"",
-	"Atheme Development Group <http://www.atheme.org>"
+	VENDOR_STRING
 );
 
 static char *command = NULL;

@@ -11,7 +11,7 @@ DECLARE_MODULE_V1
 (
 	"contrib/ns_cleannick", false, _modinit, _moddeinit,
 	PACKAGE_STRING,
-	"Atheme Development Group <http://www.atheme.org>"
+	VENDOR_STRING
 );
 
 #define	LAMENESS_WEIGHT		0.35f

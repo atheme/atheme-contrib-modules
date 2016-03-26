@@ -21,7 +21,7 @@ DECLARE_MODULE_V1
 (
 	"contrib/ns_guestnoreg", false, _modinit, _moddeinit,
         PACKAGE_STRING,
-        "Atheme Development Group <http://www.atheme.org>"
+        VENDOR_STRING
 );
 
 static mowgli_list_t guestnicks = { NULL, NULL, 0 };

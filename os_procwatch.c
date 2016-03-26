@@ -15,7 +15,7 @@ DECLARE_MODULE_V1
 (
 	"contrib/os_procwatch", false, _modinit, _moddeinit,
 	PACKAGE_STRING,
-	"Atheme Development Group <http://www.atheme.org>"
+	VENDOR_STRING
 );
 
 static void procwatch_readhandler(connection_t *cptr);

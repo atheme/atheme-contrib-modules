@@ -40,7 +40,7 @@ DECLARE_MODULE_V1
 (
 	"contrib/graphtastical", true, _modinit, NULL,
 	PACKAGE_STRING,
-	"Atheme Development Group <http://www.atheme.org>"
+	VENDOR_STRING
 );
 
 static mowgli_eventloop_timer_t *channels_timer = NULL;

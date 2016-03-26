@@ -12,7 +12,7 @@ DECLARE_MODULE_V1
 (
 	"contrib/gen_vhostonreg", false, _modinit, _moddeinit,
 	"$Revision: 7785 $",
-	"Atheme Development Group <http://www.atheme.org>"
+	VENDOR_STRING
 );
 
 /* allow us-ascii letters, digits and the following characters */

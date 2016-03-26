@@ -12,7 +12,7 @@ DECLARE_MODULE_V1
 (
 	"contrib/cs_userinfo", false, _modinit, _moddeinit,
 	PACKAGE_STRING,
-	"Atheme Development Group <http://www.atheme.org>"
+	VENDOR_STRING
 );
 
 static void userinfo_check_join(hook_channel_joinpart_t *hdata);

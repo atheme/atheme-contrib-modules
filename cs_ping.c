@@ -4,7 +4,7 @@ DECLARE_MODULE_V1
 (
 	"contrib/cs_ping", false, _modinit, _moddeinit,
 	PACKAGE_STRING,
-	"Atheme Development Group <http://www.atheme.org>"
+	VENDOR_STRING
 );
 
 static void cs_cmd_ping(sourceinfo_t *si, int parc, char *parv[]);

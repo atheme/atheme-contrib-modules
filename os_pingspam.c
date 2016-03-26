@@ -12,7 +12,7 @@ DECLARE_MODULE_V1
 (
 	"contrib/os_pingspam", false, _modinit, _moddeinit,
 	PACKAGE_STRING,
-	"Atheme Development Group <http://www.atheme.org>"
+	VENDOR_STRING
 );
 
 char *notices[] =

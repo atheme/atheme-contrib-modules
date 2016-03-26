@@ -15,7 +15,7 @@ DECLARE_MODULE_V1
 (
 	"contrib/ms_fsend", false, _modinit, _moddeinit,
 	PACKAGE_STRING,
-	"Atheme Development Group <http://www.atheme.org>"
+	VENDOR_STRING
 );
 
 static void ms_cmd_fsend(sourceinfo_t *si, int parc, char *parv[]);

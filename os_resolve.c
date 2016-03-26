@@ -11,7 +11,7 @@ DECLARE_MODULE_V1
 (
         "contrib/os_resolve", false, _modinit, _moddeinit,
         PACKAGE_STRING,
-        "Atheme Development Group <http://www.atheme.org>"
+        VENDOR_STRING
 );
 
 static void os_cmd_resolve(sourceinfo_t *si, int parc, char *parv[]);

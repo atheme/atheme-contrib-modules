@@ -11,7 +11,7 @@
 DECLARE_MODULE_V1
 (
 	"contrib/os_trace", false, _modinit, _moddeinit,
-	"Copyright (c) 2010 William Pitcock <nenolod@atheme.org>",
+	PACKAGE_STRING,
 	VENDOR_STRING
 );
 

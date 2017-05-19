@@ -53,7 +53,7 @@ Responds to users that ping ChanServ with "Pong!".
 #### cs_regmode.c
 
 Sets the stupid, pointless DALNet-style +/-r mode when a channel
-is registered or dropped. NOT RECOMMENDED TO USE.
+is registered, recreated, or dropped. NOT RECOMMENDED TO USE.
 
 #### cs_regnotice.c
 

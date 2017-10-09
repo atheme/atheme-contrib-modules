@@ -33,7 +33,6 @@ void _moddeinit(module_unload_intent_t intent)
 static void ns_cmd_generatehash(sourceinfo_t *si, int parc, char *parv[])
 {
 	char *pass = parv[0];
-	char hash[PASSLEN];
 
 	if (parc < 1)
 	{
@@ -42,13 +41,12 @@ static void ns_cmd_generatehash(sourceinfo_t *si, int parc, char *parv[])
 		return;
 	}
 
-	if (crypto_module_loaded)
-	{
-		mowgli_strlcpy(hash, crypt_string(pass, gen_salt()), PASSLEN);
+	const char *const hash = crypt_string(pass, NULL);
+
+	if (hash)
 		command_success_string(si, hash, "Hash is: %s", hash);
-	}
 	else
-		command_success_nodata(si, "No crypto module loaded so could not hash anything.");
+		command_fail(si, fault_internalerror, _("Hash generation failure -- is a crypto module loaded?"));
 
 	logcommand(si, CMDLOG_GET, "GENERATEHASH");
 }

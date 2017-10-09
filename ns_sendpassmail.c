@@ -97,15 +97,24 @@ static int sendpassmail_foreach_cb(myentity_t *mt, void *privdata)
 	}
 
 	key = random_string(12);
+
+	const char *const hash = crypt_string(key, NULL);
+
+	if (!hash)
+	{
+		command_fail(si, fault_internalerror, _("Hash generation for password change key failed."));
+		free(key);
+		return;
+	}
 	if (sendemail(si->su != NULL ? si->su : si->service->me, mu, EMAIL_SETPASS, mu->email, key))
 	{
 		if (ismarked)
 			wallops("%s used SENDPASSMAIL for the \2MARKED\2 account %s (%s).", get_oper_name(si), entity(mu)->name, mu->email_canonical);
 
 		logcommand(si, CMDLOG_ADMIN, "SENDPASSMAIL: \2%s\2 (\2%s\2) (change key)", entity(mu)->name, mu->email_canonical);
-		metadata_add(mu, "private:setpass:key", crypt_string(key, gen_salt()));
 		metadata_add(mu, "private:sendpass:sender", get_oper_name(si));
 		metadata_add(mu, "private:sendpass:timestamp", number_to_string(time(NULL)));
+		metadata_add(mu, "private:setpass:key", hash);
 	}
 	else
 		logcommand(si, CMDLOG_ADMIN, "SENDPASSMAIL failed sending email to  %s", mu->email_canonical);

@@ -104,7 +104,7 @@ static int sendpassmail_foreach_cb(myentity_t *mt, void *privdata)
 	{
 		command_fail(si, fault_internalerror, _("Hash generation for password change key failed."));
 		free(key);
-		return;
+		return 0;
 	}
 	if (sendemail(si->su != NULL ? si->su : si->service->me, mu, EMAIL_SETPASS, mu->email, key))
 	{

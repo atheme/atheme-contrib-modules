@@ -7,23 +7,18 @@
 
 #include "atheme-compat.h"
 
-DECLARE_MODULE_V1
-(
-	"contrib/ns_listlogins", false, _modinit, _moddeinit,
-	PACKAGE_STRING,
-	VENDOR_STRING
-);
-
 static void ns_cmd_listlogins(sourceinfo_t *si, int parc, char *parv[]);
 
 command_t ns_listlogins = { "LISTLOGINS", N_("Lists details of clients authenticated as you."), AC_AUTHENTICATED, 1, ns_cmd_listlogins, { .path = "contrib/listlogins" } };
 
-void _modinit(module_t *m)
+static void
+mod_init(module_t *const restrict m)
 {
 	service_named_bind_command("nickserv", &ns_listlogins);
 }
 
-void _moddeinit(module_unload_intent_t intent)
+static void
+mod_deinit(const module_unload_intent_t intent)
 {
 	service_named_unbind_command("nickserv", &ns_listlogins);
 }
@@ -50,6 +45,13 @@ static void ns_cmd_listlogins(sourceinfo_t *si, int parc, char *parv[])
 	command_success_nodata(si, ngettext(N_("\2%d\2 client found"), N_("\2%d\2 clients found"), matches), matches);
 	logcommand(si, CMDLOG_GET, "LISTLOGINS: (\2%d\2 matches)", matches);
 }
+
+DECLARE_MODULE_V1
+(
+	"contrib/ns_listlogins", MODULE_UNLOAD_CAPABILITY_OK, mod_init, mod_deinit,
+	PACKAGE_STRING,
+	VENDOR_STRING
+);
 
 /* vim:cinoptions=>s,e0,n0,f0,{0,}0,^0,=s,ps,t0,c3,+s,(2s,us,)20,*30,gs,hs
  * vim:ts=8

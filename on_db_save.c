@@ -4,13 +4,6 @@
 
 #ifndef _WIN32
 
-DECLARE_MODULE_V1
-(
-	"contrib/on_db_save", false, _modinit, _moddeinit,
-	"",
-	VENDOR_STRING
-);
-
 static char *command = NULL;
 
 static void on_db_save(void *unused);
@@ -21,7 +14,8 @@ static struct update_command_state {
 	int running;
 } update_command_proc;
 
-void _modinit(module_t *m)
+static void
+mod_init(module_t *const restrict m)
 {
 	hook_add_event("db_saved");
 	hook_add_db_saved(on_db_save);
@@ -29,7 +23,8 @@ void _modinit(module_t *m)
 	add_dupstr_conf_item("db_update_command", &conf_gi_table, 0, &command, NULL);
 }
 
-void _moddeinit(module_unload_intent_t intent)
+static void
+mod_deinit(const module_unload_intent_t intent)
 {
 	hook_del_db_saved(on_db_save);
 
@@ -140,5 +135,12 @@ static void on_db_save(void *unused)
 			break;
 	}
 }
+
+DECLARE_MODULE_V1
+(
+	"contrib/on_db_save", MODULE_UNLOAD_CAPABILITY_OK, mod_init, mod_deinit,
+	"",
+	VENDOR_STRING
+);
 
 #endif

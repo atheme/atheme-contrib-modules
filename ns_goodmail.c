@@ -8,13 +8,6 @@
 
 #include "atheme.h"
 
-DECLARE_MODULE_V1
-(
-	"contrib/ns_goodmail", false, _modinit, _moddeinit,
-	PACKAGE_STRING,
-	"Atheme Development Group <http://www.atheme.net>"
-);
-
 static void check_registration(hook_user_register_check_t *hdata);
 static void ns_cmd_goodmail(sourceinfo_t *si, int parc, char *parv[]);
 
@@ -34,7 +27,8 @@ typedef struct goodmail_ goodmail_t;
 
 mowgli_list_t ns_maillist;
 
-void _modinit(module_t *m)
+static void
+mod_init(module_t *const restrict m)
 {
 	if (!module_find_published("backend/opensex"))
 	{
@@ -52,7 +46,8 @@ void _modinit(module_t *m)
 	service_named_bind_command("nickserv", &ns_goodmail);
 }
 
-void _moddeinit(module_unload_intent_t intent)
+static void
+mod_deinit(const module_unload_intent_t intent)
 {
 	hook_del_user_can_register(check_registration);
 	hook_del_db_write(write_gedb);
@@ -228,6 +223,13 @@ static void ns_cmd_goodmail(sourceinfo_t *si, int parc, char *parv[])
 		return;
 	}
 }
+
+DECLARE_MODULE_V1
+(
+	"contrib/ns_goodmail", MODULE_UNLOAD_CAPABILITY_OK, mod_init, mod_deinit,
+	PACKAGE_STRING,
+	"Atheme Development Group <http://www.atheme.net>"
+);
 
 /* vim:cinoptions=>s,e0,n0,f0,{0,}0,^0,=s,ps,t0,c3,+s,(2s,us,)20,*30,gs,hs
  * vim:ts=8

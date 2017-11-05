@@ -7,25 +7,20 @@
 
 #include "atheme-compat.h"
 
-DECLARE_MODULE_V1
-(
-	"contrib/ns_forbid", false, _modinit, _moddeinit,
-	PACKAGE_STRING,
-	VENDOR_STRING
-);
-
 #define FORBID_EMAIL "noemail"
 
 static void ns_cmd_forbid(sourceinfo_t *si, int parc, char *parv[]);
 
 command_t ns_forbid = { "FORBID", "Disallows use of a nickname.", PRIV_USER_ADMIN, 3, ns_cmd_forbid, { .path = "contrib/forbid" } };
 
-void _modinit(module_t *m)
+static void
+mod_init(module_t *const restrict m)
 {
 	service_named_bind_command("nickserv", &ns_forbid);
 }
 
-void _moddeinit(module_unload_intent_t intent)
+static void
+mod_deinit(const module_unload_intent_t intent)
 {
 	service_named_unbind_command("nickserv", &ns_forbid);
 }
@@ -142,6 +137,13 @@ static void ns_cmd_forbid(sourceinfo_t *si, int parc, char *parv[])
 		command_fail(si, fault_needmoreparams, _("Usage: FORBID <nickname> ON|OFF [reason]"));
 	}
 }
+
+DECLARE_MODULE_V1
+(
+	"contrib/ns_forbid", MODULE_UNLOAD_CAPABILITY_OK, mod_init, mod_deinit,
+	PACKAGE_STRING,
+	VENDOR_STRING
+);
 
 /* vim:cinoptions=>s,e0,n0,f0,{0,}0,^0,=s,ps,t0,c3,+s,(2s,us,)20,*30,gs,hs
  * vim:ts=8

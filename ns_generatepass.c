@@ -8,24 +8,19 @@
 
 #include "atheme-compat.h"
 
-DECLARE_MODULE_V1
-(
-	"contrib/ns_generatepass", false, _modinit, _moddeinit,
-	PACKAGE_STRING,
-	"Epiphanic Networks <http://www.epiphanic.org>"
-);
-
 static void ns_cmd_generatepass(sourceinfo_t *si, int parc, char *parv[]);
 
 command_t ns_generatepass = { "GENERATEPASS", "Generates a random password.",
                         AC_NONE, 1, ns_cmd_generatepass, { .path = "contrib/generatepass" } };
 
-void _modinit(module_t *m)
+static void
+mod_init(module_t *const restrict m)
 {
 	service_named_bind_command("nickserv", &ns_generatepass);
 }
 
-void _moddeinit(module_unload_intent_t intent)
+static void
+mod_deinit(const module_unload_intent_t intent)
 {
 	service_named_unbind_command("nickserv", &ns_generatepass);
 }
@@ -47,6 +42,13 @@ static void ns_cmd_generatepass(sourceinfo_t *si, int parc, char *parv[])
 	free(newpass);
 	logcommand(si, CMDLOG_GET, "GENERATEPASS");
 }
+
+DECLARE_MODULE_V1
+(
+	"contrib/ns_generatepass", MODULE_UNLOAD_CAPABILITY_OK, mod_init, mod_deinit,
+	PACKAGE_STRING,
+	"Epiphanic Networks <http://www.epiphanic.org>"
+);
 
 /* vim:cinoptions=>s,e0,n0,f0,{0,}0,^0,=s,ps,t0,c3,+s,(2s,us,)20,*30,gs,hs
  * vim:ts=8

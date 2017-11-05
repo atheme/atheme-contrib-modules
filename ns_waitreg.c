@@ -9,13 +9,6 @@
 #include "conf.h"
 #include <limits.h>
 
-DECLARE_MODULE_V1
-(
-	"contrib/ns_waitreg", false, _modinit, _moddeinit,
-        PACKAGE_STRING,
-        VENDOR_STRING
-);
-
 unsigned int waitreg_time = 0;
 
 static void waitreg_hook(hook_user_register_check_t *hdata)
@@ -42,7 +35,7 @@ static void info_hook(sourceinfo_t *si)
 }
 
 void
-_modinit(module_t *m)
+mod_init(module_t *m)
 {
 
 	hook_add_event("user_can_register");
@@ -55,10 +48,17 @@ _modinit(module_t *m)
 }
 
 void
-_moddeinit(module_unload_intent_t intent)
+mod_deinit(module_unload_intent_t intent)
 {
 	hook_del_user_can_register(waitreg_hook);
 	hook_del_operserv_info(info_hook);
 
 	del_conf_item("WAITREG_TIME", &nicksvs.me->conf_table);
 }
+
+DECLARE_MODULE_V1
+(
+	"contrib/ns_waitreg", MODULE_UNLOAD_CAPABILITY_OK, mod_init, mod_deinit,
+        PACKAGE_STRING,
+        VENDOR_STRING
+);

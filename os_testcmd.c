@@ -8,13 +8,6 @@
 
 #include "atheme-compat.h"
 
-DECLARE_MODULE_V1
-(
-	"contrib/os_testcmd", false, _modinit, _moddeinit,
-	PACKAGE_STRING,
-	VENDOR_STRING
-);
-
 struct testcmddata
 {
 	sourceinfo_t *prevsi;
@@ -37,12 +30,14 @@ struct sourceinfo_vtable testcmd_vtable = {
 	.cmd_success_string = testcmd_command_success_string
 };
 
-void _modinit(module_t *m)
+static void
+mod_init(module_t *const restrict m)
 {
 	service_named_bind_command("operserv", &os_testcmd);
 }
 
-void _moddeinit(module_unload_intent_t intent)
+static void
+mod_deinit(const module_unload_intent_t intent)
 {
 	service_named_unbind_command("operserv", &os_testcmd);
 }
@@ -127,6 +122,13 @@ static void os_cmd_testcmd(sourceinfo_t *si, int parc, char *parv[])
 	if (!udata.got_result)
 		command_success_nodata(si, "Command returned without giving a result");
 }
+
+DECLARE_MODULE_V1
+(
+	"contrib/os_testcmd", MODULE_UNLOAD_CAPABILITY_OK, mod_init, mod_deinit,
+	PACKAGE_STRING,
+	VENDOR_STRING
+);
 
 /* vim:cinoptions=>s,e0,n0,f0,{0,}0,^0,=s,ps,t0,c3,+s,(2s,us,)20,*30,gs,hs
  * vim:ts=8

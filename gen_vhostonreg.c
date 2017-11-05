@@ -8,13 +8,6 @@
 
 #include "atheme-compat.h"
 
-DECLARE_MODULE_V1
-(
-	"contrib/gen_vhostonreg", false, _modinit, _moddeinit,
-	"$Revision: 7785 $",
-	VENDOR_STRING
-);
-
 /* allow us-ascii letters, digits and the following characters */
 #define VALID_SPECIALS "-"
 
@@ -23,7 +16,8 @@ static int counter;
 static void handle_verify_register(hook_user_req_t *req);
 static void hook_user_identify(user_t *u);
 
-void _modinit(module_t *m)
+static void
+mod_init(module_t *const restrict m)
 {
 	hook_add_event("user_verify_register");
 	hook_add_user_verify_register(handle_verify_register);
@@ -34,7 +28,8 @@ void _modinit(module_t *m)
 		counter += 100000;
 }
 
-void _moddeinit(module_unload_intent_t intent)
+static void
+mod_deinit(const module_unload_intent_t intent)
 {
 	hook_del_user_verify_register(handle_verify_register);
 	hook_del_user_identify(hook_user_identify);
@@ -111,6 +106,13 @@ static void hook_user_identify(user_t *u)
 	/* they do not, add one. */
 	user_add_host(u->myuser);
 }
+
+DECLARE_MODULE_V1
+(
+	"contrib/gen_vhostonreg", MODULE_UNLOAD_CAPABILITY_OK, mod_init, mod_deinit,
+	"$Revision: 7785 $",
+	VENDOR_STRING
+);
 
 /* vim:cinoptions=>s,e0,n0,f0,{0,}0,^0,=s,ps,t0,c3,+s,(2s,us,)20,*30,gs,hs
  * vim:ts=8

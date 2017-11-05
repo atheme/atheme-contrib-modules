@@ -9,13 +9,6 @@
 #include "atheme-compat.h"
 #include "datastream.h"
 
-DECLARE_MODULE_V1
-(
-	"contrib/gen_listenerdemo", false, _modinit, _moddeinit,
-	PACKAGE_STRING,
-	"William Pitcock <nenolod -at- nenolod.net>"
-);
-
 connection_t *listener;
 
 static int my_read(connection_t * cptr, char *buf)
@@ -75,15 +68,24 @@ static void do_listen(connection_t *cptr)
 	slog(LG_DEBUG, "do_listen(): accepted %d", cptr->fd);
 }
 
-void _modinit(module_t *m)
+static void
+mod_init(module_t *const restrict m)
 {
 	listener = connection_open_listener_tcp("127.0.0.1", 7100, do_listen);
 }
 
-void _moddeinit(module_unload_intent_t intent)
+static void
+mod_deinit(const module_unload_intent_t intent)
 {
 	connection_close(listener);
 }
+
+DECLARE_MODULE_V1
+(
+	"contrib/gen_listenerdemo", MODULE_UNLOAD_CAPABILITY_OK, mod_init, mod_deinit,
+	PACKAGE_STRING,
+	"William Pitcock <nenolod -at- nenolod.net>"
+);
 
 /* vim:cinoptions=>s,e0,n0,f0,{0,}0,^0,=s,ps,t0,c3,+s,(2s,us,)20,*30,gs,hs
  * vim:ts=8

@@ -3,13 +3,6 @@
 #if defined( __linux__) || defined(__Linux__)
 #include <execinfo.h>
 
-DECLARE_MODULE_V1
-(
-	"contrib/backtrace", false, _modinit, _moddeinit,
-	PACKAGE_STRING,
-	VENDOR_STRING
-);
-
 static void __segv_hdl(int whocares)
 {
 	void *array[256];
@@ -27,15 +20,25 @@ static void __segv_hdl(int whocares)
 	slog(LG_INFO, "--------------------------------------------");
 }
 
-void _modinit(module_t *m)
+static void
+mod_init(module_t *const restrict m)
 {
 	signal(SIGSEGV, __segv_hdl);
 }
 
-void _moddeinit(module_unload_intent_t intent)
+static void
+mod_deinit(const module_unload_intent_t intent)
 {
 	signal(SIGSEGV, NULL);
 }
+
+DECLARE_MODULE_V1
+(
+	"contrib/backtrace", MODULE_UNLOAD_CAPABILITY_OK, mod_init, mod_deinit,
+	PACKAGE_STRING,
+	VENDOR_STRING
+);
+
 #endif
 
 /* vim:cinoptions=>s,e0,n0,f0,{0,}0,^0,=s,ps,t0,c3,+s,(2s,us,)20,*30,gs,hs

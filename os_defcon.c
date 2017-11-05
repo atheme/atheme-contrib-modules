@@ -14,13 +14,6 @@
 #include "atheme-compat.h"
 #define DEFCON_CMODE "R"
 
-DECLARE_MODULE_V1
-(
-	"contrib/os_defcon", false, _modinit, _moddeinit,
-	PACKAGE_STRING,
-	"Atheme Development Group <http://atheme.github.io>"
-);
-
 static void os_cmd_defcon(sourceinfo_t *si, int parc, char *parv[]);
 static void defcon_nouserreg(hook_user_register_check_t *hdata);
 static void defcon_nochanreg(hook_channel_register_check_t *hdatac);
@@ -32,7 +25,8 @@ static mowgli_eventloop_timer_t *defcon_timer = NULL;
 
 command_t os_defcon = { "DEFCON", N_("Implements Defense Condition lockdowns."), PRIV_ADMIN, 1, os_cmd_defcon, { .path = "contrib/defcon" } };
 
-void _modinit(module_t *m)
+static void
+mod_init(module_t *const restrict m)
 {
 	service_named_bind_command("operserv", &os_defcon);
 	TAINT_ON("Using os_defcon", "Use of os_defcon is unsupported and not recommend. Use only at your own risk.");
@@ -50,7 +44,8 @@ void _modinit(module_t *m)
 	add_duration_conf_item("DEFCON_TIMEOUT", &svs->conf_table, 0, &defcon_timeout, "m", 900);
 }
 
-void _moddeinit(module_unload_intent_t intent)
+static void
+mod_deinit(const module_unload_intent_t intent)
 {
 	service_named_unbind_command("operserv", &os_defcon);
 
@@ -236,6 +231,13 @@ static void os_cmd_defcon(sourceinfo_t *si, int parc, char *parv[])
 	wallops(_("\2%s\2 set Defense condition to level \2%d\2."), get_oper_name(si), level);
 	logcommand(si, CMDLOG_ADMIN, "DEFCON: \2%d\2", level);
 }
+
+DECLARE_MODULE_V1
+(
+	"contrib/os_defcon", MODULE_UNLOAD_CAPABILITY_OK, mod_init, mod_deinit,
+	PACKAGE_STRING,
+	"Atheme Development Group <http://atheme.github.io>"
+);
 
 /* vim:cinoptions=>s,e0,n0,f0,{0,}0,^0,=s,ps,t0,c3,+s,(2s,us,)20,*30,gs,hs
  * vim:ts=8

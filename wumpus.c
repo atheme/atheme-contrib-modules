@@ -11,13 +11,6 @@
 
 #include "atheme-compat.h"
 
-DECLARE_MODULE_V1
-(
-	"contrib/wumpus", false, _modinit, _moddeinit,
-	PACKAGE_STRING,
-	"William Pitcock <nenolod -at- nenolod.net>"
-);
-
 /* contents */
 typedef enum {
 	E_NOTHING = 0,
@@ -967,7 +960,7 @@ join_wumpus_channel(server_t *s)
 
 /* start handler */
 void
-_modinit(module_t *m)
+mod_init(module_t *m)
 {
 	wumpus.svs = service_add("Wumpus", NULL);
 	service_set_chanmsg(wumpus.svs, false);
@@ -995,7 +988,7 @@ _modinit(module_t *m)
 }
 
 void
-_moddeinit(module_unload_intent_t intent)
+mod_deinit(module_unload_intent_t intent)
 {
 	/* cleanup after ourselves if necessary */
 	if (wumpus.running)
@@ -1021,6 +1014,13 @@ _moddeinit(module_unload_intent_t intent)
 	if (wumpus.start_game_timer)
 		mowgli_timer_destroy(base_eventloop, wumpus.start_game_timer);
 }
+
+DECLARE_MODULE_V1
+(
+	"contrib/wumpus", MODULE_UNLOAD_CAPABILITY_OK, mod_init, mod_deinit,
+	PACKAGE_STRING,
+	"William Pitcock <nenolod -at- nenolod.net>"
+);
 
 /* vim:cinoptions=>s,e0,n0,f0,{0,}0,^0,=s,ps,t0,c3,+s,(2s,us,)20,*30,gs,hs
  * vim:ts=8

@@ -8,26 +8,21 @@
 
 #include "atheme-compat.h"
 
-DECLARE_MODULE_V1
-(
-	"contrib/cs_updown", false, _modinit, _moddeinit,
-	PACKAGE_STRING,
-	VENDOR_STRING
-);
-
 static void cs_cmd_up(sourceinfo_t *si, int parc, char *parv[]);
 static void cs_cmd_down(sourceinfo_t *si, int parc, char *parv[]);
 
 command_t cs_up = { "UP", "Grants all access you have permission to on a given channel.", AC_NONE, 1, cs_cmd_up, { .path = "contrib/up" } };
 command_t cs_down = { "DOWN", "Removes all current access you posess on a given channel.", AC_NONE, 1, cs_cmd_down, { .path = "contrib/down" } };
 
-void _modinit(module_t *m)
+static void
+mod_init(module_t *const restrict m)
 {
 	service_named_bind_command("chanserv", &cs_up);
 	service_named_bind_command("chanserv", &cs_down);
 }
 
-void _moddeinit(module_unload_intent_t intent)
+static void
+mod_deinit(const module_unload_intent_t intent)
 {
 	service_named_unbind_command("chanserv", &cs_up);
 	service_named_unbind_command("chanserv", &cs_down);
@@ -224,6 +219,13 @@ static void cs_cmd_down(sourceinfo_t *si, int parc, char *parv[])
 
 	command_success_nodata(si, "Downed successfully on \2%s\2.", mc->name);
 }
+
+DECLARE_MODULE_V1
+(
+	"contrib/cs_updown", MODULE_UNLOAD_CAPABILITY_OK, mod_init, mod_deinit,
+	PACKAGE_STRING,
+	VENDOR_STRING
+);
 
 /* vim:cinoptions=>s,e0,n0,f0,{0,}0,^0,=s,ps,t0,c3,+s,(2s,us,)20,*30,gs,hs
  * vim:ts=8

@@ -7,23 +7,18 @@
 
 #include "atheme-compat.h"
 
-DECLARE_MODULE_V1
-(
-        "contrib/os_resolve", false, _modinit, _moddeinit,
-        PACKAGE_STRING,
-        VENDOR_STRING
-);
-
 static void os_cmd_resolve(sourceinfo_t *si, int parc, char *parv[]);
 
 command_t cmd_resolve = { "RESOLVE", N_("Perform DNS lookup on hostname"), PRIV_ADMIN, 1, os_cmd_resolve, { .path = "contrib/os_resolve" } };
 
-void _modinit(module_t *m)
+static void
+mod_init(module_t *const restrict m)
 {
 	service_named_bind_command("operserv", &cmd_resolve);
 }
 
-void _moddeinit(module_unload_intent_t intent)
+static void
+mod_deinit(const module_unload_intent_t intent)
 {
 	service_named_unbind_command("operserv", &cmd_resolve);
 }
@@ -77,3 +72,10 @@ static void os_cmd_resolve(sourceinfo_t *si, int parc, char *parv[])
 
 	object_ref(req->si);
 }
+
+DECLARE_MODULE_V1
+(
+        "contrib/os_resolve", MODULE_UNLOAD_CAPABILITY_OK, mod_init, mod_deinit,
+        PACKAGE_STRING,
+        VENDOR_STRING
+);

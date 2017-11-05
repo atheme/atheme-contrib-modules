@@ -12,23 +12,18 @@
 
 #include "atheme-compat.h"
 
-DECLARE_MODULE_V1
-(
-	"contrib/os_kill", false, _modinit, _moddeinit,
-	PACKAGE_STRING,
-	VENDOR_STRING
-);
-
 static void os_cmd_kill(sourceinfo_t *si, int parc, char *parv[]);
 
 command_t os_kill = { "KILL", "Kill a user with Services.", PRIV_OMODE, 2, os_cmd_kill, { .path = "contrib/kill" } };
 
-void _modinit(module_t *m)
+static void
+mod_init(module_t *const restrict m)
 {
 	service_named_bind_command("operserv", &os_kill);
 }
 
-void _moddeinit(module_unload_intent_t intent)
+static void
+mod_deinit(const module_unload_intent_t intent)
 {
 	service_named_unbind_command("operserv", &os_kill);
 }
@@ -54,3 +49,10 @@ static void os_cmd_kill(sourceinfo_t *si, int parc, char *parv[])
 
 	kill_user(si->service->me, target, "Requested: %s", parv[1]);
 }
+
+DECLARE_MODULE_V1
+(
+	"contrib/os_kill", MODULE_UNLOAD_CAPABILITY_OK, mod_init, mod_deinit,
+	PACKAGE_STRING,
+	VENDOR_STRING
+);

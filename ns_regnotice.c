@@ -8,13 +8,6 @@
 #include "atheme-compat.h"
 #include "conf.h"
 
-DECLARE_MODULE_V1
-(
-	"contrib/ns_regnotice", false, _modinit, _moddeinit,
-        PACKAGE_STRING,
-        VENDOR_STRING
-);
-
 static mowgli_list_t regnotices = { NULL, NULL, 0 };
 
 static void regnotice_hook(myuser_t *mu)
@@ -59,7 +52,7 @@ static void regnotice_config_purge(void *unused)
 }
 
 void
-_modinit(module_t *m)
+mod_init(module_t *m)
 {
 	hook_add_event("config_purge");
 	hook_add_config_purge(regnotice_config_purge);
@@ -71,10 +64,17 @@ _modinit(module_t *m)
 }
 
 void
-_moddeinit(module_unload_intent_t intent)
+mod_deinit(module_unload_intent_t intent)
 {
 	hook_del_user_register(regnotice_hook);
 	hook_del_config_purge(regnotice_config_purge);
 
 	del_conf_item("REGNOTICE", &nicksvs.me->conf_table);
 }
+
+DECLARE_MODULE_V1
+(
+	"contrib/ns_regnotice", MODULE_UNLOAD_CAPABILITY_OK, mod_init, mod_deinit,
+        PACKAGE_STRING,
+        VENDOR_STRING
+);

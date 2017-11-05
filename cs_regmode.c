@@ -7,13 +7,6 @@
 
 #include "atheme-compat.h"
 
-DECLARE_MODULE_V1
-(
-	"contrib/cs_regmode", false, _modinit, _moddeinit,
-        PACKAGE_STRING,
-        VENDOR_STRING
-);
-
 static void register_hook(hook_channel_req_t *hdata)
 {
 	mychan_t *mc = hdata->mc;
@@ -33,7 +26,7 @@ static void drop_hook(mychan_t *mc)
 }
 
 void
-_modinit(module_t *m)
+mod_init(module_t *m)
 {
 	hook_add_event("channel_register");
 	hook_add_channel_register(register_hook);
@@ -43,8 +36,15 @@ _modinit(module_t *m)
 }
 
 void
-_moddeinit(module_unload_intent_t intent)
+mod_deinit(module_unload_intent_t intent)
 {
 	hook_del_channel_register(register_hook);
 	hook_del_channel_drop(drop_hook);
 }
+
+DECLARE_MODULE_V1
+(
+	"contrib/cs_regmode", MODULE_UNLOAD_CAPABILITY_OK, mod_init, mod_deinit,
+        PACKAGE_STRING,
+        VENDOR_STRING
+);

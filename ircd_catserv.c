@@ -8,13 +8,6 @@
 
 #include "atheme-compat.h"
 
-DECLARE_MODULE_V1
-(
-	"contrib/ircd_catserv", false, _modinit, _moddeinit,
-	PACKAGE_STRING,
-	VENDOR_STRING
-);
-
 service_t *catserv;
 
 static void catserv_cmd_meow(sourceinfo_t *si, int parc, char *parv[]);
@@ -25,7 +18,8 @@ command_t catserv_meow = { "MEOW", "Makes the cute little kitty-cat meow!",
 command_t catserv_help = { "HELP", "Displays contextual help information.",
 				AC_NONE, 1, catserv_cmd_help, { .path = "help" } };
 
-void _modinit(module_t *m)
+static void
+mod_init(module_t *const restrict m)
 {
 	catserv = service_add("catserv", NULL);
 
@@ -33,7 +27,8 @@ void _modinit(module_t *m)
 	service_bind_command(catserv, &catserv_help);
 }
 
-void _moddeinit(module_unload_intent_t intent)
+static void
+mod_deinit(const module_unload_intent_t intent)
 {
 	service_unbind_command(catserv, &catserv_meow);
 	service_unbind_command(catserv, &catserv_help);
@@ -50,6 +45,13 @@ static void catserv_cmd_help(sourceinfo_t *si, int parc, char *parv[])
 {
 	command_help(si, si->service->commands);
 }
+
+DECLARE_MODULE_V1
+(
+	"contrib/ircd_catserv", MODULE_UNLOAD_CAPABILITY_OK, mod_init, mod_deinit,
+	PACKAGE_STRING,
+	VENDOR_STRING
+);
 
 /* vim:cinoptions=>s,e0,n0,f0,{0,}0,^0,=s,ps,t0,c3,+s,(2s,us,)20,*30,gs,hs
  * vim:ts=8

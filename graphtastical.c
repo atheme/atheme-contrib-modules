@@ -36,13 +36,6 @@
 
 #include "atheme-compat.h"
 
-DECLARE_MODULE_V1
-(
-	"contrib/graphtastical", true, _modinit, NULL,
-	PACKAGE_STRING,
-	VENDOR_STRING
-);
-
 static mowgli_eventloop_timer_t *channels_timer = NULL;
 static mowgli_eventloop_timer_t *uchannels_timer = NULL;
 
@@ -176,7 +169,8 @@ static void write_uchannels_dot_file(void *arg)
 	}
 }
 
-void _modinit(module_t *m)
+static void
+mod_init(module_t *const restrict m)
 {
 	write_channels_dot_file(NULL);
 	write_uchannels_dot_file(NULL);
@@ -185,11 +179,19 @@ void _modinit(module_t *m)
 	uchannels_timer = mowgli_timer_add(base_eventloop, "write_uchannels_dot_file", write_uchannels_dot_file, NULL, 60);
 }
 
-void _moddeinit(module_unload_intent_t intent)
+static void
+mod_deinit(const module_unload_intent_t intent)
 {
 	mowgli_timer_destroy(base_eventloop, channels_timer);
 	mowgli_timer_destroy(base_eventloop, uchannels_timer);
 }
+
+DECLARE_MODULE_V1
+(
+	"contrib/graphtastical", MODULE_UNLOAD_CAPABILITY_NEVER, mod_init, mod_deinit,
+	PACKAGE_STRING,
+	VENDOR_STRING
+);
 
 /* vim:cinoptions=>s,e0,n0,f0,{0,}0,^0,=s,ps,t0,c3,+s,(2s,us,)20,*30,gs,hs
  * vim:ts=8

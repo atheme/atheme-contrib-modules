@@ -7,13 +7,6 @@
 
 #include "atheme-compat.h"
 
-DECLARE_MODULE_V1
-(
-	"contrib/ns_cleannick", false, _modinit, _moddeinit,
-	PACKAGE_STRING,
-	VENDOR_STRING
-);
-
 #define	LAMENESS_WEIGHT		0.35f
 
 /*
@@ -97,7 +90,8 @@ static void user_state_changed(hook_user_nick_t *data)
 	}
 }
 
-void _modinit(module_t *m)
+static void
+mod_init(module_t *const restrict m)
 {
 	hook_add_event("user_add");
 	hook_add_user_add(user_state_changed);
@@ -106,8 +100,16 @@ void _modinit(module_t *m)
 	hook_add_user_nickchange(user_state_changed);
 }
 
-void _moddeinit(module_unload_intent_t intent)
+static void
+mod_deinit(const module_unload_intent_t intent)
 {
 	hook_del_user_add(user_state_changed);
 	hook_del_user_nickchange(user_state_changed);
 }
+
+DECLARE_MODULE_V1
+(
+	"contrib/ns_cleannick", MODULE_UNLOAD_CAPABILITY_OK, mod_init, mod_deinit,
+	PACKAGE_STRING,
+	VENDOR_STRING
+);

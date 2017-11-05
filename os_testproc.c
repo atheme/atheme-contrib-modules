@@ -10,13 +10,6 @@
 
 #ifndef _WIN32
 
-DECLARE_MODULE_V1
-(
-	"contrib/os_testproc", false, _modinit, _moddeinit,
-	PACKAGE_STRING,
-	VENDOR_STRING
-);
-
 struct testprocdata
 {
 	char dest[NICKLEN];
@@ -30,12 +23,14 @@ static void os_cmd_testproc(sourceinfo_t *si, int parc, char *parv[]);
 command_t os_testproc = { "TESTPROC", "Does something with child processes.",
                         AC_NONE, 0, os_cmd_testproc, { .path = "contrib/testproc" } };
 
-void _modinit(module_t *m)
+static void
+mod_init(module_t *const restrict m)
 {
 	service_named_bind_command("operserv", &os_testproc);
 }
 
-void _moddeinit(module_unload_intent_t intent)
+static void
+mod_deinit(const module_unload_intent_t intent)
 {
 	if (procdata.pip != NULL)
 		connection_close_soon(procdata.pip);
@@ -128,6 +123,13 @@ static void os_cmd_testproc(sourceinfo_t *si, int parc, char *parv[])
 			break;
 	}
 }
+
+DECLARE_MODULE_V1
+(
+	"contrib/os_testproc", MODULE_UNLOAD_CAPABILITY_OK, mod_init, mod_deinit,
+	PACKAGE_STRING,
+	VENDOR_STRING
+);
 
 #endif
 

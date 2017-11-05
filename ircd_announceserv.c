@@ -7,13 +7,6 @@
 
 #include "atheme-compat.h"
 
-DECLARE_MODULE_V1
-(
-	"contrib/ircd_announceserv", false, _modinit, _moddeinit,
-	PACKAGE_STRING,
-	"JD and Taros"
-);
-
 service_t *announcesvs;
 
 static void as_cmd_help(sourceinfo_t *si, int parc, char *parv[]);
@@ -45,7 +38,8 @@ typedef struct asreq_ asreq_t;
 
 mowgli_list_t as_reqlist;
 
-void _modinit(module_t *m)
+static void
+mod_init(module_t *const restrict m)
 {
 	announcesvs = service_add("announceserv", NULL);
 
@@ -66,7 +60,8 @@ void _modinit(module_t *m)
 	service_bind_command(announcesvs, &as_cancel);
 }
 
-void _moddeinit(module_unload_intent_t intent)
+static void
+mod_deinit(const module_unload_intent_t intent)
 {
 	hook_del_user_drop(account_drop_request);
 	hook_del_db_write(write_asreqdb);
@@ -388,6 +383,14 @@ static void as_cmd_cancel(sourceinfo_t *si, int parc, char *parv[])
         }
 	command_fail(si, fault_badparams, _("You do not have a pending announcement to cancel."));
 }
+
+DECLARE_MODULE_V1
+(
+	"contrib/ircd_announceserv", MODULE_UNLOAD_CAPABILITY_OK, mod_init, mod_deinit,
+	PACKAGE_STRING,
+	"JD and Taros"
+);
+
 /* vim:cinoptions=>s,e0,n0,f0,{0,}0,^0,=s,ps,t0,c3,+s,(2s,us,)20,*30,gs,hs
  * vim:ts=8
  * vim:sw=8

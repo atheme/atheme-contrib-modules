@@ -45,13 +45,6 @@
 #include "atheme-compat.h"
 #include "conf.h"
 
-DECLARE_MODULE_V1
-(
-	"contrib/dnsbl", false, _modinit, _moddeinit,
-	PACKAGE_STRING,
-	"Atheme Development Group <http://atheme.github.io>"
-);
-
 mowgli_list_t blacklist_list = { NULL, NULL, 0 };
 mowgli_patricia_t **os_set_cmdtree;
 static char *action = NULL;
@@ -566,7 +559,7 @@ static void db_h_ble(database_handle_t *db, const char *type)
 }
 
 void
-_modinit(module_t *m)
+mod_init(module_t *m)
 {
 	MODULE_TRY_REQUEST_SYMBOL(m, os_set_cmdtree, "operserv/set", "os_set_cmdtree");
 
@@ -599,7 +592,7 @@ _modinit(module_t *m)
 }
 
 void
-_moddeinit(module_unload_intent_t intent)
+mod_deinit(module_unload_intent_t intent)
 {
 	hook_del_db_write(write_dnsbl_exempt_db);
 	hook_del_user_add(check_dnsbls);
@@ -614,6 +607,14 @@ _moddeinit(module_unload_intent_t intent)
 	service_named_unbind_command("operserv", &os_dnsblexempt);
 	service_named_unbind_command("operserv", &os_dnsblscan);
 }
+
+DECLARE_MODULE_V1
+(
+	"contrib/dnsbl", MODULE_UNLOAD_CAPABILITY_OK, mod_init, mod_deinit,
+	PACKAGE_STRING,
+	"Atheme Development Group <http://atheme.github.io>"
+);
+
 /* vim:cinoptions=>s,e0,n0,f0,{0,}0,^0,=s,ps,t0,c3,+s,(2s,us,)20,*30,gs,hs
  * vim:ts=8
  * vim:sw=8

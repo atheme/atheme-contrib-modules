@@ -10,13 +10,6 @@
 
 #include "atheme-compat.h"
 
-DECLARE_MODULE_V1
-(
-	"contrib/os_klinechan", false, _modinit, _moddeinit,
-	PACKAGE_STRING,
-	"Atheme Development Group <http://atheme.github.io>"
-);
-
 static void os_cmd_klinechan(sourceinfo_t *si, int parc, char *parv[]);
 static void os_cmd_listklinechans(sourceinfo_t *si, int parc, char *parv[]);
 
@@ -27,7 +20,8 @@ command_t os_listklinechans = { "LISTKLINECHAN", "Lists active K:line channels."
 static void klinechan_check_join(hook_channel_joinpart_t *hdata);
 static void klinechan_show_info(hook_channel_req_t *hdata);
 
-void _modinit(module_t *m)
+static void
+mod_init(module_t *const restrict m)
 {
 	service_named_bind_command("operserv", &os_klinechan);
 	service_named_bind_command("operserv", &os_listklinechans);
@@ -37,7 +31,8 @@ void _modinit(module_t *m)
 	hook_add_channel_info(klinechan_show_info);
 }
 
-void _moddeinit(module_unload_intent_t intent)
+static void
+mod_deinit(const module_unload_intent_t intent)
 {
 	service_named_unbind_command("operserv", &os_klinechan);
 	service_named_unbind_command("operserv", &os_listklinechans);
@@ -224,3 +219,10 @@ static void os_cmd_listklinechans(sourceinfo_t *si, int parc, char *parv[])
 		command_success_nodata(si, ngettext(N_("\2%d\2 match for pattern \2%s\2"),
 						    N_("\2%d\2 matches for pattern \2%s\2"), matches), matches, pattern);
 }
+
+DECLARE_MODULE_V1
+(
+	"contrib/os_klinechan", MODULE_UNLOAD_CAPABILITY_OK, mod_init, mod_deinit,
+	PACKAGE_STRING,
+	"Atheme Development Group <http://atheme.github.io>"
+);

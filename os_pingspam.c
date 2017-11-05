@@ -8,13 +8,6 @@
 
 #include "atheme-compat.h"
 
-DECLARE_MODULE_V1
-(
-	"contrib/os_pingspam", false, _modinit, _moddeinit,
-	PACKAGE_STRING,
-	VENDOR_STRING
-);
-
 char *notices[] =
 {
 	"Scanning for proxies.",
@@ -55,7 +48,8 @@ command_t os_autopingspam = { "AUTOPINGSPAM", "Spam connecting users with pings 
 
 int spamming;
 
-void _modinit(module_t *m)
+static void
+mod_init(module_t *const restrict m)
 {
 	spamming = 0;
 
@@ -66,7 +60,8 @@ void _modinit(module_t *m)
 	hook_add_user_add(user_add_hook);
 }
 
-void _moddeinit(module_unload_intent_t intent)
+static void
+mod_deinit(const module_unload_intent_t intent)
 {
 	service_named_unbind_command("operserv", &os_pingspam);
 	service_named_unbind_command("operserv", &os_autopingspam);
@@ -148,6 +143,13 @@ void pingspam(user_t *u)
 		   );
 	}
 }
+
+DECLARE_MODULE_V1
+(
+	"contrib/os_pingspam", MODULE_UNLOAD_CAPABILITY_OK, mod_init, mod_deinit,
+	PACKAGE_STRING,
+	VENDOR_STRING
+);
 
 /* vim:cinoptions=>s,e0,n0,f0,{0,}0,^0,=s,ps,t0,c3,+s,(2s,us,)20,*30,gs,hs
  * vim:ts=8

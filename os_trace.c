@@ -8,13 +8,6 @@
 #include "atheme-compat.h"
 #include <limits.h>
 
-DECLARE_MODULE_V1
-(
-	"contrib/os_trace", false, _modinit, _moddeinit,
-	PACKAGE_STRING,
-	VENDOR_STRING
-);
-
 static char *reason_extract(char **args);
 static void os_cmd_trace(sourceinfo_t *si, int parc, char *parv[]);
 
@@ -774,7 +767,8 @@ trace_action_constructor_t trace_count = { trace_count_prepare, trace_count_exec
 mowgli_patricia_t *trace_cmdtree = NULL;
 mowgli_patricia_t *trace_acttree = NULL;
 
-void _modinit(module_t *m)
+static void
+mod_init(module_t *const restrict m)
 {
 	service_named_bind_command("operserv", &os_trace);
 
@@ -794,7 +788,8 @@ void _modinit(module_t *m)
 	mowgli_patricia_add(trace_acttree, "COUNT", &trace_count);
 }
 
-void _moddeinit(module_unload_intent_t intent)
+static void
+mod_deinit(const module_unload_intent_t intent)
 {
 	mowgli_patricia_destroy(trace_cmdtree, NULL, NULL);
 
@@ -923,6 +918,13 @@ static bool os_cmd_trace_run(sourceinfo_t *si, trace_action_constructor_t *actco
 
 	return true;
 }
+
+DECLARE_MODULE_V1
+(
+	"contrib/os_trace", MODULE_UNLOAD_CAPABILITY_OK, mod_init, mod_deinit,
+	PACKAGE_STRING,
+	VENDOR_STRING
+);
 
 /* vim:cinoptions=>s,e0,n0,f0,{0,}0,^0,=s,ps,t0,c3,+s,(2s,us,)20,*30,gs,hs
  * vim:ts=8

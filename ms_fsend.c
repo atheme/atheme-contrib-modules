@@ -11,13 +11,6 @@
 /* MEMOLEN + 8, so the "[FORCE] " string will fit */
 #define FMEMOLEN 308
 
-DECLARE_MODULE_V1
-(
-	"contrib/ms_fsend", false, _modinit, _moddeinit,
-	PACKAGE_STRING,
-	VENDOR_STRING
-);
-
 static void ms_cmd_fsend(sourceinfo_t *si, int parc, char *parv[]);
 
 /* MARK is prolly the most appropriate priv (that I can think of), if you can
@@ -26,12 +19,14 @@ static void ms_cmd_fsend(sourceinfo_t *si, int parc, char *parv[]);
 command_t ms_fsend = { "FSEND", N_("Forcibly sends a memo to a user."),
                         PRIV_MARK, 2, ms_cmd_fsend, { .path = "contrib/fsend" } };
 
-void _modinit(module_t *m)
+static void
+mod_init(module_t *const restrict m)
 {
         service_named_bind_command("memoserv", &ms_fsend);
 }
 
-void _moddeinit(module_unload_intent_t intent)
+static void
+mod_deinit(const module_unload_intent_t intent)
 {
 	service_named_unbind_command("memoserv", &ms_fsend);
 }
@@ -173,6 +168,13 @@ static void ms_cmd_fsend(sourceinfo_t *si, int parc, char *parv[])
 
 	return;
 }
+
+DECLARE_MODULE_V1
+(
+	"contrib/ms_fsend", MODULE_UNLOAD_CAPABILITY_OK, mod_init, mod_deinit,
+	PACKAGE_STRING,
+	VENDOR_STRING
+);
 
 /* vim:cinoptions=>s,e0,n0,f0,{0,}0,^0,=s,ps,t0,c3,+s,(2s,us,)20,*30,gs,hs
  * vim:ts=8

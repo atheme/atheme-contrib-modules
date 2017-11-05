@@ -16,23 +16,18 @@
  */
 char * mlocktweak;
 
-DECLARE_MODULE_V1
-(
-	"contrib/mlocktweaker", false, _modinit, _moddeinit,
-	PACKAGE_STRING,
-	"William Pitcock <nenolod@atheme.org>"
-);
-
 static void handle_channel_register(hook_channel_req_t *hdata);
 
-void _modinit(module_t *m)
+static void
+mod_init(module_t *const restrict m)
 {
 	add_dupstr_conf_item("MLOCKTWEAK", &chansvs.me->conf_table, 0, &mlocktweak, "-t+c");
 	hook_add_event("channel_register");
 	hook_add_first_channel_register(handle_channel_register);
 }
 
-void _moddeinit(module_unload_intent_t intent)
+static void
+mod_deinit(const module_unload_intent_t intent)
 {
 	del_conf_item("MLOCKTWEAK", &chansvs.me->conf_table);
 	hook_del_channel_register(handle_channel_register);
@@ -68,3 +63,10 @@ static void handle_channel_register(hook_channel_req_t *hdata)
 
 	mc->mlock_off &= ~mc->mlock_on;
 }
+
+DECLARE_MODULE_V1
+(
+	"contrib/mlocktweaker", MODULE_UNLOAD_CAPABILITY_OK, mod_init, mod_deinit,
+	PACKAGE_STRING,
+	"William Pitcock <nenolod@atheme.org>"
+);

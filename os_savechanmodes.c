@@ -7,13 +7,6 @@
 
 #include "atheme-compat.h"
 
-DECLARE_MODULE_V1
-(
-	"contrib/os_savechanmodes", false, _modinit, _moddeinit,
-	"$Revision: 7785 $",
-	"Jilles Tjoelker <jilles -at- stack.nl>"
-);
-
 static void os_cmd_savechanmodes(sourceinfo_t *si, int parc, char *parv[]);
 static void os_cmd_loadchanmodes(sourceinfo_t *si, int parc, char *parv[]);
 
@@ -22,13 +15,15 @@ command_t os_savechanmodes = { "SAVECHANMODES", "Dumps channel modes to a file."
 command_t os_loadchanmodes = { "LOADCHANMODES", "Restores channel modes from a file.",
 		  	   PRIV_ADMIN, 1, os_cmd_loadchanmodes, { .path = "contrib/loadchanmodes" } };
 
-void _modinit(module_t *m)
+static void
+mod_init(module_t *const restrict m)
 {
 	service_named_bind_command("operserv", &os_savechanmodes);
 	service_named_bind_command("operserv", &os_loadchanmodes);
 }
 
-void _moddeinit(module_unload_intent_t intent)
+static void
+mod_deinit(const module_unload_intent_t intent)
 {
 	service_named_unbind_command("operserv", &os_savechanmodes);
 	service_named_unbind_command("operserv", &os_loadchanmodes);
@@ -172,6 +167,13 @@ static void os_cmd_loadchanmodes(sourceinfo_t *si, int parc, char *parv[])
 	command_success_nodata(si, "Remember to restart services to make %s leave channels it should not be in.",
 			chansvs.nick);
 }
+
+DECLARE_MODULE_V1
+(
+	"contrib/os_savechanmodes", MODULE_UNLOAD_CAPABILITY_OK, mod_init, mod_deinit,
+	"$Revision: 7785 $",
+	"Jilles Tjoelker <jilles -at- stack.nl>"
+);
 
 /* vim:cinoptions=>s,e0,n0,f0,{0,}0,^0,=s,ps,t0,c3,+s,(2s,us,)20,*30,gs,hs
  * vim:ts=8

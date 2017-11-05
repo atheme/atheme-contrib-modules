@@ -27,13 +27,6 @@
 
 #include "atheme-compat.h"
 
-DECLARE_MODULE_V1
-(
-	"contrib/os_akillnicklist", false, _modinit, _moddeinit,
-	"0.1",
-	"Atheme Development Group <http://atheme.github.io>"
-);
-
 static mowgli_patricia_t *akillalllist = NULL;
 static mowgli_patricia_t *akillnicklist = NULL;
 static mowgli_patricia_t *akilluserlist = NULL;
@@ -146,7 +139,7 @@ aknl_nickhook(hook_user_nick_t *data)
 }
 
 void
-_modinit(module_t *m)
+mod_init(module_t *m)
 {
 	add_subblock_top_conf("NICKLISTS", &conft);
 	add_conf_item("ALL", &conft, nicklist_config_handler_all);
@@ -166,7 +159,7 @@ _modinit(module_t *m)
 }
 
 void
-_moddeinit(module_unload_intent_t intent)
+mod_deinit(module_unload_intent_t intent)
 {
 	hook_del_user_add(aknl_nickhook);
 	hook_del_user_nickchange(aknl_nickhook);
@@ -177,3 +170,10 @@ _moddeinit(module_unload_intent_t intent)
 	del_conf_item("REAL", &conft);
 	del_top_conf("NICKLISTS");
 }
+
+DECLARE_MODULE_V1
+(
+	"contrib/os_akillnicklist", MODULE_UNLOAD_CAPABILITY_OK, mod_init, mod_deinit,
+	"0.1",
+	"Atheme Development Group <http://atheme.github.io>"
+);

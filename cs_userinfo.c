@@ -8,27 +8,22 @@
 
 #include "atheme-compat.h"
 
-DECLARE_MODULE_V1
-(
-	"contrib/cs_userinfo", false, _modinit, _moddeinit,
-	PACKAGE_STRING,
-	VENDOR_STRING
-);
-
 static void userinfo_check_join(hook_channel_joinpart_t *hdata);
 static void cs_cmd_userinfo(sourceinfo_t *si, int parc, char *parv[]);
 
 command_t cs_userinfo = { "USERINFO", N_("Sets a userinfo message."),
 			AC_NONE, 3, cs_cmd_userinfo, { .path = "contrib/userinfo" } };
 
-void _modinit(module_t *m)
+static void
+mod_init(module_t *const restrict m)
 {
 	hook_add_event("channel_join");
 	hook_add_channel_join(userinfo_check_join);
 	service_named_bind_command("chanserv", &cs_userinfo);
 }
 
-void _moddeinit(module_unload_intent_t intent)
+static void
+mod_deinit(const module_unload_intent_t intent)
 {
 	hook_del_channel_join(userinfo_check_join);
 	service_named_unbind_command("chanserv", &cs_userinfo);
@@ -155,3 +150,10 @@ static void userinfo_check_join(hook_channel_joinpart_t *hdata)
 		return;
 	msg(chansvs.nick, cu->chan->name, "[%s] %s", cu->user->nick, md->value);
 }
+
+DECLARE_MODULE_V1
+(
+	"contrib/cs_userinfo", MODULE_UNLOAD_CAPABILITY_OK, mod_init, mod_deinit,
+	PACKAGE_STRING,
+	VENDOR_STRING
+);

@@ -8,13 +8,6 @@
 
 #include "atheme-compat.h"
 
-DECLARE_MODULE_V1
-(
-        "contrib/ircd_loveserv", false, _modinit, _moddeinit,
-        PACKAGE_STRING,
-        VENDOR_STRING
-);
-
 service_t *loveserv;
 
 static void _ls_admirer(sourceinfo_t *si, int parc, char *parv[])
@@ -281,7 +274,8 @@ static void _ls_help(sourceinfo_t *si, int parc, char *parv[])
 command_t ls_help = { "HELP", "Displays contextual help information.",
                                 AC_NONE, 1, _ls_help, { .path = "help" } };
 
-void _modinit(module_t *m)
+static void
+mod_init(module_t *const restrict m)
 {
         loveserv = service_add("LoveServ", NULL);
 
@@ -299,7 +293,8 @@ void _modinit(module_t *m)
 	service_bind_command(loveserv, &ls_help);
 }
 
-void _moddeinit(module_unload_intent_t intent)
+static void
+mod_deinit(const module_unload_intent_t intent)
 {
 	service_unbind_command(loveserv, &ls_admirer);
 	service_unbind_command(loveserv, &ls_rose);
@@ -317,6 +312,13 @@ void _moddeinit(module_unload_intent_t intent)
 	if (loveserv)
 		service_delete(loveserv);
 }
+
+DECLARE_MODULE_V1
+(
+        "contrib/ircd_loveserv", MODULE_UNLOAD_CAPABILITY_OK, mod_init, mod_deinit,
+        PACKAGE_STRING,
+        VENDOR_STRING
+);
 
 /* vim:cinoptions=>s,e0,n0,f0,{0,}0,^0,=s,ps,t0,c3,+s,(2s,us,)20,*30,gs,hs
  * vim:ts=8

@@ -11,13 +11,6 @@
 #ifdef __FreeBSD__
 #include <sys/event.h>
 
-DECLARE_MODULE_V1
-(
-	"contrib/os_procwatch", false, _modinit, _moddeinit,
-	PACKAGE_STRING,
-	VENDOR_STRING
-);
-
 static void procwatch_readhandler(connection_t *cptr);
 
 static void os_cmd_procwatch(sourceinfo_t *si, int parc, char *parv[]);
@@ -27,7 +20,8 @@ command_t os_procwatch = { "PROCWATCH", "Notifies snoop channel on process exit.
 
 static connection_t *kq_conn;
 
-void _modinit(module_t *m)
+static void
+mod_init(module_t *const restrict m)
 {
 	int kq;
 
@@ -42,7 +36,8 @@ void _modinit(module_t *m)
 	service_named_bind_command("operserv", &os_procwatch);
 }
 
-void _moddeinit(module_unload_intent_t intent)
+static void
+mod_deinit(const module_unload_intent_t intent)
 {
 	if (kq_conn != NULL)
 		connection_close_soon(kq_conn);
@@ -95,6 +90,14 @@ static void os_cmd_procwatch(sourceinfo_t *si, int parc, char *parv[])
 	}
 	command_success_nodata(si, "Added pid %ld to list.", v);
 }
+
+DECLARE_MODULE_V1
+(
+	"contrib/os_procwatch", MODULE_UNLOAD_CAPABILITY_OK, mod_init, mod_deinit,
+	PACKAGE_STRING,
+	VENDOR_STRING
+);
+
 #endif
 
 /* vim:cinoptions=>s,e0,n0,f0,{0,}0,^0,=s,ps,t0,c3,+s,(2s,us,)20,*30,gs,hs

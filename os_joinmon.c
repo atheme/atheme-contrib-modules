@@ -8,13 +8,6 @@
 
 #include "atheme-compat.h"
 
-DECLARE_MODULE_V1
-(
-	"contrib/os_joinmon", true, _modinit, _moddeinit,
-	PACKAGE_STRING,
-	"Atheme Development Group <http://www.atheme.net>"
-);
-
 static void watch_user_joins(hook_channel_joinpart_t *hdata);
 static void os_cmd_joinmon(sourceinfo_t *si, int parc, char *parv[]);
 
@@ -35,7 +28,8 @@ typedef struct joinmon_ joinmon_t;
 
 mowgli_list_t os_monlist;
 
-void _modinit(module_t *m)
+static void
+mod_init(module_t *const restrict m)
 {
 	if (!module_find_published("backend/opensex"))
 	{
@@ -53,7 +47,8 @@ void _modinit(module_t *m)
 	service_named_bind_command("operserv", &os_joinmon);
 }
 
-void _moddeinit(module_unload_intent_t intent)
+static void
+mod_deinit(const module_unload_intent_t intent)
 {
 	hook_del_channel_join(watch_user_joins);
 	hook_del_db_write(write_jmdb);
@@ -246,6 +241,13 @@ static void os_cmd_joinmon(sourceinfo_t *si, int parc, char *parv[])
 		return;
 	}
 }
+
+DECLARE_MODULE_V1
+(
+	"contrib/os_joinmon", MODULE_UNLOAD_CAPABILITY_NEVER, mod_init, mod_deinit,
+	PACKAGE_STRING,
+	"Atheme Development Group <http://www.atheme.net>"
+);
 
 /* vim:cinoptions=>s,e0,n0,f0,{0,}0,^0,=s,ps,t0,c3,+s,(2s,us,)20,*30,gs,hs
  * vim:ts=8

@@ -10,13 +10,6 @@
 #include "atheme-compat.h"
 #include "uplink.h"
 
-DECLARE_MODULE_V1
-(
-	"contrib/ns_ajoin", false, _modinit, _moddeinit,
-	PACKAGE_STRING,
-	VENDOR_STRING
-);
-
 static void ajoin_on_identify(user_t *u);
 
 static void ns_cmd_ajoin_syntaxerr(sourceinfo_t *si)
@@ -174,14 +167,16 @@ static void ns_cmd_ajoin(sourceinfo_t *si, int parc, char *parv[])
 
 command_t ns_ajoin = { "AJOIN", "Manages automatic-join on identify.", AC_AUTHENTICATED, 2, ns_cmd_ajoin, { .path = "contrib/ajoin" } };
 
-void _modinit(module_t *m)
+static void
+mod_init(module_t *const restrict m)
 {
 	hook_add_event("user_identify");
 	hook_add_user_identify(ajoin_on_identify);
 	service_named_bind_command("nickserv", &ns_ajoin);
 }
 
-void _moddeinit(module_unload_intent_t intent)
+static void
+mod_deinit(const module_unload_intent_t intent)
 {
 	hook_del_user_identify(ajoin_on_identify);
 	service_named_unbind_command("nickserv", &ns_ajoin);
@@ -213,3 +208,10 @@ static void ajoin_on_identify(user_t *u)
 		chan = strtok(NULL, ",");
 	}
 }
+
+DECLARE_MODULE_V1
+(
+	"contrib/ns_ajoin", MODULE_UNLOAD_CAPABILITY_OK, mod_init, mod_deinit,
+	PACKAGE_STRING,
+	VENDOR_STRING
+);

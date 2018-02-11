@@ -10,7 +10,7 @@
 struct procdata
 {
 	char name[NICKLEN + 1];
-	char email[EMAILLEN];
+	char email[EMAILLEN + 1];
 };
 
 #define MAX_CHILDPROCS 10

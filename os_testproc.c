@@ -12,7 +12,7 @@
 
 struct testprocdata
 {
-	char dest[NICKLEN];
+	char dest[NICKLEN + 1];
 	connection_t *pip;
 };
 

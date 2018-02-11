@@ -46,12 +46,12 @@ static bool is_nickname_lame(const char *nickname)
  */
 static void clean_nickname(user_t *u)
 {
-	char nickbuf[NICKLEN];
+	char nickbuf[NICKLEN + 1];
 	char *p;
 
 	return_if_fail(u != NULL);
 
-	mowgli_strlcpy(nickbuf, u->nick, NICKLEN);
+	mowgli_strlcpy(nickbuf, u->nick, sizeof nickbuf);
 
 	p = nickbuf;
 

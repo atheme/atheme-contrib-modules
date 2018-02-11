@@ -9,7 +9,7 @@
 
 struct procdata
 {
-	char name[NICKLEN];
+	char name[NICKLEN + 1];
 	char email[EMAILLEN];
 };
 

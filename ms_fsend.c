@@ -8,9 +8,6 @@
 
 #include "atheme-compat.h"
 
-/* MEMOLEN + 8, so the "[FORCE] " string will fit */
-#define FMEMOLEN 308
-
 static void ms_cmd_fsend(sourceinfo_t *si, int parc, char *parv[]);
 
 /* MARK is prolly the most appropriate priv (that I can think of), if you can
@@ -122,8 +119,8 @@ static void ms_cmd_fsend(sourceinfo_t *si, int parc, char *parv[])
 		memo->sent = CURRTIME;
 		memo->status = 0;
 		mowgli_strlcpy(memo->sender,entity(si->smu)->name,NICKLEN);
-		mowgli_strlcpy(memo->text, "[FORCE] ", FMEMOLEN);
-		mowgli_strlcat(memo->text, m, FMEMOLEN);
+		mowgli_strlcpy(memo->text, "[FORCE] ", sizeof memo->text);
+		mowgli_strlcat(memo->text, m, sizeof memo->text);
 
 		/* Create a linked list node and add to memos */
 		n = mowgli_node_create();

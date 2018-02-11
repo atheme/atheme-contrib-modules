@@ -38,11 +38,11 @@ mod_deinit(const module_unload_intent_t intent)
 static void user_add_host(myuser_t *mu)
 {
 	int maxlen1, i;
-	char newhost[HOSTLEN];
+	char newhost[HOSTLEN + 1];
 	const char *p;
 	bool invalidchar = false;
 
-	maxlen1 = HOSTLEN - 2 - strlen(me.hidehostsuffix);
+	maxlen1 = HOSTLEN - 1 - strlen(me.hidehostsuffix);
 	if (maxlen1 < 9)
 		return;
 	p = entity(mu)->name;

@@ -93,7 +93,11 @@ static int sendpassmail_foreach_cb(myentity_t *mt, void *privdata)
 
 	key = random_string(12);
 
+#if (CURRENT_ABI_REVISION >= 730000)
+	const char *const hash = crypt_password(key);
+#else
 	const char *const hash = crypt_string(key, NULL);
+#endif
 
 	if (!hash)
 	{

@@ -37,7 +37,7 @@ static void ns_cmd_generatehash(sourceinfo_t *si, int parc, char *parv[])
 	}
 
 #if (CURRENT_ABI_REVISION >= 730000)
-	const char *const hash = crypt_password(key);
+	const char *const hash = crypt_password(pass);
 #else
 	const char *const hash = crypt_string(pass, NULL);
 #endif

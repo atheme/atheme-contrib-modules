@@ -127,9 +127,3 @@ static void os_cmd_testproc(sourceinfo_t *si, int parc, char *parv[])
 SIMPLE_DECLARE_MODULE_V1("contrib/os_testproc", MODULE_UNLOAD_CAPABILITY_OK)
 
 #endif
-
-/* vim:cinoptions=>s,e0,n0,f0,{0,}0,^0,=s,ps,t0,c3,+s,(2s,us,)20,*30,gs,hs
- * vim:ts=8
- * vim:sw=8
- * vim:noexpandtab
- */

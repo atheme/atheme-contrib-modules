@@ -39,7 +39,7 @@ static void os_cmd_tabletest(sourceinfo_t *si, int parc, char *parv[])
 
 	command_success_table(si, t);
 
-	object_unref(t);
+	atheme_object_unref(t);
 }
 
 DECLARE_MODULE_V1

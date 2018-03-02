@@ -11,7 +11,8 @@ static void command_roulette(sourceinfo_t *si, int parc, char *parv[]);
 
 command_t cmd_roulette = { "ROULETTE", N_("A game of Russian Roulette."), AC_NONE, 2, command_roulette, { .path = "contrib/roulette" } };
 
-void mod_init(module_t * m)
+void
+mod_init(module_t * m)
 {
 	service_named_bind_command("gameserv", &cmd_roulette);
 
@@ -31,7 +32,8 @@ mod_deinit(const module_unload_intent_t intent)
  * quickly and easily. Of course, sourceinfo has a vtable that can be manipulated,
  * but this is quicker and easier...                                  -- nenolod
  */
-static void gs_command_report(sourceinfo_t *si, const char *fmt, ...)
+static void
+gs_command_report(sourceinfo_t *si, const char *fmt, ...)
 {
 	va_list args;
 	char buf[BUFSIZE];
@@ -49,7 +51,8 @@ static void gs_command_report(sourceinfo_t *si, const char *fmt, ...)
 		kill_user(si->service->me, si->su, "Lost at Russian Roulette.");
 }
 
-static void command_roulette(sourceinfo_t *si, int parc, char *parv[])
+static void
+command_roulette(sourceinfo_t *si, int parc, char *parv[])
 {
 	static const char *roulette_responses[2] = {
 		N_("*CLICK*"),

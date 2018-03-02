@@ -11,13 +11,15 @@
 
 static void ajoin_on_identify(user_t *u);
 
-static void ns_cmd_ajoin_syntaxerr(sourceinfo_t *si)
+static void
+ns_cmd_ajoin_syntaxerr(sourceinfo_t *si)
 {
 	command_fail(si, fault_badparams, STR_INSUFFICIENT_PARAMS, "AJOIN");
 	command_fail(si, fault_badparams, "Syntax: AJOIN <list|add|del|clear> [#channel]");
 }
 
-static void ns_cmd_ajoin(sourceinfo_t *si, int parc, char *parv[])
+static void
+ns_cmd_ajoin(sourceinfo_t *si, int parc, char *parv[])
 {
 	char buf[512];
 	char *chan;
@@ -181,7 +183,8 @@ mod_deinit(const module_unload_intent_t intent)
 	service_named_unbind_command("nickserv", &ns_ajoin);
 }
 
-static void ajoin_on_identify(user_t *u)
+static void
+ajoin_on_identify(user_t *u)
 {
 	myuser_t *mu = u->myuser;
 	metadata_t *md;

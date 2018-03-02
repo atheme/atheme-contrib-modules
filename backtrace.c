@@ -4,7 +4,8 @@
 
 #include <execinfo.h>
 
-static void __segv_hdl(int whocares)
+static void
+__segv_hdl(int whocares)
 {
 	void *array[256];
 	char **strings;

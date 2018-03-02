@@ -16,7 +16,8 @@ mod_deinit(const module_unload_intent_t intent)
 	service_named_unbind_command("operserv", &os_tabletest);
 }
 
-static void os_cmd_tabletest(sourceinfo_t *si, int parc, char *parv[])
+static void
+os_cmd_tabletest(sourceinfo_t *si, int parc, char *parv[])
 {
 	table_t *t = table_new("Table \2test\2");
 	table_row_t *r = table_row_new(t);

@@ -56,7 +56,8 @@ mod_deinit(const module_unload_intent_t intent)
 	service_named_unbind_command("nickserv", &ns_goodmail);
 }
 
-static void write_gedb(database_handle_t *db)
+static void
+write_gedb(database_handle_t *db)
 {
 	mowgli_node_t *n;
 
@@ -73,7 +74,8 @@ static void write_gedb(database_handle_t *db)
 	}
 }
 
-static void db_h_ge(database_handle_t *db, const char *type)
+static void
+db_h_ge(database_handle_t *db, const char *type)
 {
 	const char *mail = db_sread_word(db);
 	time_t mail_ts = db_sread_time(db);
@@ -87,7 +89,9 @@ static void db_h_ge(database_handle_t *db, const char *type)
 	l->reason = sstrdup(reason);
 	mowgli_node_add(l, mowgli_node_create(), &ns_maillist);
 }
-static void check_registration(hook_user_register_check_t *hdata)
+
+static void
+check_registration(hook_user_register_check_t *hdata)
 {
 	mowgli_node_t *n;
 	goodmail_t *l;
@@ -112,7 +116,8 @@ static void check_registration(hook_user_register_check_t *hdata)
 			hdata->si->su != NULL ? hdata->si->su->nick : get_source_name(hdata->si));
 }
 
-static void ns_cmd_goodmail(sourceinfo_t *si, int parc, char *parv[])
+static void
+ns_cmd_goodmail(sourceinfo_t *si, int parc, char *parv[])
 {
 	char *action = parv[0];
 	char *email = parv[1];

@@ -39,7 +39,8 @@ mod_deinit(const module_unload_intent_t intent)
 	hook_del_channel_info(klinechan_show_info);
 }
 
-static void klinechan_check_join(hook_channel_joinpart_t *hdata)
+static void
+klinechan_check_join(hook_channel_joinpart_t *hdata)
 {
 	mychan_t *mc;
 	chanuser_t *cu = hdata->cu;
@@ -92,7 +93,8 @@ static void klinechan_check_join(hook_channel_joinpart_t *hdata)
 	}
 }
 
-static void klinechan_show_info(hook_channel_req_t *hdata)
+static void
+klinechan_show_info(hook_channel_req_t *hdata)
 {
 	metadata_t *md;
 	const char *setter, *reason;
@@ -117,7 +119,8 @@ static void klinechan_show_info(hook_channel_req_t *hdata)
 	command_success_nodata(hdata->si, "%s had \2automatic klines\2 enabled on it by %s on %s (%s)", hdata->mc->name, setter, strfbuf, reason);
 }
 
-static void os_cmd_klinechan(sourceinfo_t *si, int parc, char *parv[])
+static void
+os_cmd_klinechan(sourceinfo_t *si, int parc, char *parv[])
 {
 	char *target = parv[0];
 	char *action = parv[1];
@@ -189,7 +192,8 @@ static void os_cmd_klinechan(sourceinfo_t *si, int parc, char *parv[])
 	}
 }
 
-static void os_cmd_listklinechans(sourceinfo_t *si, int parc, char *parv[])
+static void
+os_cmd_listklinechans(sourceinfo_t *si, int parc, char *parv[])
 {
 	const char *pattern;
 	mowgli_patricia_iteration_state_t state;

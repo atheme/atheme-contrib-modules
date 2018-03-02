@@ -29,7 +29,8 @@ struct sendpassmail_state
 	stringref email_canonical;
 };
 
-static bool can_sendpass(sourceinfo_t *si, myuser_t *mu)
+static bool
+can_sendpass(sourceinfo_t *si, myuser_t *mu)
 {
 	if (is_soper(mu) && !has_priv(si, PRIV_ADMIN))
 	{
@@ -58,7 +59,8 @@ static bool can_sendpass(sourceinfo_t *si, myuser_t *mu)
 	return true;
 }
 
-static int sendpassmail_foreach_cb(myentity_t *mt, void *privdata)
+static int
+sendpassmail_foreach_cb(myentity_t *mt, void *privdata)
 {
 	struct sendpassmail_state *state = (struct sendpassmail_state *) privdata;
 
@@ -117,7 +119,8 @@ static int sendpassmail_foreach_cb(myentity_t *mt, void *privdata)
 	return 0;
 }
 
-static void ns_cmd_sendpassmail(sourceinfo_t *si, int parc, char *parv[])
+static void
+ns_cmd_sendpassmail(sourceinfo_t *si, int parc, char *parv[])
 {
 	myuser_t *mu;
 	char *email = parv[0];

@@ -35,12 +35,14 @@ mod_deinit(const module_unload_intent_t intent)
 	service_delete(catserv);
 }
 
-static void catserv_cmd_meow(sourceinfo_t *si, int parc, char *parv[])
+static void
+catserv_cmd_meow(sourceinfo_t *si, int parc, char *parv[])
 {
 	command_success_nodata(si, "Meow!");
 }
 
-static void catserv_cmd_help(sourceinfo_t *si, int parc, char *parv[])
+static void
+catserv_cmd_help(sourceinfo_t *si, int parc, char *parv[])
 {
 	command_help(si, si->service->commands);
 }

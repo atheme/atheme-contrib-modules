@@ -24,7 +24,8 @@ typedef struct {
 	mowgli_node_t node;
 } trace_query_domain_t;
 
-static int read_comparison_operator(char** string, int default_comparison)
+static int
+read_comparison_operator(char** string, int default_comparison)
 {
 	if (**string == '<')
 	{
@@ -61,7 +62,8 @@ static int read_comparison_operator(char** string, int default_comparison)
 		return default_comparison;
 }
 
-char *reason_extract(char **args)
+char *
+reason_extract(char **args)
 {
 	char *start = *args;
 	bool quotes = false;
@@ -115,7 +117,8 @@ typedef struct {
 	int flags;
 } trace_query_regexp_domain_t;
 
-static void *trace_regexp_prepare(char **args)
+static void *
+trace_regexp_prepare(char **args)
 {
 	trace_query_regexp_domain_t *domain;
 
@@ -129,7 +132,8 @@ static void *trace_regexp_prepare(char **args)
 	return domain;
 }
 
-static bool trace_regexp_exec(user_t *u, void *q)
+static bool
+trace_regexp_exec(user_t *u, void *q)
 {
 	char usermask[512];
 	trace_query_regexp_domain_t *domain = (trace_query_regexp_domain_t *) q;
@@ -145,7 +149,8 @@ static bool trace_regexp_exec(user_t *u, void *q)
 	return regex_match(domain->regex, usermask);
 }
 
-static void trace_regexp_cleanup(void *q)
+static void
+trace_regexp_cleanup(void *q)
 {
 	trace_query_regexp_domain_t *domain = (trace_query_regexp_domain_t *) q;
 
@@ -164,7 +169,8 @@ typedef struct {
 	server_t *server;
 } trace_query_server_domain_t;
 
-static void *trace_server_prepare(char **args)
+static void *
+trace_server_prepare(char **args)
 {
 	char *server;
 	trace_query_server_domain_t *domain;
@@ -184,7 +190,8 @@ static void *trace_server_prepare(char **args)
 	return domain;
 }
 
-static bool trace_server_exec(user_t *u, void *q)
+static bool
+trace_server_exec(user_t *u, void *q)
 {
 	trace_query_server_domain_t *domain = (trace_query_server_domain_t *) q;
 
@@ -194,7 +201,8 @@ static bool trace_server_exec(user_t *u, void *q)
 	return (domain->server == u->server);
 }
 
-static void trace_server_cleanup(void *q)
+static void
+trace_server_cleanup(void *q)
 {
 	trace_query_server_domain_t *domain = (trace_query_server_domain_t *) q;
 
@@ -210,7 +218,8 @@ typedef struct {
 	char *pattern;
 } trace_query_glob_domain_t;
 
-static void *trace_glob_prepare(char **args)
+static void *
+trace_glob_prepare(char **args)
 {
 	char *pattern;
 	trace_query_glob_domain_t *domain;
@@ -229,7 +238,8 @@ static void *trace_glob_prepare(char **args)
 	return domain;
 }
 
-static bool trace_glob_exec(user_t *u, void *q)
+static bool
+trace_glob_exec(user_t *u, void *q)
 {
 	char usermask[512];
 	trace_query_glob_domain_t *domain = (trace_query_glob_domain_t *) q;
@@ -245,7 +255,8 @@ static bool trace_glob_exec(user_t *u, void *q)
 	return !match(domain->pattern, usermask);
 }
 
-static void trace_glob_cleanup(void *q)
+static void
+trace_glob_cleanup(void *q)
 {
 	trace_query_glob_domain_t *domain = (trace_query_glob_domain_t *) q;
 
@@ -261,7 +272,8 @@ typedef struct {
 	channel_t *channel;
 } trace_query_channel_domain_t;
 
-static void *trace_channel_prepare(char **args)
+static void *
+trace_channel_prepare(char **args)
 {
 	char *channel;
 	trace_query_channel_domain_t *domain;
@@ -281,7 +293,8 @@ static void *trace_channel_prepare(char **args)
 	return domain;
 }
 
-static bool trace_channel_exec(user_t *u, void *q)
+static bool
+trace_channel_exec(user_t *u, void *q)
 {
 	trace_query_channel_domain_t *domain = (trace_query_channel_domain_t *) q;
 
@@ -294,7 +307,8 @@ static bool trace_channel_exec(user_t *u, void *q)
 	return (chanuser_find(domain->channel, u) != NULL);
 }
 
-static void trace_channel_cleanup(void *q)
+static void
+trace_channel_cleanup(void *q)
 {
 	trace_query_channel_domain_t *domain = (trace_query_channel_domain_t *) q;
 
@@ -311,7 +325,8 @@ typedef struct {
 	int comparison;
 } trace_query_nickage_domain_t;
 
-static void *trace_nickage_prepare(char **args)
+static void *
+trace_nickage_prepare(char **args)
 {
 	char *nickage_string;
 	trace_query_nickage_domain_t *domain;
@@ -332,7 +347,8 @@ static void *trace_nickage_prepare(char **args)
 	return domain;
 }
 
-static bool trace_nickage_exec(user_t *u, void *q)
+static bool
+trace_nickage_exec(user_t *u, void *q)
 {
 	trace_query_nickage_domain_t *domain = (trace_query_nickage_domain_t *) q;
 
@@ -352,7 +368,8 @@ static bool trace_nickage_exec(user_t *u, void *q)
 		return (nickage == domain->nickage);
 }
 
-static void trace_nickage_cleanup(void *q)
+static void
+trace_nickage_cleanup(void *q)
 {
 	trace_query_nickage_domain_t *domain = (trace_query_nickage_domain_t *) q;
 
@@ -369,7 +386,8 @@ typedef struct {
 	int comparison;
 } trace_query_numchan_domain_t;
 
-static void *trace_numchan_prepare(char **args)
+static void *
+trace_numchan_prepare(char **args)
 {
 	char *numchan_string;
 	trace_query_numchan_domain_t *domain;
@@ -390,7 +408,8 @@ static void *trace_numchan_prepare(char **args)
 	return domain;
 }
 
-static bool trace_numchan_exec(user_t *u, void *q)
+static bool
+trace_numchan_exec(user_t *u, void *q)
 {
 	trace_query_numchan_domain_t *domain = (trace_query_numchan_domain_t *) q;
 
@@ -410,7 +429,8 @@ static bool trace_numchan_exec(user_t *u, void *q)
 		return (numchan == domain->numchan);
 }
 
-static void trace_numchan_cleanup(void *q)
+static void
+trace_numchan_cleanup(void *q)
 {
 	trace_query_numchan_domain_t *domain = (trace_query_numchan_domain_t *) q;
 
@@ -426,7 +446,8 @@ typedef struct {
 	bool identified;
 } trace_query_identified_domain_t;
 
-static void *trace_identified_prepare(char **args)
+static void *
+trace_identified_prepare(char **args)
 {
 	char *yesno;
 	bool identified;
@@ -453,7 +474,8 @@ static void *trace_identified_prepare(char **args)
 	return domain;
 }
 
-static bool trace_identified_exec(user_t *u, void *q)
+static bool
+trace_identified_exec(user_t *u, void *q)
 {
 	trace_query_identified_domain_t *domain = (trace_query_identified_domain_t *) q;
 
@@ -463,7 +485,8 @@ static bool trace_identified_exec(user_t *u, void *q)
 	return (domain->identified == (u->myuser != NULL));
 }
 
-static void trace_identified_cleanup(void *q)
+static void
+trace_identified_cleanup(void *q)
 {
 	trace_query_identified_domain_t *domain = (trace_query_identified_domain_t *) q;
 
@@ -490,7 +513,8 @@ typedef struct {
 static void trace_action_init(trace_action_t *a, sourceinfo_t *si);
 
 /* initializes common fields for trace action object. */
-void trace_action_init(trace_action_t *a, sourceinfo_t *si)
+void
+trace_action_init(trace_action_t *a, sourceinfo_t *si)
 {
 	return_if_fail(a != NULL);
 	return_if_fail(si != NULL);
@@ -499,7 +523,8 @@ void trace_action_init(trace_action_t *a, sourceinfo_t *si)
 	a->matched = false;
 }
 
-static trace_action_t *trace_print_prepare(sourceinfo_t *si, char **args)
+static trace_action_t *
+trace_print_prepare(sourceinfo_t *si, char **args)
 {
 	trace_action_t *a;
 
@@ -511,7 +536,8 @@ static trace_action_t *trace_print_prepare(sourceinfo_t *si, char **args)
 	return a;
 }
 
-static void trace_print_exec(user_t *u, trace_action_t *a)
+static void
+trace_print_exec(user_t *u, trace_action_t *a)
 {
 	return_if_fail(u != NULL);
 	return_if_fail(a != NULL);
@@ -522,7 +548,8 @@ static void trace_print_exec(user_t *u, trace_action_t *a)
 	command_success_nodata(a->si, _("\2Match:\2  %s!%s@%s %s {%s}"), u->nick, u->user, u->host, u->gecos, u->server->name);
 }
 
-static void trace_print_cleanup(trace_action_t *a, bool succeeded)
+static void
+trace_print_cleanup(trace_action_t *a, bool succeeded)
 {
 	return_if_fail(a != NULL);
 
@@ -538,7 +565,8 @@ typedef struct {
 	char *reason;
 } trace_action_kill_t;
 
-static trace_action_t *trace_kill_prepare(sourceinfo_t *si, char **args)
+static trace_action_t *
+trace_kill_prepare(sourceinfo_t *si, char **args)
 {
 	trace_action_kill_t *a;
 	char *reason;
@@ -559,7 +587,8 @@ static trace_action_t *trace_kill_prepare(sourceinfo_t *si, char **args)
 	return (trace_action_t*) a;
 }
 
-static void trace_kill_exec(user_t *u, trace_action_t *act)
+static void
+trace_kill_exec(user_t *u, trace_action_t *act)
 {
 	service_t *svs;
 	trace_action_kill_t *a = (trace_action_kill_t *) act;
@@ -580,7 +609,8 @@ static void trace_kill_exec(user_t *u, trace_action_t *act)
 	command_success_nodata(act->si, _("\2%s\2 has been killed."), u->nick);
 }
 
-static void trace_kill_cleanup(trace_action_t *a, bool succeeded)
+static void
+trace_kill_cleanup(trace_action_t *a, bool succeeded)
 {
 	return_if_fail(a != NULL);
 
@@ -597,7 +627,8 @@ typedef struct {
 	char *reason;
 } trace_action_akill_t;
 
-static trace_action_t *trace_akill_prepare(sourceinfo_t *si, char **args)
+static trace_action_t *
+trace_akill_prepare(sourceinfo_t *si, char **args)
 {
 	trace_action_akill_t *a;
 	char *s, *reason;
@@ -671,7 +702,8 @@ static trace_action_t *trace_akill_prepare(sourceinfo_t *si, char **args)
 	return (trace_action_t*) a;
 }
 
-static void trace_akill_exec(user_t *u, trace_action_t *act)
+static void
+trace_akill_exec(user_t *u, trace_action_t *act)
 {
 	const char *kuser, *khost;
 	trace_action_akill_t *a = (trace_action_akill_t *) act;
@@ -700,7 +732,8 @@ static void trace_akill_exec(user_t *u, trace_action_t *act)
 	command_success_nodata(act->si, _("\2%s\2 has been akilled."), u->nick);
 }
 
-static void trace_akill_cleanup(trace_action_t *a, bool succeeded)
+static void
+trace_akill_cleanup(trace_action_t *a, bool succeeded)
 {
 	return_if_fail(a != NULL);
 
@@ -716,7 +749,8 @@ typedef struct {
 	int matches;
 } trace_action_count_t;
 
-static trace_action_t *trace_count_prepare(sourceinfo_t *si, char **args)
+static trace_action_t *
+trace_count_prepare(sourceinfo_t *si, char **args)
 {
 	trace_action_count_t *a;
 
@@ -728,7 +762,8 @@ static trace_action_t *trace_count_prepare(sourceinfo_t *si, char **args)
 	return (trace_action_t *) a;
 }
 
-static void trace_count_exec(user_t *u, trace_action_t *act)
+static void
+trace_count_exec(user_t *u, trace_action_t *act)
 {
 	trace_action_count_t *a = (trace_action_count_t *) act;
 
@@ -741,7 +776,8 @@ static void trace_count_exec(user_t *u, trace_action_t *act)
 	a->matches++;
 }
 
-static void trace_count_cleanup(trace_action_t *act, bool succeeded)
+static void
+trace_count_cleanup(trace_action_t *act, bool succeeded)
 {
 	trace_action_count_t *a = (trace_action_count_t *) act;
 
@@ -800,7 +836,8 @@ mod_deinit(const module_unload_intent_t intent)
 
 static bool os_cmd_trace_run(sourceinfo_t *si, trace_action_constructor_t *actcons, trace_action_t* act, mowgli_list_t *crit, char *args);
 
-static void os_cmd_trace(sourceinfo_t *si, int parc, char *parv[])
+static void
+os_cmd_trace(sourceinfo_t *si, int parc, char *parv[])
 {
 	mowgli_list_t crit = { NULL, NULL, 0 };
 	trace_action_constructor_t *actcons;
@@ -848,7 +885,8 @@ static void os_cmd_trace(sourceinfo_t *si, int parc, char *parv[])
 	free(params);
 }
 
-static bool os_cmd_trace_run(sourceinfo_t *si, trace_action_constructor_t *actcons, trace_action_t* act, mowgli_list_t *crit, char *args)
+static bool
+os_cmd_trace_run(sourceinfo_t *si, trace_action_constructor_t *actcons, trace_action_t* act, mowgli_list_t *crit, char *args)
 {
 	user_t *u;
 	mowgli_patricia_iteration_state_t state;

@@ -7,7 +7,8 @@
 
 #include "atheme-compat.h"
 
-static void register_hook(hook_channel_req_t *hdata)
+static void
+register_hook(hook_channel_req_t *hdata)
 {
 	mychan_t *mc = hdata->mc;
 
@@ -17,7 +18,8 @@ static void register_hook(hook_channel_req_t *hdata)
 	modestack_mode_simple(chansvs.nick, mc->chan, MTYPE_ADD, CMODE_CHANREG);
 }
 
-static void drop_hook(mychan_t *mc)
+static void
+drop_hook(mychan_t *mc)
 {
 	if (mc == NULL || mc->chan == NULL)
 		return;

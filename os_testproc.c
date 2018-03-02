@@ -37,7 +37,8 @@ mod_deinit(const module_unload_intent_t intent)
 	service_named_unbind_command("operserv", &os_testproc);
 }
 
-static void testproc_recvqhandler(connection_t *cptr)
+static void
+testproc_recvqhandler(connection_t *cptr)
 {
 	char buf[BUFSIZE];
 	int count;
@@ -64,7 +65,8 @@ static void testproc_recvqhandler(connection_t *cptr)
 		notice(service_find("operserv")->me->nick, u->nick, "%s", buf);
 }
 
-static void testproc_closehandler(connection_t *cptr)
+static void
+testproc_closehandler(connection_t *cptr)
 {
 	if (cptr != procdata.pip)
 	{
@@ -76,7 +78,8 @@ static void testproc_closehandler(connection_t *cptr)
 	procdata.pip = NULL;
 }
 
-static void os_cmd_testproc(sourceinfo_t *si, int parc, char *parv[])
+static void
+os_cmd_testproc(sourceinfo_t *si, int parc, char *parv[])
 {
 	int pipes[2];
 

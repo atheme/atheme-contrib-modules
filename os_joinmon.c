@@ -57,7 +57,8 @@ mod_deinit(const module_unload_intent_t intent)
 	service_named_unbind_command("operserv", &os_joinmon);
 }
 
-static void write_jmdb(database_handle_t *db)
+static void
+write_jmdb(database_handle_t *db)
 {
 	mowgli_node_t *n;
 
@@ -74,7 +75,8 @@ static void write_jmdb(database_handle_t *db)
 	}
 }
 
-static void db_h_jm(database_handle_t *db, const char *type)
+static void
+db_h_jm(database_handle_t *db, const char *type)
 {
 	const char *user = db_sread_word(db);
 	time_t mon_ts = db_sread_time(db);
@@ -89,7 +91,8 @@ static void db_h_jm(database_handle_t *db, const char *type)
 	mowgli_node_add(l, mowgli_node_create(), &os_monlist);
 }
 
-static void watch_user_joins(hook_channel_joinpart_t *hdata)
+static void
+watch_user_joins(hook_channel_joinpart_t *hdata)
 {
 	mowgli_node_t *n;
 	chanuser_t *cu = hdata->cu;
@@ -122,7 +125,8 @@ static void watch_user_joins(hook_channel_joinpart_t *hdata)
 	}
 }
 
-static void os_cmd_joinmon(sourceinfo_t *si, int parc, char *parv[])
+static void
+os_cmd_joinmon(sourceinfo_t *si, int parc, char *parv[])
 {
 	char *action = parv[0];
 	char *pattern = parv[1];

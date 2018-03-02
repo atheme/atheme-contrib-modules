@@ -40,7 +40,8 @@ static mowgli_eventloop_timer_t *channels_timer = NULL;
 static mowgli_eventloop_timer_t *uchannels_timer = NULL;
 
 /* write channels.dot */
-static void write_channels_dot_file(void *arg)
+static void
+write_channels_dot_file(void *arg)
 {
 	mychan_t *mc;
 	chanacs_t *ca;
@@ -110,7 +111,8 @@ static void write_channels_dot_file(void *arg)
 }
 
 /* write uchannels.dot */
-static void write_uchannels_dot_file(void *arg)
+static void
+write_uchannels_dot_file(void *arg)
 {
 	channel_t *c;
 	chanuser_t *cu;

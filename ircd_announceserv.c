@@ -79,7 +79,8 @@ mod_deinit(const module_unload_intent_t intent)
 	}
 }
 
-static void write_asreqdb(database_handle_t *db)
+static void
+write_asreqdb(database_handle_t *db)
 {
 	mowgli_node_t *n;
 
@@ -98,7 +99,8 @@ static void write_asreqdb(database_handle_t *db)
 
 }
 
-static void db_h_ar(database_handle_t *db, const char *type)
+static void
+db_h_ar(database_handle_t *db, const char *type)
 {
 	const char *nick = db_sread_word(db);
 	const char *subject = db_sread_word(db);
@@ -116,7 +118,8 @@ static void db_h_ar(database_handle_t *db, const char *type)
 }
 
 /* Properly remove announcement requests from the DB if an account is dropped */
-static void account_drop_request(myuser_t *mu)
+static void
+account_drop_request(myuser_t *mu)
 {
 	mowgli_node_t *n;
 	asreq_t *l;
@@ -142,7 +145,8 @@ static void account_drop_request(myuser_t *mu)
 }
 
 /* HELP <command> [params] */
-void as_cmd_help(sourceinfo_t *si, int parc, char *parv[])
+void
+as_cmd_help(sourceinfo_t *si, int parc, char *parv[])
 {
 	char *command = parv[0];
 
@@ -165,7 +169,8 @@ void as_cmd_help(sourceinfo_t *si, int parc, char *parv[])
 	help_display(si, si->service, command, si->service->commands);
 }
 
-static void as_cmd_request(sourceinfo_t *si, int parc, char *parv[])
+static void
+as_cmd_request(sourceinfo_t *si, int parc, char *parv[])
 {
 	char *subject = parv[0];
 	char *text = parv[1];
@@ -244,7 +249,8 @@ static void as_cmd_request(sourceinfo_t *si, int parc, char *parv[])
 	return;
 }
 
-static void as_cmd_activate(sourceinfo_t *si, int parc, char *parv[])
+static void
+as_cmd_activate(sourceinfo_t *si, int parc, char *parv[])
 {
 	char *nick = parv[0];
 	user_t *u;
@@ -289,7 +295,8 @@ static void as_cmd_activate(sourceinfo_t *si, int parc, char *parv[])
 	command_success_nodata(si, _("Nick \2%s\2 not found in announce request database."), nick);
 }
 
-static void as_cmd_reject(sourceinfo_t *si, int parc, char *parv[])
+static void
+as_cmd_reject(sourceinfo_t *si, int parc, char *parv[])
 {
 	char *nick = parv[0];
 	user_t *u;
@@ -325,7 +332,8 @@ static void as_cmd_reject(sourceinfo_t *si, int parc, char *parv[])
 	command_success_nodata(si, _("Nick \2%s\2 not found in announcement request database."), nick);
 }
 
-static void as_cmd_waiting(sourceinfo_t *si, int parc, char *parv[])
+static void
+as_cmd_waiting(sourceinfo_t *si, int parc, char *parv[])
 {
 	asreq_t *l;
 	mowgli_node_t *n;
@@ -351,7 +359,8 @@ static void as_cmd_waiting(sourceinfo_t *si, int parc, char *parv[])
 	logcommand(si, CMDLOG_GET, "WAITING");
 }
 
-static void as_cmd_cancel(sourceinfo_t *si, int parc, char *parv[])
+static void
+as_cmd_cancel(sourceinfo_t *si, int parc, char *parv[])
 {
 	asreq_t *l;
 	mowgli_node_t *n;

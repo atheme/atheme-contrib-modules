@@ -67,7 +67,8 @@ mod_deinit(const module_unload_intent_t intent)
 	hook_del_user_add(user_add_hook);
 }
 
-static void user_add_hook(hook_user_nick_t *data)
+static void
+user_add_hook(hook_user_nick_t *data)
 {
 	user_t *u;
 
@@ -80,7 +81,8 @@ static void user_add_hook(hook_user_nick_t *data)
 		pingspam(u);
 }
 
-static void os_cmd_pingspam(sourceinfo_t *si, int parc, char *parv[])
+static void
+os_cmd_pingspam(sourceinfo_t *si, int parc, char *parv[])
 {
 	char *target = parv[0];
 	user_t *u;
@@ -102,7 +104,8 @@ static void os_cmd_pingspam(sourceinfo_t *si, int parc, char *parv[])
 	logcommand(si, CMDLOG_ADMIN, "PINGSPAM: \2%s\2", target);
 }
 
-static void os_cmd_autopingspam(sourceinfo_t *si, int parc, char *parv[])
+static void
+os_cmd_autopingspam(sourceinfo_t *si, int parc, char *parv[])
 {
 	char *mode = parv[0];
 
@@ -122,7 +125,8 @@ static void os_cmd_autopingspam(sourceinfo_t *si, int parc, char *parv[])
 	}
 }
 
-void pingspam(user_t *u)
+void
+pingspam(user_t *u)
 {
 	user_t *sptr;
 	mowgli_node_t *n;

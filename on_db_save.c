@@ -31,7 +31,8 @@ mod_deinit(const module_unload_intent_t intent)
 	del_conf_item("db_update_command", &conf_gi_table);
 }
 
-static void update_command_finished(pid_t pid, int status, void *data)
+static void
+update_command_finished(pid_t pid, int status, void *data)
 {
 	if (!WIFEXITED(status) || WEXITSTATUS(status) != 0)
 		slog(LG_ERROR, "ERROR: Database update command failed with error %d", WEXITSTATUS(status));
@@ -39,7 +40,8 @@ static void update_command_finished(pid_t pid, int status, void *data)
 	update_command_proc.running = 0;
 }
 
-static void update_command_recvq_handler(connection_t *cptr, int err)
+static void
+update_command_recvq_handler(connection_t *cptr, int err)
 {
 	char buf[BUFSIZE];
 	int count;
@@ -61,17 +63,20 @@ static void update_command_recvq_handler(connection_t *cptr, int err)
 		slog(LG_DEBUG, "db update command stdout: %s", buf);
 }
 
-static void update_command_stdout_handler(connection_t *cptr)
+static void
+update_command_stdout_handler(connection_t *cptr)
 {
 	update_command_recvq_handler(cptr, 0);
 }
 
-static void update_command_stderr_handler(connection_t *cptr)
+static void
+update_command_stderr_handler(connection_t *cptr)
 {
 	update_command_recvq_handler(cptr, 1);
 }
 
-static void on_db_save(void *unused)
+static void
+on_db_save(void *unused)
 {
 	int stdout_pipes[2], stderr_pipes[2];
 	pid_t pid;

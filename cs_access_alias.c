@@ -25,7 +25,8 @@ mod_deinit(const module_unload_intent_t intent)
 	service_named_unbind_command("chanserv", &cs_access);
 }
 
-static void compat_cmd(sourceinfo_t *si, const char *cmdname, char *channel, char *arg1, char *arg2, char *arg3)
+static void
+compat_cmd(sourceinfo_t *si, const char *cmdname, char *channel, char *arg1, char *arg2, char *arg3)
 {
 	int newparc;
 	char *newparv[5];
@@ -50,7 +51,8 @@ typedef struct {
 	unsigned int level;
 } template_iter_t;
 
-static int global_template_search(const char *key, void *data, void *privdata)
+static int
+global_template_search(const char *key, void *data, void *privdata)
 {
 	template_iter_t *iter = privdata;
 	default_template_t *def_t = data;
@@ -61,7 +63,8 @@ static int global_template_search(const char *key, void *data, void *privdata)
 	return 0;
 }
 
-static const char *get_template_name(mychan_t *mc, unsigned int level)
+static const char *
+get_template_name(mychan_t *mc, unsigned int level)
 {
 	metadata_t *md;
 	const char *p, *q, *r;
@@ -108,7 +111,8 @@ static const char *get_template_name(mychan_t *mc, unsigned int level)
 	return iter.res;
 }
 
-static void access_list(sourceinfo_t *si, mychan_t *mc, int parc, char *parv[])
+static void
+access_list(sourceinfo_t *si, mychan_t *mc, int parc, char *parv[])
 {
 	mowgli_node_t *n;
 	chanacs_t *ca;
@@ -159,7 +163,8 @@ static void access_list(sourceinfo_t *si, mychan_t *mc, int parc, char *parv[])
 		logcommand(si, CMDLOG_GET, "%s ACCESS LIST", mc->name);
 }
 
-static void cs_cmd_access(sourceinfo_t *si, int parc, char *parv[])
+static void
+cs_cmd_access(sourceinfo_t *si, int parc, char *parv[])
 {
 	char *chan, *cmd;
 	mychan_t *mc;

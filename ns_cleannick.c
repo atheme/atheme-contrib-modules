@@ -13,7 +13,8 @@
  * Determine if a nickname is lame.  Non-alphabetical characters
  * are penalized twice, uppercase characters are penalized once.
  */
-static bool is_nickname_lame(const char *nickname)
+static bool
+is_nickname_lame(const char *nickname)
 {
 	const char *p;
 	unsigned int capcount = 0;
@@ -44,7 +45,8 @@ static bool is_nickname_lame(const char *nickname)
 /*
  * Sanitize a nickname and then change it to the sanitized version forcefully.
  */
-static void clean_nickname(user_t *u)
+static void
+clean_nickname(user_t *u)
 {
 	char nickbuf[COMPAT_NICKLEN + 1];
 	char *p;
@@ -73,7 +75,8 @@ static void clean_nickname(user_t *u)
 	fnc_sts(nicksvs.me->me, u, nickbuf, FNC_FORCE);
 }
 
-static void user_state_changed(hook_user_nick_t *data)
+static void
+user_state_changed(hook_user_nick_t *data)
 {
 	return_if_fail(data != NULL);
 	return_if_fail(data->u != NULL);

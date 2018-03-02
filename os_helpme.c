@@ -22,7 +22,8 @@ mod_deinit(const module_unload_intent_t intent)
 	service_named_unbind_command("operserv", &os_helpme);
 }
 
-static void os_cmd_helpme(sourceinfo_t *si, int parc, char *parv[])
+static void
+os_cmd_helpme(sourceinfo_t *si, int parc, char *parv[])
 {
 	service_t *svs;
 

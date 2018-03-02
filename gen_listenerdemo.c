@@ -10,7 +10,8 @@
 
 connection_t *listener;
 
-static int my_read(connection_t * cptr, char *buf)
+static int
+my_read(connection_t * cptr, char *buf)
 {
         int n;
 
@@ -23,7 +24,8 @@ static int my_read(connection_t * cptr, char *buf)
         return n;
 }
 
-static void do_packet(char *buf)
+static void
+do_packet(char *buf)
 {
         char *ptr, buf2[BUFSIZE * 2];
         static char tmp[BUFSIZE * 2 + 1];
@@ -50,7 +52,8 @@ static void do_packet(char *buf)
         }
 }
 
-static void my_rhandler(connection_t * cptr)
+static void
+my_rhandler(connection_t * cptr)
 {
         char buf[BUFSIZE * 2];
 
@@ -60,7 +63,8 @@ static void my_rhandler(connection_t * cptr)
         do_packet(buf);
 }
 
-static void do_listen(connection_t *cptr)
+static void
+do_listen(connection_t *cptr)
 {
 	connection_t *newptr;
 	newptr = connection_accept_tcp(cptr, my_rhandler, NULL);

@@ -18,7 +18,8 @@
 
 static mowgli_list_t guestnicks = { NULL, NULL, 0 };
 
-static void guestnoreg_hook(hook_user_register_check_t *hdata)
+static void
+guestnoreg_hook(hook_user_register_check_t *hdata)
 {
         mowgli_node_t *n;
 
@@ -39,7 +40,8 @@ static void guestnoreg_hook(hook_user_register_check_t *hdata)
 
 }
 
-static int guestnoreg_config_handler(mowgli_config_file_entry_t *ce)
+static int
+guestnoreg_config_handler(mowgli_config_file_entry_t *ce)
 {
         mowgli_config_file_entry_t *cce;
 
@@ -52,7 +54,8 @@ static int guestnoreg_config_handler(mowgli_config_file_entry_t *ce)
         return 0;
 }
 
-static void guestnoreg_config_purge(void *unused)
+static void
+guestnoreg_config_purge(void *unused)
 {
         mowgli_node_t *n, *tn;
 

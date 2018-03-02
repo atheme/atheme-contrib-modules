@@ -62,7 +62,8 @@ mod_deinit(const module_unload_intent_t intent)
 		mowgli_timer_destroy(base_eventloop, defcon_timer);
 }
 
-static void defcon_nouserreg(hook_user_register_check_t *hdata)
+static void
+defcon_nouserreg(hook_user_register_check_t *hdata)
 {
 	return_if_fail(hdata != NULL);
 	return_if_fail(hdata->si != NULL);
@@ -74,7 +75,8 @@ static void defcon_nouserreg(hook_user_register_check_t *hdata)
 	}
 }
 
-static void defcon_nochanreg(hook_channel_register_check_t *hdatac)
+static void
+defcon_nochanreg(hook_channel_register_check_t *hdatac)
 {
 	return_if_fail(hdatac != NULL);
 	return_if_fail(hdatac->si != NULL);
@@ -86,7 +88,8 @@ static void defcon_nochanreg(hook_channel_register_check_t *hdatac)
 	}
 }
 
-static void defcon_useradd(hook_user_nick_t *data)
+static void
+defcon_useradd(hook_user_nick_t *data)
 {
 	user_t *u = data->u;
 	kline_t *k;
@@ -107,7 +110,8 @@ static void defcon_useradd(hook_user_nick_t *data)
 	}
 }
 
-static void defcon_svsignore(void)
+static void
+defcon_svsignore(void)
 {
 	svsignore_t *svsignore;
 	mowgli_node_t *n, *tn;
@@ -142,7 +146,8 @@ static void defcon_svsignore(void)
 	}
 }
 
-static void defcon_forcechanmodes(void)
+static void
+defcon_forcechanmodes(void)
 {
 	channel_t *chptr;
 	mowgli_patricia_iteration_state_t state;
@@ -172,7 +177,8 @@ static void defcon_forcechanmodes(void)
 	}
 }
 
-static void defcon_timeoutfunc(void *dummy)
+static void
+defcon_timeoutfunc(void *dummy)
 {
 	service_t *svs;
 	char buf[BUFSIZE];
@@ -188,7 +194,8 @@ static void defcon_timeoutfunc(void *dummy)
 	notice_global_sts(svs->me, "*", buf);
 }
 
-static void os_cmd_defcon(sourceinfo_t *si, int parc, char *parv[])
+static void
+os_cmd_defcon(sourceinfo_t *si, int parc, char *parv[])
 {
 	char *defcon = parv[0];
 	char buf[BUFSIZE];

@@ -27,7 +27,8 @@ mod_deinit(const module_unload_intent_t intent)
 	service_named_unbind_command("memoserv", &ms_fsend);
 }
 
-static void ms_cmd_fsend(sourceinfo_t *si, int parc, char *parv[])
+static void
+ms_cmd_fsend(sourceinfo_t *si, int parc, char *parv[])
 {
 	/* misc structs etc */
 	user_t *tu;

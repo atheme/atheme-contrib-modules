@@ -23,7 +23,8 @@ mod_deinit(const module_unload_intent_t intent)
 	service_named_unbind_command("nickserv", &ns_listlogins);
 }
 
-static void ns_cmd_listlogins(sourceinfo_t *si, int parc, char *parv[])
+static void
+ns_cmd_listlogins(sourceinfo_t *si, int parc, char *parv[])
 {
 	user_t *u;
 	mowgli_node_t *n;

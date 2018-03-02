@@ -9,7 +9,8 @@
 
 service_t *loveserv;
 
-static void _ls_admirer(sourceinfo_t *si, int parc, char *parv[])
+static void
+_ls_admirer(sourceinfo_t *si, int parc, char *parv[])
 {
 	char *target = parv[0];
 
@@ -32,7 +33,8 @@ static void _ls_admirer(sourceinfo_t *si, int parc, char *parv[])
 
 command_t ls_admirer = { "ADMIRER", "Tell somebody they have a secret admirer.", AC_NONE, 1, _ls_admirer, { .path = "" } };
 
-static void _ls_rose(sourceinfo_t *si, int parc, char *parv[])
+static void
+_ls_rose(sourceinfo_t *si, int parc, char *parv[])
 {
 	char *target = parv[0];
 
@@ -55,7 +57,8 @@ static void _ls_rose(sourceinfo_t *si, int parc, char *parv[])
 
 command_t ls_rose = { "ROSE", "Sends a rose to somebody.", AC_NONE, 1, _ls_rose, { .path = "" } };
 
-static void _ls_chocolate(sourceinfo_t *si, int parc, char *parv[])
+static void
+_ls_chocolate(sourceinfo_t *si, int parc, char *parv[])
 {
 	char *target = parv[0];
 
@@ -78,7 +81,8 @@ static void _ls_chocolate(sourceinfo_t *si, int parc, char *parv[])
 
 command_t ls_chocolate = { "CHOCOLATE", "Sends chocolates to somebody.", AC_NONE, 1, _ls_chocolate, { .path = "" } };
 
-static void _ls_candy(sourceinfo_t *si, int parc, char *parv[])
+static void
+_ls_candy(sourceinfo_t *si, int parc, char *parv[])
 {
 	char *target = parv[0];
 
@@ -101,7 +105,8 @@ static void _ls_candy(sourceinfo_t *si, int parc, char *parv[])
 
 command_t ls_candy = { "CANDY", "Sends a bag of candy to somebody.", AC_NONE, 1, _ls_candy, { .path = "" } };
 
-static void _ls_hug(sourceinfo_t *si, int parc, char *parv[])
+static void
+_ls_hug(sourceinfo_t *si, int parc, char *parv[])
 {
 	char *target = parv[0];
 
@@ -124,7 +129,8 @@ static void _ls_hug(sourceinfo_t *si, int parc, char *parv[])
 
 command_t ls_hug = { "HUG", "Reach out and hug somebody.", AC_NONE, 1, _ls_hug, { .path = "" } };
 
-static void _ls_kiss(sourceinfo_t *si, int parc, char *parv[])
+static void
+_ls_kiss(sourceinfo_t *si, int parc, char *parv[])
 {
 	char *target = parv[0];
 
@@ -147,7 +153,8 @@ static void _ls_kiss(sourceinfo_t *si, int parc, char *parv[])
 
 command_t ls_kiss = { "KISS", "Kiss somebody.", AC_NONE, 1, _ls_kiss, { .path = "" } };
 
-static void _ls_lovenote(sourceinfo_t *si, int parc, char *parv[])
+static void
+_ls_lovenote(sourceinfo_t *si, int parc, char *parv[])
 {
 	char *target = parv[0];
 	char *note = parv[1];
@@ -171,7 +178,8 @@ static void _ls_lovenote(sourceinfo_t *si, int parc, char *parv[])
 
 command_t ls_lovenote = { "LOVENOTE", "Sends a lovenote to somebody.", AC_NONE, 2, _ls_lovenote, { .path = "" } };
 
-static void _ls_apology(sourceinfo_t *si, int parc, char *parv[])
+static void
+_ls_apology(sourceinfo_t *si, int parc, char *parv[])
 {
 	char *target = parv[0];
 	char *note = parv[1];
@@ -195,7 +203,8 @@ static void _ls_apology(sourceinfo_t *si, int parc, char *parv[])
 
 command_t ls_apology = { "APOLOGY", "Sends an apology to somebody.", AC_NONE, 2, _ls_apology, { .path = "" } };
 
-static void _ls_thankyou(sourceinfo_t *si, int parc, char *parv[])
+static void
+_ls_thankyou(sourceinfo_t *si, int parc, char *parv[])
 {
 	char *target = parv[0];
 	char *note = parv[1];
@@ -219,7 +228,8 @@ static void _ls_thankyou(sourceinfo_t *si, int parc, char *parv[])
 
 command_t ls_thankyou = { "THANKYOU", "Sends a thank-you note to somebody.", AC_NONE, 2, _ls_thankyou, { .path = "" } };
 
-static void _ls_spank(sourceinfo_t *si, int parc, char *parv[])
+static void
+_ls_spank(sourceinfo_t *si, int parc, char *parv[])
 {
 	char *target = parv[0];
 
@@ -242,7 +252,8 @@ static void _ls_spank(sourceinfo_t *si, int parc, char *parv[])
 
 command_t ls_spank = { "SPANK", "Gives somebody a spanking.", AC_NONE, 1, _ls_spank, { .path = "" } };
 
-static void _ls_chocobo(sourceinfo_t *si, int parc, char *parv[])	/* silly */
+static void
+_ls_chocobo(sourceinfo_t *si, int parc, char *parv[])	/* silly */
 {
 	char *target = parv[0];
 
@@ -265,7 +276,8 @@ static void _ls_chocobo(sourceinfo_t *si, int parc, char *parv[])	/* silly */
 
 command_t ls_chocobo = { "CHOCOBO", "Sends a chocobo to somebody.", AC_NONE, 1, _ls_chocobo, { .path = "" } };
 
-static void _ls_help(sourceinfo_t *si, int parc, char *parv[])
+static void
+_ls_help(sourceinfo_t *si, int parc, char *parv[])
 {
         command_help(si, si->service->commands);
 }

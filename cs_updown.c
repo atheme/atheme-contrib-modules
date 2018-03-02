@@ -27,8 +27,8 @@ mod_deinit(const module_unload_intent_t intent)
 	service_named_unbind_command("chanserv", &cs_down);
 }
 
-
-static void cs_cmd_up(sourceinfo_t *si, int parc, char *parv[])
+static void
+cs_cmd_up(sourceinfo_t *si, int parc, char *parv[])
 {
 	chanuser_t *cu;
 	mychan_t *mc;
@@ -131,8 +131,8 @@ static void cs_cmd_up(sourceinfo_t *si, int parc, char *parv[])
 	command_success_nodata(si, "Upped successfully on \2%s\2.", mc->name);
 }
 
-
-static void cs_cmd_down(sourceinfo_t *si, int parc, char *parv[])
+static void
+cs_cmd_down(sourceinfo_t *si, int parc, char *parv[])
 {
 	chanuser_t *cu;
 	mychan_t *mc;

@@ -25,7 +25,8 @@ mod_deinit(const module_unload_intent_t intent)
 	service_named_unbind_command("nickserv", &ns_fenforce);
 }
 
-static void ns_cmd_fenforce(sourceinfo_t *si, int parc, char *parv[])
+static void
+ns_cmd_fenforce(sourceinfo_t *si, int parc, char *parv[])
 {
 	char *setting;
 	myuser_t *mu;

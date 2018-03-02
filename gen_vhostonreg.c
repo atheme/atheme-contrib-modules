@@ -34,7 +34,8 @@ mod_deinit(const module_unload_intent_t intent)
 	hook_del_user_identify(hook_user_identify);
 }
 
-static void user_add_host(myuser_t *mu)
+static void
+user_add_host(myuser_t *mu)
 {
 	int maxlen1, i;
 	char newhost[COMPAT_HOSTLEN + 1];
@@ -78,7 +79,8 @@ static void user_add_host(myuser_t *mu)
 	metadata_add(mu, "private:usercloak", newhost);
 }
 
-static void handle_verify_register(hook_user_req_t *req)
+static void
+handle_verify_register(hook_user_req_t *req)
 {
 	myuser_t *mu = req->mu;
 	mowgli_node_t *n;
@@ -96,7 +98,8 @@ static void handle_verify_register(hook_user_req_t *req)
 	}
 }
 
-static void hook_user_identify(user_t *u)
+static void
+hook_user_identify(user_t *u)
 {
 	/* if they have an existing cloak, don't do anything */
 	if ((metadata_find(u->myuser, "private:usercloak")) || (me.hidehostsuffix == NULL))

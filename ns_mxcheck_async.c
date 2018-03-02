@@ -37,7 +37,8 @@ mod_deinit(const module_unload_intent_t intent)
     childproc_delete_all(childproc_cb);
 }
 
-static void childproc_cb(pid_t pid, int status, void *data)
+static void
+childproc_cb(pid_t pid, int status, void *data)
 {
 	struct procdata *pd = data;
 	myuser_t *mu;
@@ -71,7 +72,8 @@ static void childproc_cb(pid_t pid, int status, void *data)
 	}
 }
 
-static void check_registration(hook_user_register_check_t *hdata)
+static void
+check_registration(hook_user_register_check_t *hdata)
 {
 	char buf[1024];
 	const char *user;
@@ -124,7 +126,8 @@ static void check_registration(hook_user_register_check_t *hdata)
 	}
 }
 
-int count_mx (const char *host)
+int
+count_mx(const char *host)
 {
     u_char nsbuf[4096];
     ns_msg amsg;

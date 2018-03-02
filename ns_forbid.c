@@ -25,7 +25,8 @@ mod_deinit(const module_unload_intent_t intent)
 	service_named_unbind_command("nickserv", &ns_forbid);
 }
 
-static void make_forbid(sourceinfo_t *si, const char *account, const char *reason)
+static void
+make_forbid(sourceinfo_t *si, const char *account, const char *reason)
 {
 	myuser_t *mu;
 	mynick_t *mn = NULL;
@@ -77,7 +78,8 @@ static void make_forbid(sourceinfo_t *si, const char *account, const char *reaso
 	/* don't call hooks, hmm */
 }
 
-static void destroy_forbid(sourceinfo_t *si, const char *account)
+static void
+destroy_forbid(sourceinfo_t *si, const char *account)
 {
 	myuser_t *mu;
 	metadata_t *md;
@@ -104,7 +106,8 @@ static void destroy_forbid(sourceinfo_t *si, const char *account)
 	atheme_object_unref(mu);
 }
 
-static void ns_cmd_forbid(sourceinfo_t *si, int parc, char *parv[])
+static void
+ns_cmd_forbid(sourceinfo_t *si, int parc, char *parv[])
 {
 	const char *account;
 	const char *action;

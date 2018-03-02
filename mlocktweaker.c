@@ -32,7 +32,8 @@ mod_deinit(const module_unload_intent_t intent)
 	hook_del_channel_register(handle_channel_register);
 }
 
-static void handle_channel_register(hook_channel_req_t *hdata)
+static void
+handle_channel_register(hook_channel_req_t *hdata)
 {
 	mychan_t *mc = hdata->mc;
 	unsigned int *target;

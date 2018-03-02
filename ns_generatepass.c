@@ -24,7 +24,8 @@ mod_deinit(const module_unload_intent_t intent)
 	service_named_unbind_command("nickserv", &ns_generatepass);
 }
 
-static void ns_cmd_generatepass(sourceinfo_t *si, int parc, char *parv[])
+static void
+ns_cmd_generatepass(sourceinfo_t *si, int parc, char *parv[])
 {
 	int n = 0;
 	char *newpass;

@@ -29,7 +29,8 @@ mod_deinit(const module_unload_intent_t intent)
 	service_named_unbind_command("operserv", &os_loadchanmodes);
 }
 
-static void os_cmd_savechanmodes(sourceinfo_t *si, int parc, char *parv[])
+static void
+os_cmd_savechanmodes(sourceinfo_t *si, int parc, char *parv[])
 {
 	FILE *out;
 	mowgli_patricia_iteration_state_t state;
@@ -67,7 +68,8 @@ static void os_cmd_savechanmodes(sourceinfo_t *si, int parc, char *parv[])
 			DATADIR "/chanmodes.txt");
 }
 
-static channel_t *restore_channel(char *name, char *modes)
+static channel_t *
+restore_channel(char *name, char *modes)
 {
 	channel_t *c;
 	int modeparc;
@@ -88,7 +90,8 @@ static channel_t *restore_channel(char *name, char *modes)
 	return c;
 }
 
-static void os_cmd_loadchanmodes(sourceinfo_t *si, int parc, char *parv[])
+static void
+os_cmd_loadchanmodes(sourceinfo_t *si, int parc, char *parv[])
 {
 	FILE *in;
 	char *item, buf[2048];

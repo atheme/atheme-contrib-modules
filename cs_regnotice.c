@@ -10,7 +10,8 @@
 
 static mowgli_list_t regnotices = { NULL, NULL, 0 };
 
-static void regnotice_hook(hook_channel_req_t *hdata)
+static void
+regnotice_hook(hook_channel_req_t *hdata)
 {
 	mowgli_node_t *n;
 	sourceinfo_t *si = hdata->si;
@@ -27,7 +28,8 @@ static void regnotice_hook(hook_channel_req_t *hdata)
 	}
 }
 
-static int regnotice_config_handler(mowgli_config_file_entry_t *ce)
+static int
+regnotice_config_handler(mowgli_config_file_entry_t *ce)
 {
 	mowgli_config_file_entry_t *cce;
 
@@ -40,7 +42,8 @@ static int regnotice_config_handler(mowgli_config_file_entry_t *ce)
 	return 0;
 }
 
-static void regnotice_config_purge(void *unused)
+static void
+regnotice_config_purge(void *unused)
 {
 	mowgli_node_t *n, *tn;
 

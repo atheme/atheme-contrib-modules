@@ -17,7 +17,8 @@ mod_deinit(const module_unload_intent_t intent)
 	service_named_unbind_command("chanserv", &cs_ping);
 }
 
-static void cs_cmd_ping(sourceinfo_t *si, int parc, char *parv[])
+static void
+cs_cmd_ping(sourceinfo_t *si, int parc, char *parv[])
 {
 	command_success_nodata(si, "Pong!");
 	return;

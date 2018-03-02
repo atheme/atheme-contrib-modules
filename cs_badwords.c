@@ -67,7 +67,8 @@ mod_deinit(const module_unload_intent_t intent)
 	command_delete(&cs_set_blockbadwordsops, *cs_set_cmdtree);
 }
 
-static inline mowgli_list_t *badwords_list_of(mychan_t *mc)
+static inline mowgli_list_t *
+badwords_list_of(mychan_t *mc)
 {
 	mowgli_list_t *l;
 
@@ -83,7 +84,8 @@ static inline mowgli_list_t *badwords_list_of(mychan_t *mc)
 	return l;
 }
 
-static void write_badword_db(database_handle_t *db)
+static void
+write_badword_db(database_handle_t *db)
 {
 	mowgli_node_t *n;
 	mychan_t *mc;
@@ -112,7 +114,8 @@ static void write_badword_db(database_handle_t *db)
 	}
 }
 
-static void db_h_bw(database_handle_t *db, const char *type)
+static void
+db_h_bw(database_handle_t *db, const char *type)
 {
 	mychan_t *mc;
 	mowgli_patricia_iteration_state_t state;
@@ -143,7 +146,8 @@ static void db_h_bw(database_handle_t *db, const char *type)
 	}
 }
 
-static void on_channel_message(hook_cmessage_data_t *data)
+static void
+on_channel_message(hook_cmessage_data_t *data)
 {
 	badword_t *bw;
 	mowgli_node_t *n;
@@ -233,7 +237,8 @@ static void on_channel_message(hook_cmessage_data_t *data)
 }
 
 /* SET BADWORD */
-static void cs_cmd_badwords(sourceinfo_t *si, int parc, char *parv[])
+static void
+cs_cmd_badwords(sourceinfo_t *si, int parc, char *parv[])
 {
 	char *channel = parv[0];
 	char *command = parv[1];
@@ -388,7 +393,8 @@ static void cs_cmd_badwords(sourceinfo_t *si, int parc, char *parv[])
 	}
 }
 
-static void cs_set_cmd_blockbadwords(sourceinfo_t *si, int parc, char *parv[])
+static void
+cs_set_cmd_blockbadwords(sourceinfo_t *si, int parc, char *parv[])
 {
 	mychan_t *mc;
 
@@ -449,7 +455,8 @@ static void cs_set_cmd_blockbadwords(sourceinfo_t *si, int parc, char *parv[])
 	}
 }
 
-static void cs_set_cmd_blockbadwordsops(sourceinfo_t *si, int parc, char *parv[])
+static void
+cs_set_cmd_blockbadwordsops(sourceinfo_t *si, int parc, char *parv[])
 {
 	mychan_t *mc;
 

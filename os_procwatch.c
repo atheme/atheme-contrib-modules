@@ -45,7 +45,8 @@ mod_deinit(const module_unload_intent_t intent)
 	service_named_unbind_command("operserv", &os_procwatch);
 }
 
-static void procwatch_readhandler(connection_t *cptr)
+static void
+procwatch_readhandler(connection_t *cptr)
 {
 	struct kevent ev;
 
@@ -62,7 +63,8 @@ static void procwatch_readhandler(connection_t *cptr)
 	}
 }
 
-static void os_cmd_procwatch(sourceinfo_t *si, int parc, char *parv[])
+static void
+os_cmd_procwatch(sourceinfo_t *si, int parc, char *parv[])
 {
 	long v;
 	char *end;

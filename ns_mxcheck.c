@@ -23,7 +23,8 @@ mod_deinit(const module_unload_intent_t intent)
     hook_del_user_can_register(check_registration);
 }
 
-static void check_registration(hook_user_register_check_t *hdata)
+static void
+check_registration(hook_user_register_check_t *hdata)
 {
     char buf[1024];
     const char *user;
@@ -61,7 +62,8 @@ static void check_registration(hook_user_register_check_t *hdata)
     }
 }
 
-int count_mx (const char *host)
+int
+count_mx(const char *host)
 {
     u_char nsbuf[4096];
     ns_msg amsg;

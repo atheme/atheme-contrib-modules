@@ -24,12 +24,14 @@ mod_deinit(const module_unload_intent_t intent)
 	service_named_unbind_command("operserv", &os_modeall);
 }
 
-static void set_channel_mode(service_t *s, channel_t *c, int modeparc, char *modeparv[])
+static void
+set_channel_mode(service_t *s, channel_t *c, int modeparc, char *modeparv[])
 {
 	channel_mode(s->me, c, modeparc, modeparv);
 }
 
-static void os_cmd_modeall(sourceinfo_t *si, int parc, char *parv[])
+static void
+os_cmd_modeall(sourceinfo_t *si, int parc, char *parv[])
 {
 	char *mode = parv[0];
 	channel_t *c;

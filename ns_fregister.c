@@ -26,7 +26,8 @@ mod_deinit(const module_unload_intent_t intent)
 	service_named_unbind_command("nickserv", &ns_fregister);
 }
 
-static void ns_cmd_fregister(sourceinfo_t *si, int parc, char *parv[])
+static void
+ns_cmd_fregister(sourceinfo_t *si, int parc, char *parv[])
 {
 	myuser_t *mu;
 	mynick_t *mn = NULL;

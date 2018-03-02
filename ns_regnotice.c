@@ -10,7 +10,8 @@
 
 static mowgli_list_t regnotices = { NULL, NULL, 0 };
 
-static void regnotice_hook(myuser_t *mu)
+static void
+regnotice_hook(myuser_t *mu)
 {
 	mowgli_node_t *n;
 
@@ -24,7 +25,8 @@ static void regnotice_hook(myuser_t *mu)
 	}
 }
 
-static int regnotice_config_handler(mowgli_config_file_entry_t *ce)
+static int
+regnotice_config_handler(mowgli_config_file_entry_t *ce)
 {
 	mowgli_config_file_entry_t *cce;
 
@@ -37,7 +39,8 @@ static int regnotice_config_handler(mowgli_config_file_entry_t *ce)
 	return 0;
 }
 
-static void regnotice_config_purge(void *unused)
+static void
+regnotice_config_purge(void *unused)
 {
 	mowgli_node_t *n, *tn;
 

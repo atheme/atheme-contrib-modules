@@ -24,7 +24,8 @@ mod_deinit(const module_unload_intent_t intent)
 	service_named_unbind_command("nickserv", &ns_generatehash);
 }
 
-static void ns_cmd_generatehash(sourceinfo_t *si, int parc, char *parv[])
+static void
+ns_cmd_generatehash(sourceinfo_t *si, int parc, char *parv[])
 {
 	char *pass = parv[0];
 

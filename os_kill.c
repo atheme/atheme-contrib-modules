@@ -28,7 +28,8 @@ mod_deinit(const module_unload_intent_t intent)
 	service_named_unbind_command("operserv", &os_kill);
 }
 
-static void os_cmd_kill(sourceinfo_t *si, int parc, char *parv[])
+static void
+os_cmd_kill(sourceinfo_t *si, int parc, char *parv[])
 {
 	user_t *target;
 

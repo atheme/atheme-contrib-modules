@@ -29,7 +29,8 @@ mod_deinit(const module_unload_intent_t intent)
 }
 
 /* USERINFO <channel> [user] [message] */
-static void cs_cmd_userinfo(sourceinfo_t *si, int parc, char *parv[])
+static void
+cs_cmd_userinfo(sourceinfo_t *si, int parc, char *parv[])
 {
 	mowgli_node_t *n;
 	myuser_t *mu;
@@ -126,7 +127,8 @@ static void cs_cmd_userinfo(sourceinfo_t *si, int parc, char *parv[])
 	return;
 }
 
-static void userinfo_check_join(hook_channel_joinpart_t *hdata)
+static void
+userinfo_check_join(hook_channel_joinpart_t *hdata)
 {
 	chanuser_t *cu = hdata->cu;
 	myuser_t *mu;

@@ -11,7 +11,8 @@
 
 unsigned int waitreg_time = 0;
 
-static void waitreg_hook(hook_user_register_check_t *hdata)
+static void
+waitreg_hook(hook_user_register_check_t *hdata)
 {
 	return_if_fail(hdata != NULL);
 	return_if_fail(hdata->si != NULL);
@@ -27,7 +28,8 @@ static void waitreg_hook(hook_user_register_check_t *hdata)
 	}
 }
 
-static void info_hook(sourceinfo_t *si)
+static void
+info_hook(sourceinfo_t *si)
 {
 	return_if_fail(si != NULL);
 

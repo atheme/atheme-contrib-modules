@@ -9,8 +9,8 @@
 
 struct procdata
 {
-	char name[NICKLEN + 1];
-	char email[EMAILLEN + 1];
+	char name[COMPAT_NICKLEN + 1];
+	char email[COMPAT_EMAILLEN + 1];
 };
 
 #define MAX_CHILDPROCS 10
@@ -63,7 +63,7 @@ static void childproc_cb(pid_t pid, int status, void *data)
 				"REGISTER failed", domain);
 		myuser_notice(nicksvs.nick, mu, "Sorry, \2%s\2 does not exist, "
 				"I can't send mail there. Please check and try again.", domain);
-		object_unref(mu);
+		atheme_object_unref(mu);
 	}
 	else if (WEXITSTATUS(status) == 0)
 	{

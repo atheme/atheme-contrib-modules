@@ -6,7 +6,7 @@
  *
  */
 
-#include "atheme.h"
+#include "atheme-compat.h"
 
 static void check_registration(hook_user_register_check_t *hdata);
 static void ns_cmd_goodmail(sourceinfo_t *si, int parc, char *parv[]);

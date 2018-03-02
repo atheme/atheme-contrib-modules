@@ -107,9 +107,4 @@ mod_deinit(const module_unload_intent_t intent)
 	hook_del_user_nickchange(user_state_changed);
 }
 
-DECLARE_MODULE_V1
-(
-	"contrib/ns_cleannick", MODULE_UNLOAD_CAPABILITY_OK, mod_init, mod_deinit,
-	PACKAGE_STRING,
-	VENDOR_STRING
-);
+SIMPLE_DECLARE_MODULE_V1("contrib/ns_cleannick", MODULE_UNLOAD_CAPABILITY_OK)

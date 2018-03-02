@@ -220,9 +220,4 @@ static void os_cmd_listklinechans(sourceinfo_t *si, int parc, char *parv[])
 						    N_("\2%d\2 matches for pattern \2%s\2"), matches), matches, pattern);
 }
 
-DECLARE_MODULE_V1
-(
-	"contrib/os_klinechan", MODULE_UNLOAD_CAPABILITY_OK, mod_init, mod_deinit,
-	PACKAGE_STRING,
-	"Atheme Development Group <http://atheme.github.io>"
-);
+SIMPLE_DECLARE_MODULE_V1("contrib/os_klinechan", MODULE_UNLOAD_CAPABILITY_OK)

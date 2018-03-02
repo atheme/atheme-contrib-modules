@@ -171,9 +171,4 @@ mod_deinit(module_unload_intent_t intent)
 	del_top_conf("NICKLISTS");
 }
 
-DECLARE_MODULE_V1
-(
-	"contrib/os_akillnicklist", MODULE_UNLOAD_CAPABILITY_OK, mod_init, mod_deinit,
-	"0.1",
-	"Atheme Development Group <http://atheme.github.io>"
-);
+SIMPLE_DECLARE_MODULE_V1("contrib/os_akillnicklist", MODULE_UNLOAD_CAPABILITY_OK)

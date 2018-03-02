@@ -23,6 +23,7 @@
 #define ATHEME_CONTRIB_COMPAT_H 1
 
 #include "atheme.h"
+#include "contrib-vendors.h"
 
 
 
@@ -82,6 +83,15 @@ typedef char *stringref;
 #    define ATHEME_VATTR_ALIGNED(alignment)     /* No variable attribute support */
 #    define ATHEME_VATTR_UNUSED                 /* No variable attribute support */
 #  endif
+
+/* These 2 macros were introduced in the Atheme 7.3 development series and
+ * they're much nicer to use.
+ */
+#define VENDOR_DECLARE_MODULE_V1(name, unloadcap, ven)  \
+        DECLARE_MODULE_V1(name, unloadcap, mod_init, mod_deinit, PACKAGE_STRING, ven);
+
+#define SIMPLE_DECLARE_MODULE_V1(name, unloadcap)       \
+	VENDOR_DECLARE_MODULE_V1(name, unloadcap, VENDOR_STRING)
 
 /* These were redefined in the Atheme 7.3 development series to not
  * include the space for a NULL terminator in their definition. This

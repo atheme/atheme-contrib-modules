@@ -209,9 +209,4 @@ static void ajoin_on_identify(user_t *u)
 	}
 }
 
-DECLARE_MODULE_V1
-(
-	"contrib/ns_ajoin", MODULE_UNLOAD_CAPABILITY_OK, mod_init, mod_deinit,
-	PACKAGE_STRING,
-	VENDOR_STRING
-);
+SIMPLE_DECLARE_MODULE_V1("contrib/ns_ajoin", MODULE_UNLOAD_CAPABILITY_OK)

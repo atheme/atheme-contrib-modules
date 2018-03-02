@@ -43,12 +43,7 @@ static void ns_cmd_generatepass(sourceinfo_t *si, int parc, char *parv[])
 	logcommand(si, CMDLOG_GET, "GENERATEPASS");
 }
 
-DECLARE_MODULE_V1
-(
-	"contrib/ns_generatepass", MODULE_UNLOAD_CAPABILITY_OK, mod_init, mod_deinit,
-	PACKAGE_STRING,
-	"Epiphanic Networks <http://www.epiphanic.org>"
-);
+VENDOR_DECLARE_MODULE_V1("contrib/ns_generatepass", MODULE_UNLOAD_CAPABILITY_OK, CONTRIB_VENDOR_EPIPHANIC)
 
 /* vim:cinoptions=>s,e0,n0,f0,{0,}0,^0,=s,ps,t0,c3,+s,(2s,us,)20,*30,gs,hs
  * vim:ts=8

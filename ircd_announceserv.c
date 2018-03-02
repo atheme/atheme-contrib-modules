@@ -384,12 +384,7 @@ static void as_cmd_cancel(sourceinfo_t *si, int parc, char *parv[])
 	command_fail(si, fault_badparams, _("You do not have a pending announcement to cancel."));
 }
 
-DECLARE_MODULE_V1
-(
-	"contrib/ircd_announceserv", MODULE_UNLOAD_CAPABILITY_OK, mod_init, mod_deinit,
-	PACKAGE_STRING,
-	"JD and Taros"
-);
+VENDOR_DECLARE_MODULE_V1("contrib/ircd_announceserv", MODULE_UNLOAD_CAPABILITY_OK, CONTRIB_VENDOR_JD_AND_TAROS)
 
 /* vim:cinoptions=>s,e0,n0,f0,{0,}0,^0,=s,ps,t0,c3,+s,(2s,us,)20,*30,gs,hs
  * vim:ts=8

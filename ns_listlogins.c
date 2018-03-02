@@ -46,12 +46,7 @@ static void ns_cmd_listlogins(sourceinfo_t *si, int parc, char *parv[])
 	logcommand(si, CMDLOG_GET, "LISTLOGINS: (\2%d\2 matches)", matches);
 }
 
-DECLARE_MODULE_V1
-(
-	"contrib/ns_listlogins", MODULE_UNLOAD_CAPABILITY_OK, mod_init, mod_deinit,
-	PACKAGE_STRING,
-	VENDOR_STRING
-);
+SIMPLE_DECLARE_MODULE_V1("contrib/ns_listlogins", MODULE_UNLOAD_CAPABILITY_OK)
 
 /* vim:cinoptions=>s,e0,n0,f0,{0,}0,^0,=s,ps,t0,c3,+s,(2s,us,)20,*30,gs,hs
  * vim:ts=8

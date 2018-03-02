@@ -209,9 +209,4 @@ static void cs_cmd_access(sourceinfo_t *si, int parc, char *parv[])
 		command_fail(si, fault_badparams, _("Invalid command. Use \2/%s%s help\2 for a command listing."), (ircd->uses_rcommand == FALSE) ? "msg " : "", si->service->disp);
 }
 
-DECLARE_MODULE_V1
-(
-	"contrib/cs_access_alias", MODULE_UNLOAD_CAPABILITY_OK, mod_init, mod_deinit,
-	"$Id$",
-	"freenode <http://www.freenode.net>"
-);
+VENDOR_DECLARE_MODULE_V1("contrib/cs_access_alias", MODULE_UNLOAD_CAPABILITY_OK, CONTRIB_VENDOR_FREENODE)

@@ -144,11 +144,6 @@ int count_mx (const char *host)
     return l;
 }
 
-DECLARE_MODULE_V1
-(
-    "contrib/ns_mxcheck_async", MODULE_UNLOAD_CAPABILITY_OK, mod_init, mod_deinit,
-    "1.1",
-    "Jamie L. Penman-Smithson <jamie@slacked.org>"
-);
+VENDOR_DECLARE_MODULE_V1("contrib/ns_mxcheck_async", MODULE_UNLOAD_CAPABILITY_OK, CONTRIB_VENDOR_JAMIE_PENMAN)
 
 #endif

@@ -32,9 +32,4 @@ static void os_cmd_helpme(sourceinfo_t *si, int parc, char *parv[])
 	command_success_nodata(si, _("You are now a network helper."));
 }
 
-DECLARE_MODULE_V1
-(
-	"contrib/os_helpme", MODULE_UNLOAD_CAPABILITY_OK, mod_init, mod_deinit,
-	"os_helpme.c",
-	"elly+atheme@leptoquark.net"
-);
+VENDOR_DECLARE_MODULE_V1("contrib/os_helpme", MODULE_UNLOAD_CAPABILITY_OK, CONTRIB_VENDOR_ELLY)

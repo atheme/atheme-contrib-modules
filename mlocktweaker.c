@@ -64,9 +64,4 @@ static void handle_channel_register(hook_channel_req_t *hdata)
 	mc->mlock_off &= ~mc->mlock_on;
 }
 
-DECLARE_MODULE_V1
-(
-	"contrib/mlocktweaker", MODULE_UNLOAD_CAPABILITY_OK, mod_init, mod_deinit,
-	PACKAGE_STRING,
-	"William Pitcock <nenolod@atheme.org>"
-);
+VENDOR_DECLARE_MODULE_V1("contrib/mlocktweaker", MODULE_UNLOAD_CAPABILITY_OK, CONTRIB_VENDOR_NENOLOD)

@@ -124,12 +124,7 @@ static void os_cmd_testproc(sourceinfo_t *si, int parc, char *parv[])
 	}
 }
 
-DECLARE_MODULE_V1
-(
-	"contrib/os_testproc", MODULE_UNLOAD_CAPABILITY_OK, mod_init, mod_deinit,
-	PACKAGE_STRING,
-	VENDOR_STRING
-);
+SIMPLE_DECLARE_MODULE_V1("contrib/os_testproc", MODULE_UNLOAD_CAPABILITY_OK)
 
 #endif
 

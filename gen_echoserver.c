@@ -76,12 +76,7 @@ mod_deinit(const module_unload_intent_t intent)
 	connection_close(listener);
 }
 
-DECLARE_MODULE_V1
-(
-	"contrib/gen_echoserver", MODULE_UNLOAD_CAPABILITY_OK, mod_init, mod_deinit,
-	PACKAGE_STRING,
-	"William Pitcock <nenolod -at- nenolod.net>"
-);
+VENDOR_DECLARE_MODULE_V1("contrib/gen_echoserver", MODULE_UNLOAD_CAPABILITY_OK, CONTRIB_VENDOR_NENOLOD)
 
 /* vim:cinoptions=>s,e0,n0,f0,{0,}0,^0,=s,ps,t0,c3,+s,(2s,us,)20,*30,gs,hs
  * vim:ts=8

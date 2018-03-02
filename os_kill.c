@@ -50,9 +50,4 @@ static void os_cmd_kill(sourceinfo_t *si, int parc, char *parv[])
 	kill_user(si->service->me, target, "Requested: %s", parv[1]);
 }
 
-DECLARE_MODULE_V1
-(
-	"contrib/os_kill", MODULE_UNLOAD_CAPABILITY_OK, mod_init, mod_deinit,
-	PACKAGE_STRING,
-	VENDOR_STRING
-);
+SIMPLE_DECLARE_MODULE_V1("contrib/os_kill", MODULE_UNLOAD_CAPABILITY_OK)

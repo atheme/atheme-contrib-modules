@@ -91,12 +91,7 @@ static void os_cmd_procwatch(sourceinfo_t *si, int parc, char *parv[])
 	command_success_nodata(si, "Added pid %ld to list.", v);
 }
 
-DECLARE_MODULE_V1
-(
-	"contrib/os_procwatch", MODULE_UNLOAD_CAPABILITY_OK, mod_init, mod_deinit,
-	PACKAGE_STRING,
-	VENDOR_STRING
-);
+SIMPLE_DECLARE_MODULE_V1("contrib/os_procwatch", MODULE_UNLOAD_CAPABILITY_OK)
 
 #endif
 

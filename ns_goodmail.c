@@ -224,12 +224,7 @@ static void ns_cmd_goodmail(sourceinfo_t *si, int parc, char *parv[])
 	}
 }
 
-DECLARE_MODULE_V1
-(
-	"contrib/ns_goodmail", MODULE_UNLOAD_CAPABILITY_OK, mod_init, mod_deinit,
-	PACKAGE_STRING,
-	"Atheme Development Group <http://www.atheme.net>"
-);
+SIMPLE_DECLARE_MODULE_V1("contrib/ns_goodmail", MODULE_UNLOAD_CAPABILITY_OK)
 
 /* vim:cinoptions=>s,e0,n0,f0,{0,}0,^0,=s,ps,t0,c3,+s,(2s,us,)20,*30,gs,hs
  * vim:ts=8

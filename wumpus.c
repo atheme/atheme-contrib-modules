@@ -1015,12 +1015,7 @@ mod_deinit(module_unload_intent_t intent)
 		mowgli_timer_destroy(base_eventloop, wumpus.start_game_timer);
 }
 
-DECLARE_MODULE_V1
-(
-	"contrib/wumpus", MODULE_UNLOAD_CAPABILITY_OK, mod_init, mod_deinit,
-	PACKAGE_STRING,
-	"William Pitcock <nenolod -at- nenolod.net>"
-);
+VENDOR_DECLARE_MODULE_V1("contrib/wumpus", MODULE_UNLOAD_CAPABILITY_OK, CONTRIB_VENDOR_NENOLOD)
 
 /* vim:cinoptions=>s,e0,n0,f0,{0,}0,^0,=s,ps,t0,c3,+s,(2s,us,)20,*30,gs,hs
  * vim:ts=8

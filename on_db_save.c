@@ -136,11 +136,6 @@ static void on_db_save(void *unused)
 	}
 }
 
-DECLARE_MODULE_V1
-(
-	"contrib/on_db_save", MODULE_UNLOAD_CAPABILITY_OK, mod_init, mod_deinit,
-	"",
-	VENDOR_STRING
-);
+SIMPLE_DECLARE_MODULE_V1("contrib/on_db_save", MODULE_UNLOAD_CAPABILITY_OK)
 
 #endif

@@ -621,12 +621,7 @@ mod_deinit(module_unload_intent_t intent)
 	service_named_unbind_command("operserv", &os_dnsblscan);
 }
 
-DECLARE_MODULE_V1
-(
-	"contrib/dnsbl", MODULE_UNLOAD_CAPABILITY_OK, mod_init, mod_deinit,
-	PACKAGE_STRING,
-	"Atheme Development Group <http://atheme.github.io>"
-);
+SIMPLE_DECLARE_MODULE_V1("contrib/dnsbl", MODULE_UNLOAD_CAPABILITY_OK)
 
 /* vim:cinoptions=>s,e0,n0,f0,{0,}0,^0,=s,ps,t0,c3,+s,(2s,us,)20,*30,gs,hs
  * vim:ts=8

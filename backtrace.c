@@ -32,12 +32,7 @@ mod_deinit(const module_unload_intent_t intent)
 	signal(SIGSEGV, NULL);
 }
 
-DECLARE_MODULE_V1
-(
-	"contrib/backtrace", MODULE_UNLOAD_CAPABILITY_OK, mod_init, mod_deinit,
-	PACKAGE_STRING,
-	VENDOR_STRING
-);
+SIMPLE_DECLARE_MODULE_V1("contrib/backtrace", MODULE_UNLOAD_CAPABILITY_OK)
 
 #endif
 

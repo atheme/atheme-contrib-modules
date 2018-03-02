@@ -46,12 +46,7 @@ static void catserv_cmd_help(sourceinfo_t *si, int parc, char *parv[])
 	command_help(si, si->service->commands);
 }
 
-DECLARE_MODULE_V1
-(
-	"contrib/ircd_catserv", MODULE_UNLOAD_CAPABILITY_OK, mod_init, mod_deinit,
-	PACKAGE_STRING,
-	VENDOR_STRING
-);
+SIMPLE_DECLARE_MODULE_V1("contrib/ircd_catserv", MODULE_UNLOAD_CAPABILITY_OK)
 
 /* vim:cinoptions=>s,e0,n0,f0,{0,}0,^0,=s,ps,t0,c3,+s,(2s,us,)20,*30,gs,hs
  * vim:ts=8

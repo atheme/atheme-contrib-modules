@@ -151,9 +151,4 @@ static void userinfo_check_join(hook_channel_joinpart_t *hdata)
 	msg(chansvs.nick, cu->chan->name, "[%s] %s", cu->user->nick, md->value);
 }
 
-DECLARE_MODULE_V1
-(
-	"contrib/cs_userinfo", MODULE_UNLOAD_CAPABILITY_OK, mod_init, mod_deinit,
-	PACKAGE_STRING,
-	VENDOR_STRING
-);
+SIMPLE_DECLARE_MODULE_V1("contrib/cs_userinfo", MODULE_UNLOAD_CAPABILITY_OK)

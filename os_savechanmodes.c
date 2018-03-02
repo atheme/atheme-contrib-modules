@@ -168,12 +168,7 @@ static void os_cmd_loadchanmodes(sourceinfo_t *si, int parc, char *parv[])
 			chansvs.nick);
 }
 
-DECLARE_MODULE_V1
-(
-	"contrib/os_savechanmodes", MODULE_UNLOAD_CAPABILITY_OK, mod_init, mod_deinit,
-	"$Revision: 7785 $",
-	"Jilles Tjoelker <jilles -at- stack.nl>"
-);
+VENDOR_DECLARE_MODULE_V1("contrib/os_savechanmodes", MODULE_UNLOAD_CAPABILITY_OK, CONTRIB_VENDOR_JILLEST)
 
 /* vim:cinoptions=>s,e0,n0,f0,{0,}0,^0,=s,ps,t0,c3,+s,(2s,us,)20,*30,gs,hs
  * vim:ts=8

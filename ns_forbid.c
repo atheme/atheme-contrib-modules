@@ -101,7 +101,7 @@ static void destroy_forbid(sourceinfo_t *si, const char *account)
 	wallops("%s unforbade the nickname \2%s\2.", get_oper_name(si), account);
 	command_success_nodata(si, "\2%s\2 is no longer forbidden.", entity(mu)->name);
 	/* no hooks here either, hmm */
-	object_unref(mu);
+	atheme_object_unref(mu);
 }
 
 static void ns_cmd_forbid(sourceinfo_t *si, int parc, char *parv[])

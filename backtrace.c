@@ -5,7 +5,7 @@
 #include <execinfo.h>
 
 static void
-__segv_hdl(int whocares)
+contrib_backtrace_segv_handle(int whocares)
 {
 	void *array[256];
 	char **strings;
@@ -25,7 +25,7 @@ __segv_hdl(int whocares)
 static void
 mod_init(module_t *const restrict m)
 {
-	signal(SIGSEGV, __segv_hdl);
+	signal(SIGSEGV, &contrib_backtrace_segv_handle);
 }
 
 static void

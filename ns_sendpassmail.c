@@ -6,7 +6,7 @@
  *
  */
 
-#include "atheme.h"
+#include "atheme-compat.h"
 
 static void ns_cmd_sendpassmail(sourceinfo_t *si, int parc, char *parv[]);
 
@@ -93,11 +93,7 @@ static int sendpassmail_foreach_cb(myentity_t *mt, void *privdata)
 
 	key = random_string(12);
 
-#if (CURRENT_ABI_REVISION >= 730000)
 	const char *const hash = crypt_password(key);
-#else
-	const char *const hash = crypt_string(key, NULL);
-#endif
 
 	if (!hash)
 	{
@@ -126,7 +122,7 @@ static void ns_cmd_sendpassmail(sourceinfo_t *si, int parc, char *parv[])
 {
 	myuser_t *mu;
 	char *email = parv[0];
-	char cmdtext[NICKLEN + 20];
+	char cmdtext[COMPAT_NICKLEN + 20];
 
 	struct sendpassmail_state state;
 

@@ -577,7 +577,7 @@ db_h_ble(database_handle_t *db, const char *type)
 	mowgli_node_add(de, mowgli_node_create(), &dnsbl_elist);
 }
 
-void
+static void
 mod_init(module_t *m)
 {
 	MODULE_CONFLICT(m, "proxyscan/dnsbl");
@@ -619,7 +619,7 @@ mod_init(module_t *m)
 	command_add(&os_set_dnsblaction, *os_set_cmdtree);
 }
 
-void
+static void
 mod_deinit(module_unload_intent_t intent)
 {
 	(void) mowgli_dns_destroy(dns_base);

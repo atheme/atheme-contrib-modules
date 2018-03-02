@@ -57,7 +57,7 @@ regnotice_config_purge(void *unused)
 	}
 }
 
-void
+static void
 mod_init(module_t *m)
 {
 	hook_add_event("config_purge");
@@ -69,7 +69,7 @@ mod_init(module_t *m)
 	add_conf_item("REGNOTICE", &chansvs.me->conf_table, regnotice_config_handler);
 }
 
-void
+static void
 mod_deinit(module_unload_intent_t intent)
 {
 	hook_del_channel_register(regnotice_hook);

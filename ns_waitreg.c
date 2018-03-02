@@ -36,7 +36,7 @@ info_hook(sourceinfo_t *si)
 	command_success_nodata(si, "Time (in seconds) before users may register an account: %u", waitreg_time);
 }
 
-void
+static void
 mod_init(module_t *m)
 {
 
@@ -49,7 +49,7 @@ mod_init(module_t *m)
 	add_uint_conf_item("WAITREG_TIME", &nicksvs.me->conf_table, 0, &waitreg_time, 0, INT_MAX, 0);
 }
 
-void
+static void
 mod_deinit(module_unload_intent_t intent)
 {
 	hook_del_user_can_register(waitreg_hook);

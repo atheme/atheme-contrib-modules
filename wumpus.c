@@ -967,7 +967,7 @@ join_wumpus_channel(server_t *s)
 }
 
 /* start handler */
-void
+static void
 mod_init(module_t *m)
 {
 	wumpus.svs = service_add("Wumpus", NULL);
@@ -995,7 +995,7 @@ mod_init(module_t *m)
 	service_bind_command(wumpus.svs, &wumpus_look);
 }
 
-void
+static void
 mod_deinit(module_unload_intent_t intent)
 {
 	/* cleanup after ourselves if necessary */

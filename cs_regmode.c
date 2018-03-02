@@ -27,7 +27,7 @@ drop_hook(mychan_t *mc)
 	modestack_mode_simple(chansvs.nick, mc->chan, MTYPE_DEL, CMODE_CHANREG);
 }
 
-void
+static void
 mod_init(module_t *m)
 {
 	hook_add_event("channel_register");
@@ -37,7 +37,7 @@ mod_init(module_t *m)
 	hook_add_channel_drop(drop_hook);
 }
 
-void
+static void
 mod_deinit(module_unload_intent_t intent)
 {
 	hook_del_channel_register(register_hook);

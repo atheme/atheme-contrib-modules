@@ -46,7 +46,7 @@ command_roulette(sourceinfo_t *si, int parc, char *parv[])
 	gs_command_report(si, "%s", roulette_responses[rand() % 6 == 0]);
 }
 
-void
+static void
 mod_init(module_t * m)
 {
 	service_named_bind_command("gameserv", &cmd_roulette);

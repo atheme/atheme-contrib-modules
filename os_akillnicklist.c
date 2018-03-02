@@ -138,7 +138,7 @@ aknl_nickhook(hook_user_nick_t *data)
 	}
 }
 
-void
+static void
 mod_init(module_t *m)
 {
 	add_subblock_top_conf("NICKLISTS", &conft);
@@ -158,7 +158,7 @@ mod_init(module_t *m)
 	hook_add_user_nickchange(aknl_nickhook);
 }
 
-void
+static void
 mod_deinit(module_unload_intent_t intent)
 {
 	hook_del_user_add(aknl_nickhook);

@@ -20,26 +20,6 @@ static void klinechan_check_join(hook_channel_joinpart_t *hdata);
 static void klinechan_show_info(hook_channel_req_t *hdata);
 
 static void
-mod_init(module_t *const restrict m)
-{
-	service_named_bind_command("operserv", &os_klinechan);
-	service_named_bind_command("operserv", &os_listklinechans);
-	hook_add_event("channel_join");
-	hook_add_first_channel_join(klinechan_check_join);
-	hook_add_event("channel_info");
-	hook_add_channel_info(klinechan_show_info);
-}
-
-static void
-mod_deinit(const module_unload_intent_t intent)
-{
-	service_named_unbind_command("operserv", &os_klinechan);
-	service_named_unbind_command("operserv", &os_listklinechans);
-	hook_del_channel_join(klinechan_check_join);
-	hook_del_channel_info(klinechan_show_info);
-}
-
-static void
 klinechan_check_join(hook_channel_joinpart_t *hdata)
 {
 	mychan_t *mc;
@@ -221,6 +201,26 @@ os_cmd_listklinechans(sourceinfo_t *si, int parc, char *parv[])
 	else
 		command_success_nodata(si, ngettext(N_("\2%d\2 match for pattern \2%s\2"),
 						    N_("\2%d\2 matches for pattern \2%s\2"), matches), matches, pattern);
+}
+
+static void
+mod_init(module_t *const restrict m)
+{
+	service_named_bind_command("operserv", &os_klinechan);
+	service_named_bind_command("operserv", &os_listklinechans);
+	hook_add_event("channel_join");
+	hook_add_first_channel_join(klinechan_check_join);
+	hook_add_event("channel_info");
+	hook_add_channel_info(klinechan_show_info);
+}
+
+static void
+mod_deinit(const module_unload_intent_t intent)
+{
+	service_named_unbind_command("operserv", &os_klinechan);
+	service_named_unbind_command("operserv", &os_listklinechans);
+	hook_del_channel_join(klinechan_check_join);
+	hook_del_channel_info(klinechan_show_info);
 }
 
 SIMPLE_DECLARE_MODULE_V1("contrib/os_klinechan", MODULE_UNLOAD_CAPABILITY_OK)

@@ -11,22 +11,6 @@ static void command_roulette(sourceinfo_t *si, int parc, char *parv[]);
 
 command_t cmd_roulette = { "ROULETTE", N_("A game of Russian Roulette."), AC_NONE, 2, command_roulette, { .path = "contrib/roulette" } };
 
-void
-mod_init(module_t * m)
-{
-	service_named_bind_command("gameserv", &cmd_roulette);
-
-	service_named_bind_command("chanserv", &cmd_roulette);
-}
-
-static void
-mod_deinit(const module_unload_intent_t intent)
-{
-	service_named_unbind_command("gameserv", &cmd_roulette);
-
-	service_named_unbind_command("chanserv", &cmd_roulette);
-}
-
 /*
  * Handle reporting for both fantasy commands and normal commands in GameServ
  * quickly and easily. Of course, sourceinfo has a vtable that can be manipulated,
@@ -60,6 +44,22 @@ command_roulette(sourceinfo_t *si, int parc, char *parv[])
 	};
 
 	gs_command_report(si, "%s", roulette_responses[rand() % 6 == 0]);
+}
+
+void
+mod_init(module_t * m)
+{
+	service_named_bind_command("gameserv", &cmd_roulette);
+
+	service_named_bind_command("chanserv", &cmd_roulette);
+}
+
+static void
+mod_deinit(const module_unload_intent_t intent)
+{
+	service_named_unbind_command("gameserv", &cmd_roulette);
+
+	service_named_unbind_command("chanserv", &cmd_roulette);
 }
 
 SIMPLE_DECLARE_MODULE_V1("contrib/gs_roulette", MODULE_UNLOAD_CAPABILITY_OK)

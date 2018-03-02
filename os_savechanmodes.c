@@ -16,20 +16,6 @@ command_t os_loadchanmodes = { "LOADCHANMODES", "Restores channel modes from a f
 		  	   PRIV_ADMIN, 1, os_cmd_loadchanmodes, { .path = "contrib/loadchanmodes" } };
 
 static void
-mod_init(module_t *const restrict m)
-{
-	service_named_bind_command("operserv", &os_savechanmodes);
-	service_named_bind_command("operserv", &os_loadchanmodes);
-}
-
-static void
-mod_deinit(const module_unload_intent_t intent)
-{
-	service_named_unbind_command("operserv", &os_savechanmodes);
-	service_named_unbind_command("operserv", &os_loadchanmodes);
-}
-
-static void
 os_cmd_savechanmodes(sourceinfo_t *si, int parc, char *parv[])
 {
 	FILE *out;
@@ -169,6 +155,20 @@ os_cmd_loadchanmodes(sourceinfo_t *si, int parc, char *parv[])
 			DATADIR "/chanmodes.txt");
 	command_success_nodata(si, "Remember to restart services to make %s leave channels it should not be in.",
 			chansvs.nick);
+}
+
+static void
+mod_init(module_t *const restrict m)
+{
+	service_named_bind_command("operserv", &os_savechanmodes);
+	service_named_bind_command("operserv", &os_loadchanmodes);
+}
+
+static void
+mod_deinit(const module_unload_intent_t intent)
+{
+	service_named_unbind_command("operserv", &os_savechanmodes);
+	service_named_unbind_command("operserv", &os_loadchanmodes);
 }
 
 VENDOR_DECLARE_MODULE_V1("contrib/os_savechanmodes", MODULE_UNLOAD_CAPABILITY_OK, CONTRIB_VENDOR_JILLEST)

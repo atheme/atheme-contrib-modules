@@ -27,42 +27,6 @@ static mowgli_eventloop_timer_t *defcon_timer = NULL;
 command_t os_defcon = { "DEFCON", N_("Implements Defense Condition lockdowns."), PRIV_ADMIN, 1, os_cmd_defcon, { .path = "contrib/defcon" } };
 
 static void
-mod_init(module_t *const restrict m)
-{
-	service_named_bind_command("operserv", &os_defcon);
-	TAINT_ON("Using os_defcon", "Use of os_defcon is unsupported and not recommend. Use only at your own risk.");
-
-	/* Hooks for all the stuff defcon disables */
-	hook_add_event("user_can_register");
-	hook_add_user_can_register(defcon_nouserreg);
-	hook_add_event("channel_can_register");
-	hook_add_channel_can_register(defcon_nochanreg);
-	hook_add_event("user_add");
-	hook_add_user_add(defcon_useradd);
-
-	service_t *svs;
-	svs = service_find("operserv");
-	add_duration_conf_item("DEFCON_TIMEOUT", &svs->conf_table, 0, &defcon_timeout, "m", 900);
-}
-
-static void
-mod_deinit(const module_unload_intent_t intent)
-{
-	service_named_unbind_command("operserv", &os_defcon);
-
-	hook_del_user_can_register(defcon_nouserreg);
-	hook_del_channel_can_register(defcon_nochanreg);
-	hook_del_user_add(defcon_useradd);
-
-	service_t *svs;
-	svs = service_find("operserv");
-	del_conf_item("DEFCON_TIMEOUT", &svs->conf_table);
-
-	if (defcon_timer != NULL)
-		mowgli_timer_destroy(base_eventloop, defcon_timer);
-}
-
-static void
 defcon_nouserreg(hook_user_register_check_t *hdata)
 {
 	return_if_fail(hdata != NULL);
@@ -238,6 +202,42 @@ os_cmd_defcon(sourceinfo_t *si, int parc, char *parv[])
 	command_success_nodata(si, _("Defense condition set to level \2%d\2."), level);
 	wallops(_("\2%s\2 set Defense condition to level \2%d\2."), get_oper_name(si), level);
 	logcommand(si, CMDLOG_ADMIN, "DEFCON: \2%d\2", level);
+}
+
+static void
+mod_init(module_t *const restrict m)
+{
+	service_named_bind_command("operserv", &os_defcon);
+	TAINT_ON("Using os_defcon", "Use of os_defcon is unsupported and not recommend. Use only at your own risk.");
+
+	/* Hooks for all the stuff defcon disables */
+	hook_add_event("user_can_register");
+	hook_add_user_can_register(defcon_nouserreg);
+	hook_add_event("channel_can_register");
+	hook_add_channel_can_register(defcon_nochanreg);
+	hook_add_event("user_add");
+	hook_add_user_add(defcon_useradd);
+
+	service_t *svs;
+	svs = service_find("operserv");
+	add_duration_conf_item("DEFCON_TIMEOUT", &svs->conf_table, 0, &defcon_timeout, "m", 900);
+}
+
+static void
+mod_deinit(const module_unload_intent_t intent)
+{
+	service_named_unbind_command("operserv", &os_defcon);
+
+	hook_del_user_can_register(defcon_nouserreg);
+	hook_del_channel_can_register(defcon_nochanreg);
+	hook_del_user_add(defcon_useradd);
+
+	service_t *svs;
+	svs = service_find("operserv");
+	del_conf_item("DEFCON_TIMEOUT", &svs->conf_table);
+
+	if (defcon_timer != NULL)
+		mowgli_timer_destroy(base_eventloop, defcon_timer);
 }
 
 SIMPLE_DECLARE_MODULE_V1("contrib/os_defcon", MODULE_UNLOAD_CAPABILITY_OK)

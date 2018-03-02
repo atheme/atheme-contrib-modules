@@ -27,36 +27,6 @@ typedef struct goodmail_ goodmail_t;
 mowgli_list_t ns_maillist;
 
 static void
-mod_init(module_t *const restrict m)
-{
-	if (!module_find_published("backend/opensex"))
-	{
-		slog(LG_INFO, "Module %s requires use of the OpenSEX database backend, refusing to load.", m->name);
-		m->mflags = MODTYPE_FAIL;
-		return;
-	}
-
-	hook_add_event("user_can_register");
-	hook_add_user_can_register(check_registration);
-	hook_add_db_write(write_gedb);
-
-	db_register_type_handler("GE", db_h_ge);
-
-	service_named_bind_command("nickserv", &ns_goodmail);
-}
-
-static void
-mod_deinit(const module_unload_intent_t intent)
-{
-	hook_del_user_can_register(check_registration);
-	hook_del_db_write(write_gedb);
-
-	db_unregister_type_handler("GE");
-
-	service_named_unbind_command("nickserv", &ns_goodmail);
-}
-
-static void
 write_gedb(database_handle_t *db)
 {
 	mowgli_node_t *n;
@@ -226,6 +196,36 @@ ns_cmd_goodmail(sourceinfo_t *si, int parc, char *parv[])
 		command_fail(si, fault_badparams, STR_INVALID_PARAMS, "goodmail");
 		return;
 	}
+}
+
+static void
+mod_init(module_t *const restrict m)
+{
+	if (!module_find_published("backend/opensex"))
+	{
+		slog(LG_INFO, "Module %s requires use of the OpenSEX database backend, refusing to load.", m->name);
+		m->mflags = MODTYPE_FAIL;
+		return;
+	}
+
+	hook_add_event("user_can_register");
+	hook_add_user_can_register(check_registration);
+	hook_add_db_write(write_gedb);
+
+	db_register_type_handler("GE", db_h_ge);
+
+	service_named_bind_command("nickserv", &ns_goodmail);
+}
+
+static void
+mod_deinit(const module_unload_intent_t intent)
+{
+	hook_del_user_can_register(check_registration);
+	hook_del_db_write(write_gedb);
+
+	db_unregister_type_handler("GE");
+
+	service_named_unbind_command("nickserv", &ns_goodmail);
 }
 
 SIMPLE_DECLARE_MODULE_V1("contrib/ns_goodmail", MODULE_UNLOAD_CAPABILITY_OK)

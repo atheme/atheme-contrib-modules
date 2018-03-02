@@ -15,18 +15,6 @@ static void ns_cmd_fregister(sourceinfo_t *si, int parc, char *parv[]);
 command_t ns_fregister = { "FREGISTER", "Registers a nickname on behalf of another user.", PRIV_USER_FREGISTER, 20, ns_cmd_fregister, { .path = "contrib/fregister" } };
 
 static void
-mod_init(module_t *const restrict m)
-{
-	service_named_bind_command("nickserv", &ns_fregister);
-}
-
-static void
-mod_deinit(const module_unload_intent_t intent)
-{
-	service_named_unbind_command("nickserv", &ns_fregister);
-}
-
-static void
 ns_cmd_fregister(sourceinfo_t *si, int parc, char *parv[])
 {
 	myuser_t *mu;
@@ -112,6 +100,18 @@ ns_cmd_fregister(sourceinfo_t *si, int parc, char *parv[])
 	req.mu = mu;
 	req.mn = mn;
 	hook_call_user_verify_register(&req);
+}
+
+static void
+mod_init(module_t *const restrict m)
+{
+	service_named_bind_command("nickserv", &ns_fregister);
+}
+
+static void
+mod_deinit(const module_unload_intent_t intent)
+{
+	service_named_unbind_command("nickserv", &ns_fregister);
 }
 
 SIMPLE_DECLARE_MODULE_V1("contrib/ns_fregister", MODULE_UNLOAD_CAPABILITY_OK)

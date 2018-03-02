@@ -48,26 +48,6 @@ command_t os_autopingspam = { "AUTOPINGSPAM", "Spam connecting users with pings 
 int spamming;
 
 static void
-mod_init(module_t *const restrict m)
-{
-	spamming = 0;
-
-	service_named_bind_command("operserv", &os_pingspam);
-	service_named_bind_command("operserv", &os_autopingspam);
-
-	hook_add_event("user_add");
-	hook_add_user_add(user_add_hook);
-}
-
-static void
-mod_deinit(const module_unload_intent_t intent)
-{
-	service_named_unbind_command("operserv", &os_pingspam);
-	service_named_unbind_command("operserv", &os_autopingspam);
-	hook_del_user_add(user_add_hook);
-}
-
-static void
 user_add_hook(hook_user_nick_t *data)
 {
 	user_t *u;
@@ -145,6 +125,26 @@ pingspam(user_t *u)
 				phrases[rand() % sizeof(phrases) / sizeof(char*)]
 		   );
 	}
+}
+
+static void
+mod_init(module_t *const restrict m)
+{
+	spamming = 0;
+
+	service_named_bind_command("operserv", &os_pingspam);
+	service_named_bind_command("operserv", &os_autopingspam);
+
+	hook_add_event("user_add");
+	hook_add_user_add(user_add_hook);
+}
+
+static void
+mod_deinit(const module_unload_intent_t intent)
+{
+	service_named_unbind_command("operserv", &os_pingspam);
+	service_named_unbind_command("operserv", &os_autopingspam);
+	hook_del_user_add(user_add_hook);
 }
 
 SIMPLE_DECLARE_MODULE_V1("contrib/os_pingspam", MODULE_UNLOAD_CAPABILITY_OK)

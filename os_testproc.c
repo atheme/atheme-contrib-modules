@@ -24,20 +24,6 @@ command_t os_testproc = { "TESTPROC", "Does something with child processes.",
                         AC_NONE, 0, os_cmd_testproc, { .path = "contrib/testproc" } };
 
 static void
-mod_init(module_t *const restrict m)
-{
-	service_named_bind_command("operserv", &os_testproc);
-}
-
-static void
-mod_deinit(const module_unload_intent_t intent)
-{
-	if (procdata.pip != NULL)
-		connection_close_soon(procdata.pip);
-	service_named_unbind_command("operserv", &os_testproc);
-}
-
-static void
 testproc_recvqhandler(connection_t *cptr)
 {
 	char buf[BUFSIZE];
@@ -125,6 +111,20 @@ os_cmd_testproc(sourceinfo_t *si, int parc, char *parv[])
 			mowgli_strlcpy(procdata.dest, CLIENT_NAME(si->su), sizeof procdata.dest);
 			break;
 	}
+}
+
+static void
+mod_init(module_t *const restrict m)
+{
+	service_named_bind_command("operserv", &os_testproc);
+}
+
+static void
+mod_deinit(const module_unload_intent_t intent)
+{
+	if (procdata.pip != NULL)
+		connection_close_soon(procdata.pip);
+	service_named_unbind_command("operserv", &os_testproc);
 }
 
 SIMPLE_DECLARE_MODULE_V1("contrib/os_testproc", MODULE_UNLOAD_CAPABILITY_OK)

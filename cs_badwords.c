@@ -30,43 +30,6 @@ typedef struct badword_ badword_t;
 
 mowgli_patricia_t **cs_set_cmdtree;
 
-static void
-mod_init(module_t *const restrict m)
-{
-	MODULE_TRY_REQUEST_SYMBOL(m, cs_set_cmdtree, "chanserv/set_core", "cs_set_cmdtree");
-
-	if (!module_find_published("backend/opensex"))
-	{
-		slog(LG_INFO, "Module %s requires use of the OpenSEX database backend, refusing to load.", m->name);
-		m->mflags = MODTYPE_FAIL;
-		return;
-	}
-
-	hook_add_event("channel_message");
-	hook_add_channel_message(on_channel_message);
-
-	hook_add_db_write(write_badword_db);
-
-	db_register_type_handler("BW", db_h_bw);
-
-	service_named_bind_command("chanserv", &cs_badwords);
-	command_add(&cs_set_blockbadwords, *cs_set_cmdtree);
-	command_add(&cs_set_blockbadwordsops, *cs_set_cmdtree);
-}
-
-static void
-mod_deinit(const module_unload_intent_t intent)
-{
-	hook_del_channel_message(on_channel_message);
-	hook_del_db_write(write_badword_db);
-
-	db_unregister_type_handler("BW");
-
-	service_named_unbind_command("chanserv", &cs_badwords);
-	command_delete(&cs_set_blockbadwords, *cs_set_cmdtree);
-	command_delete(&cs_set_blockbadwordsops, *cs_set_cmdtree);
-}
-
 static inline mowgli_list_t *
 badwords_list_of(mychan_t *mc)
 {
@@ -515,6 +478,43 @@ cs_set_cmd_blockbadwordsops(sourceinfo_t *si, int parc, char *parv[])
 		command_fail(si, fault_badparams, STR_INVALID_PARAMS, "BLOCKBADWORDSOPS");
 		return;
 	}
+}
+
+static void
+mod_init(module_t *const restrict m)
+{
+	MODULE_TRY_REQUEST_SYMBOL(m, cs_set_cmdtree, "chanserv/set_core", "cs_set_cmdtree");
+
+	if (!module_find_published("backend/opensex"))
+	{
+		slog(LG_INFO, "Module %s requires use of the OpenSEX database backend, refusing to load.", m->name);
+		m->mflags = MODTYPE_FAIL;
+		return;
+	}
+
+	hook_add_event("channel_message");
+	hook_add_channel_message(on_channel_message);
+
+	hook_add_db_write(write_badword_db);
+
+	db_register_type_handler("BW", db_h_bw);
+
+	service_named_bind_command("chanserv", &cs_badwords);
+	command_add(&cs_set_blockbadwords, *cs_set_cmdtree);
+	command_add(&cs_set_blockbadwordsops, *cs_set_cmdtree);
+}
+
+static void
+mod_deinit(const module_unload_intent_t intent)
+{
+	hook_del_channel_message(on_channel_message);
+	hook_del_db_write(write_badword_db);
+
+	db_unregister_type_handler("BW");
+
+	service_named_unbind_command("chanserv", &cs_badwords);
+	command_delete(&cs_set_blockbadwords, *cs_set_cmdtree);
+	command_delete(&cs_set_blockbadwordsops, *cs_set_cmdtree);
 }
 
 SIMPLE_DECLARE_MODULE_V1("contrib/cs_badwords", MODULE_UNLOAD_CAPABILITY_OK)

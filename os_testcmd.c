@@ -30,18 +30,6 @@ struct sourceinfo_vtable testcmd_vtable = {
 };
 
 static void
-mod_init(module_t *const restrict m)
-{
-	service_named_bind_command("operserv", &os_testcmd);
-}
-
-static void
-mod_deinit(const module_unload_intent_t intent)
-{
-	service_named_unbind_command("operserv", &os_testcmd);
-}
-
-static void
 testcmd_command_fail(sourceinfo_t *si, cmd_faultcode_t code, const char *message)
 {
 	struct testcmddata *udata = si->callerdata;
@@ -124,6 +112,18 @@ os_cmd_testcmd(sourceinfo_t *si, int parc, char *parv[])
 	command_exec(svs, &newsi, cmd, newparc, newparv);
 	if (!udata.got_result)
 		command_success_nodata(si, "Command returned without giving a result");
+}
+
+static void
+mod_init(module_t *const restrict m)
+{
+	service_named_bind_command("operserv", &os_testcmd);
+}
+
+static void
+mod_deinit(const module_unload_intent_t intent)
+{
+	service_named_unbind_command("operserv", &os_testcmd);
 }
 
 SIMPLE_DECLARE_MODULE_V1("contrib/os_testcmd", MODULE_UNLOAD_CAPABILITY_OK)

@@ -14,18 +14,6 @@ static void ns_cmd_forbid(sourceinfo_t *si, int parc, char *parv[]);
 command_t ns_forbid = { "FORBID", "Disallows use of a nickname.", PRIV_USER_ADMIN, 3, ns_cmd_forbid, { .path = "contrib/forbid" } };
 
 static void
-mod_init(module_t *const restrict m)
-{
-	service_named_bind_command("nickserv", &ns_forbid);
-}
-
-static void
-mod_deinit(const module_unload_intent_t intent)
-{
-	service_named_unbind_command("nickserv", &ns_forbid);
-}
-
-static void
 make_forbid(sourceinfo_t *si, const char *account, const char *reason)
 {
 	myuser_t *mu;
@@ -139,6 +127,18 @@ ns_cmd_forbid(sourceinfo_t *si, int parc, char *parv[])
 		command_fail(si, fault_needmoreparams, STR_INSUFFICIENT_PARAMS, "FORBID");
 		command_fail(si, fault_needmoreparams, _("Usage: FORBID <nickname> ON|OFF [reason]"));
 	}
+}
+
+static void
+mod_init(module_t *const restrict m)
+{
+	service_named_bind_command("nickserv", &ns_forbid);
+}
+
+static void
+mod_deinit(const module_unload_intent_t intent)
+{
+	service_named_unbind_command("nickserv", &ns_forbid);
 }
 
 SIMPLE_DECLARE_MODULE_V1("contrib/ns_forbid", MODULE_UNLOAD_CAPABILITY_OK)

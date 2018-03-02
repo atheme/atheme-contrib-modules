@@ -14,18 +14,6 @@ command_t cs_access = { "ACCESS", "Manipulates channel access lists.",
                          AC_NONE, 4, cs_cmd_access, { .path = "contrib/access" } };
 
 static void
-mod_init(module_t *const restrict m)
-{
-	service_named_bind_command("chanserv", &cs_access);
-}
-
-static void
-mod_deinit(const module_unload_intent_t intent)
-{
-	service_named_unbind_command("chanserv", &cs_access);
-}
-
-static void
 compat_cmd(sourceinfo_t *si, const char *cmdname, char *channel, char *arg1, char *arg2, char *arg3)
 {
 	int newparc;
@@ -210,6 +198,18 @@ cs_cmd_access(sourceinfo_t *si, int parc, char *parv[])
 		compat_cmd(si, "FLAGS", chan, parv[2], killit, NULL);
 	else
 		command_fail(si, fault_badparams, _("Invalid command. Use \2/%s%s help\2 for a command listing."), (ircd->uses_rcommand == FALSE) ? "msg " : "", si->service->disp);
+}
+
+static void
+mod_init(module_t *const restrict m)
+{
+	service_named_bind_command("chanserv", &cs_access);
+}
+
+static void
+mod_deinit(const module_unload_intent_t intent)
+{
+	service_named_unbind_command("chanserv", &cs_access);
 }
 
 VENDOR_DECLARE_MODULE_V1("contrib/cs_access_alias", MODULE_UNLOAD_CAPABILITY_OK, CONTRIB_VENDOR_FREENODE)

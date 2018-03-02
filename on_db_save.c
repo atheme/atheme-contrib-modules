@@ -15,23 +15,6 @@ static struct update_command_state {
 } update_command_proc;
 
 static void
-mod_init(module_t *const restrict m)
-{
-	hook_add_event("db_saved");
-	hook_add_db_saved(on_db_save);
-
-	add_dupstr_conf_item("db_update_command", &conf_gi_table, 0, &command, NULL);
-}
-
-static void
-mod_deinit(const module_unload_intent_t intent)
-{
-	hook_del_db_saved(on_db_save);
-
-	del_conf_item("db_update_command", &conf_gi_table);
-}
-
-static void
 update_command_finished(pid_t pid, int status, void *data)
 {
 	if (!WIFEXITED(status) || WEXITSTATUS(status) != 0)
@@ -139,6 +122,23 @@ on_db_save(void *unused)
 			childproc_add(pid, "db_update", update_command_finished, NULL);
 			break;
 	}
+}
+
+static void
+mod_init(module_t *const restrict m)
+{
+	hook_add_event("db_saved");
+	hook_add_db_saved(on_db_save);
+
+	add_dupstr_conf_item("db_update_command", &conf_gi_table, 0, &command, NULL);
+}
+
+static void
+mod_deinit(const module_unload_intent_t intent)
+{
+	hook_del_db_saved(on_db_save);
+
+	del_conf_item("db_update_command", &conf_gi_table);
 }
 
 SIMPLE_DECLARE_MODULE_V1("contrib/on_db_save", MODULE_UNLOAD_CAPABILITY_OK)

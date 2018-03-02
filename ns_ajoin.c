@@ -169,21 +169,6 @@ ns_cmd_ajoin(sourceinfo_t *si, int parc, char *parv[])
 command_t ns_ajoin = { "AJOIN", "Manages automatic-join on identify.", AC_AUTHENTICATED, 2, ns_cmd_ajoin, { .path = "contrib/ajoin" } };
 
 static void
-mod_init(module_t *const restrict m)
-{
-	hook_add_event("user_identify");
-	hook_add_user_identify(ajoin_on_identify);
-	service_named_bind_command("nickserv", &ns_ajoin);
-}
-
-static void
-mod_deinit(const module_unload_intent_t intent)
-{
-	hook_del_user_identify(ajoin_on_identify);
-	service_named_unbind_command("nickserv", &ns_ajoin);
-}
-
-static void
 ajoin_on_identify(user_t *u)
 {
 	myuser_t *mu = u->myuser;
@@ -209,6 +194,21 @@ ajoin_on_identify(user_t *u)
 
 		chan = strtok(NULL, ",");
 	}
+}
+
+static void
+mod_init(module_t *const restrict m)
+{
+	hook_add_event("user_identify");
+	hook_add_user_identify(ajoin_on_identify);
+	service_named_bind_command("nickserv", &ns_ajoin);
+}
+
+static void
+mod_deinit(const module_unload_intent_t intent)
+{
+	hook_del_user_identify(ajoin_on_identify);
+	service_named_unbind_command("nickserv", &ns_ajoin);
 }
 
 SIMPLE_DECLARE_MODULE_V1("contrib/ns_ajoin", MODULE_UNLOAD_CAPABILITY_OK)

@@ -14,20 +14,6 @@ command_t cs_up = { "UP", "Grants all access you have permission to on a given c
 command_t cs_down = { "DOWN", "Removes all current access you posess on a given channel.", AC_NONE, 1, cs_cmd_down, { .path = "contrib/down" } };
 
 static void
-mod_init(module_t *const restrict m)
-{
-	service_named_bind_command("chanserv", &cs_up);
-	service_named_bind_command("chanserv", &cs_down);
-}
-
-static void
-mod_deinit(const module_unload_intent_t intent)
-{
-	service_named_unbind_command("chanserv", &cs_up);
-	service_named_unbind_command("chanserv", &cs_down);
-}
-
-static void
 cs_cmd_up(sourceinfo_t *si, int parc, char *parv[])
 {
 	chanuser_t *cu;
@@ -217,6 +203,20 @@ cs_cmd_down(sourceinfo_t *si, int parc, char *parv[])
 	}
 
 	command_success_nodata(si, "Downed successfully on \2%s\2.", mc->name);
+}
+
+static void
+mod_init(module_t *const restrict m)
+{
+	service_named_bind_command("chanserv", &cs_up);
+	service_named_bind_command("chanserv", &cs_down);
+}
+
+static void
+mod_deinit(const module_unload_intent_t intent)
+{
+	service_named_unbind_command("chanserv", &cs_up);
+	service_named_unbind_command("chanserv", &cs_down);
 }
 
 SIMPLE_DECLARE_MODULE_V1("contrib/cs_updown", MODULE_UNLOAD_CAPABILITY_OK)

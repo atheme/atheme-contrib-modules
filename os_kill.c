@@ -17,18 +17,6 @@ static void os_cmd_kill(sourceinfo_t *si, int parc, char *parv[]);
 command_t os_kill = { "KILL", "Kill a user with Services.", PRIV_OMODE, 2, os_cmd_kill, { .path = "contrib/kill" } };
 
 static void
-mod_init(module_t *const restrict m)
-{
-	service_named_bind_command("operserv", &os_kill);
-}
-
-static void
-mod_deinit(const module_unload_intent_t intent)
-{
-	service_named_unbind_command("operserv", &os_kill);
-}
-
-static void
 os_cmd_kill(sourceinfo_t *si, int parc, char *parv[])
 {
 	user_t *target;
@@ -49,6 +37,18 @@ os_cmd_kill(sourceinfo_t *si, int parc, char *parv[])
 	command_success_nodata(si, "\2%s\2 has been killed.", target->nick);
 
 	kill_user(si->service->me, target, "Requested: %s", parv[1]);
+}
+
+static void
+mod_init(module_t *const restrict m)
+{
+	service_named_bind_command("operserv", &os_kill);
+}
+
+static void
+mod_deinit(const module_unload_intent_t intent)
+{
+	service_named_unbind_command("operserv", &os_kill);
 }
 
 SIMPLE_DECLARE_MODULE_V1("contrib/os_kill", MODULE_UNLOAD_CAPABILITY_OK)

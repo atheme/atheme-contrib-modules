@@ -13,18 +13,6 @@ static void os_cmd_modeall(sourceinfo_t *si, int parc, char *parv[]);
 command_t os_modeall = { "MODEALL", N_("Changes modes on all channels."), PRIV_OMODE, 2, os_cmd_modeall, { .path = "contrib/os_modeall" } };
 
 static void
-mod_init(module_t *const restrict m)
-{
-        service_named_bind_command("operserv", &os_modeall);
-}
-
-static void
-mod_deinit(const module_unload_intent_t intent)
-{
-	service_named_unbind_command("operserv", &os_modeall);
-}
-
-static void
 set_channel_mode(service_t *s, channel_t *c, int modeparc, char *modeparv[])
 {
 	channel_mode(s->me, c, modeparc, modeparv);
@@ -59,6 +47,18 @@ os_cmd_modeall(sourceinfo_t *si, int parc, char *parv[])
 	wallops("\2%s\2 is using MODEALL (set: \2%s\2)",
 		get_oper_name(si), mode);
 	logcommand(si, CMDLOG_ADMIN, "MODEALL: \2%s\2", mode);
+}
+
+static void
+mod_init(module_t *const restrict m)
+{
+        service_named_bind_command("operserv", &os_modeall);
+}
+
+static void
+mod_deinit(const module_unload_intent_t intent)
+{
+	service_named_unbind_command("operserv", &os_modeall);
 }
 
 SIMPLE_DECLARE_MODULE_V1("contrib/os_modeall", MODULE_UNLOAD_CAPABILITY_OK)

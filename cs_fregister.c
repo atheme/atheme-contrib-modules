@@ -14,18 +14,6 @@ command_t cs_fregister = { "FREGISTER", N_("Forcibly registers a channel."),
                            PRIV_CHAN_ADMIN, 3, cs_cmd_fregister, { .path = "contrib/cs_fregister" } };
 
 static void
-mod_init(module_t *const restrict m)
-{
-        service_named_bind_command("chanserv", &cs_fregister);
-}
-
-static void
-mod_deinit(const module_unload_intent_t intent)
-{
-	service_named_unbind_command("chanserv", &cs_fregister);
-}
-
-static void
 cs_cmd_fregister(sourceinfo_t *si, int parc, char *parv[])
 {
 	channel_t *c;
@@ -144,6 +132,18 @@ cs_cmd_fregister(sourceinfo_t *si, int parc, char *parv[])
 				ircd->protect_mchar[1], CLIENT_NAME(si->su));
 		cu->modes |= CSTATUS_PROTECT;
 	}
+}
+
+static void
+mod_init(module_t *const restrict m)
+{
+        service_named_bind_command("chanserv", &cs_fregister);
+}
+
+static void
+mod_deinit(const module_unload_intent_t intent)
+{
+	service_named_unbind_command("chanserv", &cs_fregister);
 }
 
 SIMPLE_DECLARE_MODULE_V1("contrib/cs_fregister", MODULE_UNLOAD_CAPABILITY_OK)

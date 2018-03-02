@@ -803,35 +803,6 @@ trace_action_constructor_t trace_count = { trace_count_prepare, trace_count_exec
 mowgli_patricia_t *trace_cmdtree = NULL;
 mowgli_patricia_t *trace_acttree = NULL;
 
-static void
-mod_init(module_t *const restrict m)
-{
-	service_named_bind_command("operserv", &os_trace);
-
-	trace_cmdtree = mowgli_patricia_create(strcasecanon);
-	mowgli_patricia_add(trace_cmdtree, "REGEXP", &trace_regexp);
-	mowgli_patricia_add(trace_cmdtree, "SERVER", &trace_server);
-	mowgli_patricia_add(trace_cmdtree, "GLOB", &trace_glob);
-	mowgli_patricia_add(trace_cmdtree, "CHANNEL", &trace_channel);
-	mowgli_patricia_add(trace_cmdtree, "NICKAGE", &trace_nickage);
-	mowgli_patricia_add(trace_cmdtree, "NUMCHAN", &trace_numchan);
-	mowgli_patricia_add(trace_cmdtree, "IDENTIFIED", &trace_identified);
-
-	trace_acttree = mowgli_patricia_create(strcasecanon);
-	mowgli_patricia_add(trace_acttree, "PRINT", &trace_print);
-	mowgli_patricia_add(trace_acttree, "KILL", &trace_kill);
-	mowgli_patricia_add(trace_acttree, "AKILL", &trace_akill);
-	mowgli_patricia_add(trace_acttree, "COUNT", &trace_count);
-}
-
-static void
-mod_deinit(const module_unload_intent_t intent)
-{
-	mowgli_patricia_destroy(trace_cmdtree, NULL, NULL);
-
-	service_named_unbind_command("operserv", &os_trace);
-}
-
 #define MAXMATCHES_DEF 1000
 
 static bool os_cmd_trace_run(sourceinfo_t *si, trace_action_constructor_t *actcons, trace_action_t* act, mowgli_list_t *crit, char *args);
@@ -955,6 +926,35 @@ os_cmd_trace_run(sourceinfo_t *si, trace_action_constructor_t *actcons, trace_ac
 	}
 
 	return true;
+}
+
+static void
+mod_init(module_t *const restrict m)
+{
+	service_named_bind_command("operserv", &os_trace);
+
+	trace_cmdtree = mowgli_patricia_create(strcasecanon);
+	mowgli_patricia_add(trace_cmdtree, "REGEXP", &trace_regexp);
+	mowgli_patricia_add(trace_cmdtree, "SERVER", &trace_server);
+	mowgli_patricia_add(trace_cmdtree, "GLOB", &trace_glob);
+	mowgli_patricia_add(trace_cmdtree, "CHANNEL", &trace_channel);
+	mowgli_patricia_add(trace_cmdtree, "NICKAGE", &trace_nickage);
+	mowgli_patricia_add(trace_cmdtree, "NUMCHAN", &trace_numchan);
+	mowgli_patricia_add(trace_cmdtree, "IDENTIFIED", &trace_identified);
+
+	trace_acttree = mowgli_patricia_create(strcasecanon);
+	mowgli_patricia_add(trace_acttree, "PRINT", &trace_print);
+	mowgli_patricia_add(trace_acttree, "KILL", &trace_kill);
+	mowgli_patricia_add(trace_acttree, "AKILL", &trace_akill);
+	mowgli_patricia_add(trace_acttree, "COUNT", &trace_count);
+}
+
+static void
+mod_deinit(const module_unload_intent_t intent)
+{
+	mowgli_patricia_destroy(trace_cmdtree, NULL, NULL);
+
+	service_named_unbind_command("operserv", &os_trace);
 }
 
 SIMPLE_DECLARE_MODULE_V1("contrib/os_trace", MODULE_UNLOAD_CAPABILITY_OK)

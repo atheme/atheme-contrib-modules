@@ -37,49 +37,6 @@ typedef struct asreq_ asreq_t;
 mowgli_list_t as_reqlist;
 
 static void
-mod_init(module_t *const restrict m)
-{
-	announcesvs = service_add("announceserv", NULL);
-
-	hook_add_event("user_drop");
-	hook_add_user_drop(account_drop_request);
-
-	hook_add_db_write(write_asreqdb);
-	db_register_type_handler("AR", db_h_ar);
-
-	if (announcesvs == NULL)
-		return;
-
-	service_bind_command(announcesvs, &as_help);
-	service_bind_command(announcesvs, &as_request);
-	service_bind_command(announcesvs, &as_waiting);
-	service_bind_command(announcesvs, &as_reject);
-	service_bind_command(announcesvs, &as_activate);
-	service_bind_command(announcesvs, &as_cancel);
-}
-
-static void
-mod_deinit(const module_unload_intent_t intent)
-{
-	hook_del_user_drop(account_drop_request);
-	hook_del_db_write(write_asreqdb);
-	db_unregister_type_handler("AR");
-
-	if (announcesvs != NULL)
-	{
-		service_unbind_command(announcesvs, &as_help);
-		service_unbind_command(announcesvs, &as_request);
-		service_unbind_command(announcesvs, &as_waiting);
-		service_unbind_command(announcesvs, &as_reject);
-		service_unbind_command(announcesvs, &as_activate);
-		service_unbind_command(announcesvs, &as_cancel);
-
-		service_delete(announcesvs);
-		announcesvs = NULL;
-	}
-}
-
-static void
 write_asreqdb(database_handle_t *db)
 {
 	mowgli_node_t *n;
@@ -389,6 +346,49 @@ as_cmd_cancel(sourceinfo_t *si, int parc, char *parv[])
                 }
         }
 	command_fail(si, fault_badparams, _("You do not have a pending announcement to cancel."));
+}
+
+static void
+mod_init(module_t *const restrict m)
+{
+	announcesvs = service_add("announceserv", NULL);
+
+	hook_add_event("user_drop");
+	hook_add_user_drop(account_drop_request);
+
+	hook_add_db_write(write_asreqdb);
+	db_register_type_handler("AR", db_h_ar);
+
+	if (announcesvs == NULL)
+		return;
+
+	service_bind_command(announcesvs, &as_help);
+	service_bind_command(announcesvs, &as_request);
+	service_bind_command(announcesvs, &as_waiting);
+	service_bind_command(announcesvs, &as_reject);
+	service_bind_command(announcesvs, &as_activate);
+	service_bind_command(announcesvs, &as_cancel);
+}
+
+static void
+mod_deinit(const module_unload_intent_t intent)
+{
+	hook_del_user_drop(account_drop_request);
+	hook_del_db_write(write_asreqdb);
+	db_unregister_type_handler("AR");
+
+	if (announcesvs != NULL)
+	{
+		service_unbind_command(announcesvs, &as_help);
+		service_unbind_command(announcesvs, &as_request);
+		service_unbind_command(announcesvs, &as_waiting);
+		service_unbind_command(announcesvs, &as_reject);
+		service_unbind_command(announcesvs, &as_activate);
+		service_unbind_command(announcesvs, &as_cancel);
+
+		service_delete(announcesvs);
+		announcesvs = NULL;
+	}
 }
 
 VENDOR_DECLARE_MODULE_V1("contrib/ircd_announceserv", MODULE_UNLOAD_CAPABILITY_OK, CONTRIB_VENDOR_JD_AND_TAROS)

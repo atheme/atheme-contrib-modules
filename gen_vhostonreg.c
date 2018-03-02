@@ -16,25 +16,6 @@ static void handle_verify_register(hook_user_req_t *req);
 static void hook_user_identify(user_t *u);
 
 static void
-mod_init(module_t *const restrict m)
-{
-	hook_add_event("user_verify_register");
-	hook_add_user_verify_register(handle_verify_register);
-	hook_add_event("user_identify");
-	hook_add_user_identify(hook_user_identify);
-	counter = (CURRTIME << 8) % 100000;
-	if (counter < 0)
-		counter += 100000;
-}
-
-static void
-mod_deinit(const module_unload_intent_t intent)
-{
-	hook_del_user_verify_register(handle_verify_register);
-	hook_del_user_identify(hook_user_identify);
-}
-
-static void
 user_add_host(myuser_t *mu)
 {
 	int maxlen1, i;
@@ -107,6 +88,25 @@ hook_user_identify(user_t *u)
 
 	/* they do not, add one. */
 	user_add_host(u->myuser);
+}
+
+static void
+mod_init(module_t *const restrict m)
+{
+	hook_add_event("user_verify_register");
+	hook_add_user_verify_register(handle_verify_register);
+	hook_add_event("user_identify");
+	hook_add_user_identify(hook_user_identify);
+	counter = (CURRTIME << 8) % 100000;
+	if (counter < 0)
+		counter += 100000;
+}
+
+static void
+mod_deinit(const module_unload_intent_t intent)
+{
+	hook_del_user_verify_register(handle_verify_register);
+	hook_del_user_identify(hook_user_identify);
 }
 
 SIMPLE_DECLARE_MODULE_V1("contrib/gen_vhostonreg", MODULE_UNLOAD_CAPABILITY_OK)

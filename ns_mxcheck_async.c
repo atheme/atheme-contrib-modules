@@ -24,20 +24,6 @@ static void check_registration(hook_user_register_check_t *hdata);
 int count_mx (const char *host);
 
 static void
-mod_init(module_t *const restrict m)
-{
-    hook_add_event("user_can_register");
-    hook_add_user_can_register(check_registration);
-}
-
-static void
-mod_deinit(const module_unload_intent_t intent)
-{
-    hook_del_user_can_register(check_registration);
-    childproc_delete_all(childproc_cb);
-}
-
-static void
 childproc_cb(pid_t pid, int status, void *data)
 {
 	struct procdata *pd = data;
@@ -145,6 +131,20 @@ count_mx(const char *host)
     }
 
     return l;
+}
+
+static void
+mod_init(module_t *const restrict m)
+{
+    hook_add_event("user_can_register");
+    hook_add_user_can_register(check_registration);
+}
+
+static void
+mod_deinit(const module_unload_intent_t intent)
+{
+    hook_del_user_can_register(check_registration);
+    childproc_delete_all(childproc_cb);
 }
 
 VENDOR_DECLARE_MODULE_V1("contrib/ns_mxcheck_async", MODULE_UNLOAD_CAPABILITY_OK, CONTRIB_VENDOR_JAMIE_PENMAN)

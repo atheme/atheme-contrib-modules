@@ -11,18 +11,6 @@ static void ns_cmd_sendpassmail(sourceinfo_t *si, int parc, char *parv[]);
 
 command_t ns_sendpassmail = { "SENDPASSMAIL", N_("Email registration passwords."), AC_NONE, 2, ns_cmd_sendpassmail, { .path = "contrib/ns_sendpassmail" } };
 
-static void
-mod_init(module_t *const restrict m)
-{
-	service_named_bind_command("nickserv", &ns_sendpassmail);
-}
-
-static void
-mod_deinit(const module_unload_intent_t intent)
-{
-	service_named_unbind_command("nickserv", &ns_sendpassmail);
-}
-
 struct sendpassmail_state
 {
 	sourceinfo_t *origin;
@@ -147,6 +135,18 @@ ns_cmd_sendpassmail(sourceinfo_t *si, int parc, char *parv[])
 	strshare_unref(state.email_canonical);
 
 	command_success_nodata(si, _("A password reset email has been sent for all accounts matching address \2%s\2, if any."), email);
+}
+
+static void
+mod_init(module_t *const restrict m)
+{
+	service_named_bind_command("nickserv", &ns_sendpassmail);
+}
+
+static void
+mod_deinit(const module_unload_intent_t intent)
+{
+	service_named_unbind_command("nickserv", &ns_sendpassmail);
 }
 
 SIMPLE_DECLARE_MODULE_V1("contrib/ns_sendpassmail", MODULE_UNLOAD_CAPABILITY_OK)

@@ -22,30 +22,6 @@ command_t os_procwatch = { "PROCWATCH", "Notifies snoop channel on process exit.
 static connection_t *kq_conn;
 
 static void
-mod_init(module_t *const restrict m)
-{
-	int kq;
-
-	kq = kqueue();
-	if (kq == -1)
-	{
-		m->mflags = MODTYPE_FAIL;
-		return;
-	}
-	kq_conn = connection_add("procwatch kqueue", kq, 0, procwatch_readhandler, NULL);
-
-	service_named_bind_command("operserv", &os_procwatch);
-}
-
-static void
-mod_deinit(const module_unload_intent_t intent)
-{
-	if (kq_conn != NULL)
-		connection_close_soon(kq_conn);
-	service_named_unbind_command("operserv", &os_procwatch);
-}
-
-static void
 procwatch_readhandler(connection_t *cptr)
 {
 	struct kevent ev;
@@ -92,6 +68,30 @@ os_cmd_procwatch(sourceinfo_t *si, int parc, char *parv[])
 		return;
 	}
 	command_success_nodata(si, "Added pid %ld to list.", v);
+}
+
+static void
+mod_init(module_t *const restrict m)
+{
+	int kq;
+
+	kq = kqueue();
+	if (kq == -1)
+	{
+		m->mflags = MODTYPE_FAIL;
+		return;
+	}
+	kq_conn = connection_add("procwatch kqueue", kq, 0, procwatch_readhandler, NULL);
+
+	service_named_bind_command("operserv", &os_procwatch);
+}
+
+static void
+mod_deinit(const module_unload_intent_t intent)
+{
+	if (kq_conn != NULL)
+		connection_close_soon(kq_conn);
+	service_named_unbind_command("operserv", &os_procwatch);
 }
 
 SIMPLE_DECLARE_MODULE_V1("contrib/os_procwatch", MODULE_UNLOAD_CAPABILITY_OK)

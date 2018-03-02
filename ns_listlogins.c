@@ -12,18 +12,6 @@ static void ns_cmd_listlogins(sourceinfo_t *si, int parc, char *parv[]);
 command_t ns_listlogins = { "LISTLOGINS", N_("Lists details of clients authenticated as you."), AC_AUTHENTICATED, 1, ns_cmd_listlogins, { .path = "contrib/listlogins" } };
 
 static void
-mod_init(module_t *const restrict m)
-{
-	service_named_bind_command("nickserv", &ns_listlogins);
-}
-
-static void
-mod_deinit(const module_unload_intent_t intent)
-{
-	service_named_unbind_command("nickserv", &ns_listlogins);
-}
-
-static void
 ns_cmd_listlogins(sourceinfo_t *si, int parc, char *parv[])
 {
 	user_t *u;
@@ -45,6 +33,18 @@ ns_cmd_listlogins(sourceinfo_t *si, int parc, char *parv[])
 	}
 	command_success_nodata(si, ngettext(N_("\2%d\2 client found"), N_("\2%d\2 clients found"), matches), matches);
 	logcommand(si, CMDLOG_GET, "LISTLOGINS: (\2%d\2 matches)", matches);
+}
+
+static void
+mod_init(module_t *const restrict m)
+{
+	service_named_bind_command("nickserv", &ns_listlogins);
+}
+
+static void
+mod_deinit(const module_unload_intent_t intent)
+{
+	service_named_unbind_command("nickserv", &ns_listlogins);
 }
 
 SIMPLE_DECLARE_MODULE_V1("contrib/ns_listlogins", MODULE_UNLOAD_CAPABILITY_OK)

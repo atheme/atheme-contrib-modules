@@ -28,36 +28,6 @@ typedef struct joinmon_ joinmon_t;
 mowgli_list_t os_monlist;
 
 static void
-mod_init(module_t *const restrict m)
-{
-	if (!module_find_published("backend/opensex"))
-	{
-		slog(LG_INFO, "Module %s requires use of the OpenSEX database backend, refusing to load.", m->name);
-		m->mflags = MODTYPE_FAIL;
-		return;
-	}
-
-	hook_add_event("channel_join");
-	hook_add_channel_join(watch_user_joins);
-	hook_add_db_write(write_jmdb);
-
-	db_register_type_handler("JM", db_h_jm);
-
-	service_named_bind_command("operserv", &os_joinmon);
-}
-
-static void
-mod_deinit(const module_unload_intent_t intent)
-{
-	hook_del_channel_join(watch_user_joins);
-	hook_del_db_write(write_jmdb);
-
-	db_unregister_type_handler("JM");
-
-	service_named_unbind_command("operserv", &os_joinmon);
-}
-
-static void
 write_jmdb(database_handle_t *db)
 {
 	mowgli_node_t *n;
@@ -243,6 +213,36 @@ os_cmd_joinmon(sourceinfo_t *si, int parc, char *parv[])
 		command_fail(si, fault_badparams, STR_INVALID_PARAMS, "JOINMON");
 		return;
 	}
+}
+
+static void
+mod_init(module_t *const restrict m)
+{
+	if (!module_find_published("backend/opensex"))
+	{
+		slog(LG_INFO, "Module %s requires use of the OpenSEX database backend, refusing to load.", m->name);
+		m->mflags = MODTYPE_FAIL;
+		return;
+	}
+
+	hook_add_event("channel_join");
+	hook_add_channel_join(watch_user_joins);
+	hook_add_db_write(write_jmdb);
+
+	db_register_type_handler("JM", db_h_jm);
+
+	service_named_bind_command("operserv", &os_joinmon);
+}
+
+static void
+mod_deinit(const module_unload_intent_t intent)
+{
+	hook_del_channel_join(watch_user_joins);
+	hook_del_db_write(write_jmdb);
+
+	db_unregister_type_handler("JM");
+
+	service_named_unbind_command("operserv", &os_joinmon);
 }
 
 SIMPLE_DECLARE_MODULE_V1("contrib/os_joinmon", MODULE_UNLOAD_CAPABILITY_NEVER)

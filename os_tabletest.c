@@ -5,18 +5,6 @@ static void os_cmd_tabletest(sourceinfo_t *si, int parc, char *parv[]);
 command_t os_tabletest = { "TABLETEST", "Table test.", AC_NONE, 0, os_cmd_tabletest, { .path = "" } };
 
 static void
-mod_init(module_t *const restrict m)
-{
-        service_named_bind_command("operserv", &os_tabletest);
-}
-
-static void
-mod_deinit(const module_unload_intent_t intent)
-{
-	service_named_unbind_command("operserv", &os_tabletest);
-}
-
-static void
 os_cmd_tabletest(sourceinfo_t *si, int parc, char *parv[])
 {
 	table_t *t = table_new("Table \2test\2");
@@ -41,6 +29,18 @@ os_cmd_tabletest(sourceinfo_t *si, int parc, char *parv[])
 	command_success_table(si, t);
 
 	atheme_object_unref(t);
+}
+
+static void
+mod_init(module_t *const restrict m)
+{
+        service_named_bind_command("operserv", &os_tabletest);
+}
+
+static void
+mod_deinit(const module_unload_intent_t intent)
+{
+	service_named_unbind_command("operserv", &os_tabletest);
 }
 
 SIMPLE_DECLARE_MODULE_V1("contrib/os_tabletest", MODULE_UNLOAD_CAPABILITY_OK)

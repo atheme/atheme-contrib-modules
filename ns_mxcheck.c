@@ -11,19 +11,6 @@ static void check_registration(hook_user_register_check_t *hdata);
 int count_mx (const char *host);
 
 static void
-mod_init(module_t *const restrict m)
-{
-    hook_add_event("user_can_register");
-    hook_add_user_can_register(check_registration);
-}
-
-static void
-mod_deinit(const module_unload_intent_t intent)
-{
-    hook_del_user_can_register(check_registration);
-}
-
-static void
 check_registration(hook_user_register_check_t *hdata)
 {
     char buf[1024];
@@ -81,6 +68,19 @@ count_mx(const char *host)
     }
 
     return l;
+}
+
+static void
+mod_init(module_t *const restrict m)
+{
+    hook_add_event("user_can_register");
+    hook_add_user_can_register(check_registration);
+}
+
+static void
+mod_deinit(const module_unload_intent_t intent)
+{
+    hook_del_user_can_register(check_registration);
 }
 
 VENDOR_DECLARE_MODULE_V1("contrib/ns_mxcheck", MODULE_UNLOAD_CAPABILITY_OK, CONTRIB_VENDOR_JAMIE_PENMAN)

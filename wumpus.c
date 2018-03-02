@@ -6,7 +6,6 @@
  * Rights to this code are as documented in doc/LICENSE.
  *
  * Hunt the Wumpus game implementation.
- *
  */
 
 #include "atheme-compat.h"

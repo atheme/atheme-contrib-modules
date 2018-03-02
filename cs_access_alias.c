@@ -3,8 +3,6 @@
  * Rights to this code are as documented in doc/LICENSE.
  *
  * ChanServ ACCESS command
- *
- * $Id$
  */
 
 #include "atheme-compat.h"

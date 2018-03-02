@@ -3,7 +3,6 @@
  * Rights to this code are as documented in doc/LICENSE.
  *
  * Listener code demo.
- *
  */
 
 #include "atheme-compat.h"

@@ -3,7 +3,6 @@
  * Rights to this code are as documented in doc/LICENSE.
  *
  * ping spammer thingy
- *
  */
 
 #include "atheme-compat.h"

@@ -9,9 +9,10 @@
  * to change this, add a defcon_timeout = X; option to the operserv{}
  * block in your atheme.con. X = amount of time in minutes for a defcon
  * setting to time out/expire.
- *
  */
+
 #include "atheme-compat.h"
+
 #define DEFCON_CMODE "R"
 
 static void os_cmd_defcon(sourceinfo_t *si, int parc, char *parv[]);

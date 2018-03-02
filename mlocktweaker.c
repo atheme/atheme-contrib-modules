@@ -3,7 +3,6 @@
  * Rights to this code are as documented in doc/LICENSE.
  *
  * mlocktweaker.c: A module which tweaks mlock on registration.
- *
  */
 
 #include "atheme-compat.h"

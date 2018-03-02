@@ -3,7 +3,6 @@
  * Rights to this code are as documented in doc/LICENSE.
  *
  * This file contains code for the CService UP/DOWN functions.
- *
  */
 
 #include "atheme-compat.h"

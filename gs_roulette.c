@@ -3,7 +3,6 @@
  * Rights to this code are documented in doc/LICENSE.
  *
  * Russian Roulette game. Will actually /KILL the user that gets "shot".
- *
  */
 
 #include "atheme-compat.h"

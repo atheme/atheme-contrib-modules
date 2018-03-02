@@ -9,6 +9,7 @@
 #include "atheme-compat.h"
 
 #ifdef __FreeBSD__
+
 #include <sys/event.h>
 
 static void procwatch_readhandler(connection_t *cptr);

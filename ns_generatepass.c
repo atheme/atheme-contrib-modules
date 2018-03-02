@@ -3,7 +3,6 @@
  * Rights to this code are as documented in doc/LICENSE.
  *
  * Generates a new password, either n digits long (w/ nickserv arg), or 7 digits
- *
  */
 
 #include "atheme-compat.h"

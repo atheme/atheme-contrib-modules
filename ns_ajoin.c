@@ -4,7 +4,6 @@
  * Rights to this code are as documented in doc/LICENSE.
  *
  * Services-side autojoin using SVSJOIN
- *
  */
 
 #include "atheme-compat.h"

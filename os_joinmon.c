@@ -3,7 +3,6 @@
  * Rights to this code are as documented in doc/LICENSE.
  *
  * Facilitates watching what channels a user joins.
- *
  */
 
 #include "atheme-compat.h"

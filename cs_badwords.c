@@ -1,7 +1,6 @@
 /*
  * Copyright (c) 2005 William Pitcock <nenolod -at- nenolod.net>
  * Rights to this code are as documented in doc/LICENSE.
- *
  */
 
 #include "atheme-compat.h"

@@ -3,7 +3,6 @@
  * The rights to this code are as documented under doc/LICENSE.
  *
  * Meow!
- *
  */
 
 #include "atheme-compat.h"

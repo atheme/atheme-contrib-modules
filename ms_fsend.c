@@ -3,7 +3,6 @@
  * Rights to this code are as documented in doc/LICENSE.
  *
  * This file contains code for the Memoserv FSEND function
- *
  */
 
 #include "atheme-compat.h"

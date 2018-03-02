@@ -4,7 +4,6 @@
  *
  * This file contains functionality which implements the OService MODEALL
  * command.
- *
  */
 
 #include "atheme-compat.h"

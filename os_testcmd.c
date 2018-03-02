@@ -3,7 +3,6 @@
  * Rights to this code are as documented in doc/LICENSE.
  *
  * Calls a command without a user_t.
- *
  */
 
 #include "atheme-compat.h"

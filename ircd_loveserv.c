@@ -3,7 +3,6 @@
  * Rights to this code are as documented in doc/LICENSE.
  *
  * LoveServ implementation.
- *
  */
 
 #include "atheme-compat.h"

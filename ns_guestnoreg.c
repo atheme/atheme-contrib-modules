@@ -11,7 +11,6 @@
  *      "mib_";
  *      "WebUser";
  *  };
- *
  */
 
 #include "atheme-compat.h"

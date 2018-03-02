@@ -3,7 +3,6 @@
  * Rights to this code are as documented in doc/LICENSE.
  *
  * Sets usercloak metadata on register.
- *
  */
 
 #include "atheme-compat.h"

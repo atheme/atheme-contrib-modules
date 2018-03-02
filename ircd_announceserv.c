@@ -1,8 +1,6 @@
 /*
  * Copyright (c) 2005 Atheme Development Group
  * Rights to this code are documented in doc/LICENSE.
- *
- * This file contains the main() routine.
  */
 
 #include "atheme-compat.h"

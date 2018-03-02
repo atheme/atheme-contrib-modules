@@ -1,6 +1,7 @@
 #include "atheme-compat.h"
 
 #if defined( __linux__) || defined(__Linux__)
+
 #include <execinfo.h>
 
 static void __segv_hdl(int whocares)

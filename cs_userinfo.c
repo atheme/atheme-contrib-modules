@@ -3,7 +3,6 @@
  * Rights to this code are as documented in doc/LICENSE.
  *
  * Per-channel userinfo thingie
- *
  */
 
 #include "atheme-compat.h"

@@ -5,7 +5,6 @@
  * Autokline channels.
  *
  * Default AKILL Time: 24 Hours (86400 seconds)
- *
  */
 
 #include "atheme-compat.h"

@@ -3,7 +3,6 @@
  * Rights to this code are as documented in doc/LICENSE.
  *
  * An echo server. (proof of concept for integrated XMLRPC HTTPD)
- *
  */
 
 #include "atheme-compat.h"

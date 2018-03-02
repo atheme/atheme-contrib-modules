@@ -3,7 +3,6 @@
  * Rights to this code are as documented in doc/LICENSE.
  *
  * Restrict registration to certain email addresses.
- *
  */
 
 #include "atheme-compat.h"

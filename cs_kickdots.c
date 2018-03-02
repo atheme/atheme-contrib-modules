@@ -3,7 +3,6 @@
  * Rights to this code are as documented in doc/LICENSE.
  *
  * Kicks people saying "..." on channels with "kickdots" metadata set.
- *
  */
 
 #include "atheme-compat.h"

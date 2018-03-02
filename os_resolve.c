@@ -2,7 +2,7 @@
  * Copyright (c) 2011 William Pitcock <nenolod@dereferenced.org>
  * Rights to this code are as documented in doc/LICENSE.
  *
- * Does an A record lookup.
+ * Does an A/AAAA record lookup.
  */
 
 #include "atheme-compat.h"

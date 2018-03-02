@@ -3,7 +3,6 @@
  * Rights to this code are as documented in doc/LICENSE.
  *
  * Generates a hash for use as a operserv "password".
- *
  */
 
 #include "atheme-compat.h"

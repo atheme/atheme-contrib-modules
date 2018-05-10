@@ -60,6 +60,7 @@ SRCS =				\
 	os_testcmd.c		\
 	os_testproc.c		\
 	os_trace.c		\
+	sasl_blacklist.c	\
 	wumpus.c
 
 include ../../extra.mk

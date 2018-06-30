@@ -2,26 +2,42 @@
 
 #ifndef _WIN32
 
-#include <netinet/in.h>
 #include <arpa/nameser.h>
-#include <resolv.h>
 #include <netdb.h>
-
-struct procdata
-{
-	char name[COMPAT_NICKLEN + 1];
-	char email[COMPAT_EMAILLEN + 1];
-};
+#include <netinet/in.h>
+#include <resolv.h>
 
 #define MAX_CHILDPROCS 10
 
-static unsigned int proccount;
+struct procdata
+{
+	char    name[COMPAT_NICKLEN + 1];
+	char    email[COMPAT_EMAILLEN + 1];
+};
+
+static unsigned int proccount = 0;
 static struct procdata procdata[MAX_CHILDPROCS];
 
-static void childproc_cb(pid_t pid, int status, void *data);
-static void check_registration(hook_user_register_check_t *hdata);
+static int
+count_mx(const char *host)
+{
+	unsigned char nsbuf[4096];
+	ns_msg amsg;
 
-int count_mx (const char *host);
+	int l = res_query(host, ns_c_any, ns_t_mx, nsbuf, sizeof nsbuf);
+
+	if (l < 0)
+	{
+		return 0;
+	}
+	else
+	{
+		ns_initparse(nsbuf, l, &amsg);
+		l = ns_msg_count(amsg, ns_s_an);
+	}
+
+	return l;
+}
 
 static void
 childproc_cb(pid_t pid, int status, void *data)
@@ -33,28 +49,29 @@ childproc_cb(pid_t pid, int status, void *data)
 	return_if_fail(proccount > 0);
 	proccount--;
 
-	if (!WIFEXITED(status))
+	if (! WIFEXITED(status))
 		return;
 
 	mu = myuser_find(pd->name);
-	if (mu == NULL || strcmp(pd->email, mu->email))
+	if (! mu || strcmp(pd->email, mu->email))
 		return;
+
 	domain = strchr(pd->email, '@');
-	if (domain == NULL)
+	if (! domain)
 		return;
+
 	domain++;
 
 	if (WEXITSTATUS(status) == 1)
 	{
-		slog(LG_INFO, "REGISTER: mxcheck: no A/MX records for %s - "
-				"REGISTER failed", domain);
-		myuser_notice(nicksvs.nick, mu, "Sorry, \2%s\2 does not exist, "
-				"I can't send mail there. Please check and try again.", domain);
+		slog(LG_INFO, "REGISTER: mxcheck: no A/MX records for %s - REGISTER failed", domain);
+		myuser_notice(nicksvs.nick, mu, "Sorry, \2%s\2 does not exist, I can't send mail there. "
+		                                "Please check and try again.", domain);
 		atheme_object_unref(mu);
 	}
 	else if (WEXITSTATUS(status) == 0)
 	{
-        	slog(LG_INFO, "REGISTER: mxcheck: valid MX records for %s", domain);
+		slog(LG_DEBUG, "REGISTER: mxcheck: valid MX records for %s", domain);
 	}
 }
 
@@ -92,15 +109,15 @@ check_registration(hook_user_register_check_t *hdata)
 				struct hostent *host;
 
 				/* attempt to resolve host (fallback to A) */
-				if((host = gethostbyname(domain)) == NULL)
+				if (! (host = gethostbyname(domain)))
 					_exit(1);
 			}
 			_exit(0);
 			break;
 		case -1: /* error */
-			slog(LG_ERROR, "fork() failed for check_registration(): %s",
-					strerror(errno));
-			command_fail(hdata->si, fault_toomany, "Sorry, too many registrations in progress. Try again later.");
+			slog(LG_ERROR, "fork() failed for check_registration(): %s", strerror(errno));
+			command_fail(hdata->si, fault_toomany,
+			             "Sorry, too many registrations in progress. Try again later.");
 			hdata->approved = 1;
 			return;
 		default: /* parent */
@@ -112,39 +129,18 @@ check_registration(hook_user_register_check_t *hdata)
 	}
 }
 
-int
-count_mx(const char *host)
-{
-    u_char nsbuf[4096];
-    ns_msg amsg;
-    int l;
-
-    l = res_query (host, ns_c_any, ns_t_mx, nsbuf, sizeof (nsbuf));
-    if (l < 0)
-    {
-        return 0;
-    }
-    else
-    {
-        ns_initparse (nsbuf, l, &amsg);
-        l = ns_msg_count (amsg, ns_s_an);
-    }
-
-    return l;
-}
-
 static void
 mod_init(module_t *const restrict m)
 {
-    hook_add_event("user_can_register");
-    hook_add_user_can_register(check_registration);
+	hook_add_event("user_can_register");
+	hook_add_user_can_register(check_registration);
 }
 
 static void
 mod_deinit(const module_unload_intent_t intent)
 {
-    hook_del_user_can_register(check_registration);
-    childproc_delete_all(childproc_cb);
+	hook_del_user_can_register(check_registration);
+	childproc_delete_all(childproc_cb);
 }
 
 VENDOR_DECLARE_MODULE_V1("contrib/ns_mxcheck_async", MODULE_UNLOAD_CAPABILITY_OK, CONTRIB_VENDOR_JAMIE_PENMAN)

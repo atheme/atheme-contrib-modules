@@ -5,25 +5,6 @@
 
 #include "atheme-compat.h"
 
-service_t *announcesvs;
-
-static void as_cmd_help(sourceinfo_t *si, int parc, char *parv[]);
-static void account_drop_request(myuser_t *mu);
-static void as_cmd_request(sourceinfo_t *si, int parc, char *parv[]);
-static void as_cmd_waiting(sourceinfo_t *si, int parc, char *parv[]);
-static void as_cmd_reject(sourceinfo_t *si, int parc, char *parv[]);
-static void as_cmd_activate(sourceinfo_t *si, int parc, char *parv[]);
-static void as_cmd_cancel(sourceinfo_t *si, int parc, char *parv[]);
-static void write_asreqdb(database_handle_t *db);
-static void db_h_ar(database_handle_t *db, const char *type);
-
-command_t as_help = { "HELP", N_(N_("Displays contextual help information.")), AC_NONE, 2, as_cmd_help, { .path = "help/help" } };
-command_t as_request = { "REQUEST", N_("Requests new announcement."), AC_AUTHENTICATED, 2, as_cmd_request, { .path = "contrib/as_request" } };
-command_t as_waiting = { "WAITING", N_("Lists announcements currently waiting for activation."), PRIV_GLOBAL, 1, as_cmd_waiting, { .path = "contrib/as_waiting" } };
-command_t as_reject = { "REJECT", N_("Reject the requested announcement for the given nick."), PRIV_GLOBAL, 2, as_cmd_reject, { .path = "contrib/as_reject" } };
-command_t as_activate = { "ACTIVATE", N_("Activate the requested announcement for a given nick."), PRIV_GLOBAL, 2, as_cmd_activate, { .path = "contrib/as_activate" } };
-command_t as_cancel = { "CANCEL", N_("Cancels your requested announcement."), AC_AUTHENTICATED, 0, as_cmd_cancel, { .path = "contrib/as_cancel" } };
-
 struct asreq_ {
 	stringref nick;
 	char *subject;
@@ -34,7 +15,9 @@ struct asreq_ {
 
 typedef struct asreq_ asreq_t;
 
-mowgli_list_t as_reqlist;
+static mowgli_list_t as_reqlist = { NULL, NULL, 0 };
+
+static service_t *announcesvs = NULL;
 
 static void
 write_asreqdb(database_handle_t *db)
@@ -53,7 +36,6 @@ write_asreqdb(database_handle_t *db)
 		db_write_str(db, l->text);
 		db_commit_row(db);
 	}
-
 }
 
 static void
@@ -84,6 +66,7 @@ account_drop_request(myuser_t *mu)
 	MOWGLI_LIST_FOREACH(n, as_reqlist.head)
 	{
 		l = n->data;
+
 		if (!irccasecmp(l->nick, entity(mu)->name))
 		{
 			slog(LG_REGISTER, "ANNOUNCEREQ:DROPACCOUNT: \2%s\2 %s\2", l->nick, l->text);
@@ -102,7 +85,7 @@ account_drop_request(myuser_t *mu)
 }
 
 /* HELP <command> [params] */
-void
+static void
 as_cmd_help(sourceinfo_t *si, int parc, char *parv[])
 {
 	char *command = parv[0];
@@ -202,8 +185,6 @@ as_cmd_request(sourceinfo_t *si, int parc, char *parv[])
 	logcommand(si, CMDLOG_REQUEST, "REQUEST:");
 	slog(CMDLOG_REQUEST, "[%s - %s] %s", subject2, l->creator, buf);
 	free(subject2);
-
-	return;
 }
 
 static void
@@ -223,14 +204,15 @@ as_cmd_activate(sourceinfo_t *si, int parc, char *parv[])
 		return;
 	}
 
-
 	MOWGLI_LIST_FOREACH(n, as_reqlist.head)
 	{
 		l = n->data;
+
 		if (!irccasecmp(l->nick, nick))
 		{
 			if ((u = user_find_named(nick)) != NULL)
 				notice(si->service->nick, u->nick, "[auto memo] Your requested announcement has been approved.");
+
 			subject2 = sstrdup(l->subject);
 			replace(subject2, BUFSIZE, "_", " ");
 			logcommand(si, CMDLOG_REQUEST, "ACTIVATE: \2%s\2", nick);
@@ -249,6 +231,7 @@ as_cmd_activate(sourceinfo_t *si, int parc, char *parv[])
 			return;
 		}
 	}
+
 	command_success_nodata(si, _("Nick \2%s\2 not found in announce request database."), nick);
 }
 
@@ -271,6 +254,7 @@ as_cmd_reject(sourceinfo_t *si, int parc, char *parv[])
 	MOWGLI_LIST_FOREACH(n, as_reqlist.head)
 	{
 		l = n->data;
+
 		if (!irccasecmp(l->nick, nick))
 		{
 			if ((u = user_find_named(nick)) != NULL)
@@ -286,6 +270,7 @@ as_cmd_reject(sourceinfo_t *si, int parc, char *parv[])
 			return;
 		}
 	}
+
 	command_success_nodata(si, _("Nick \2%s\2 not found in announcement request database."), nick);
 }
 
@@ -312,6 +297,7 @@ as_cmd_waiting(sourceinfo_t *si, int parc, char *parv[])
 		command_success_nodata(si, "%s", l->text);
 		free(subject2);
 	}
+
 	command_success_nodata(si, "End of list.");
 	logcommand(si, CMDLOG_GET, "WAITING");
 }
@@ -345,8 +331,63 @@ as_cmd_cancel(sourceinfo_t *si, int parc, char *parv[])
 			return;
                 }
         }
+
 	command_fail(si, fault_badparams, _("You do not have a pending announcement to cancel."));
 }
+
+static command_t as_help = {
+	"HELP",
+	N_("Displays contextual help information."),
+	AC_NONE,
+	2,
+	&as_cmd_help,
+	{ .path = "help/help" },
+};
+
+static command_t as_request = {
+	"REQUEST",
+	N_("Requests new announcement."),
+	AC_AUTHENTICATED,
+	2,
+	&as_cmd_request,
+	{ .path = "contrib/as_request" },
+};
+
+static command_t as_waiting = {
+	"WAITING",
+	N_("Lists announcements currently waiting for activation."),
+	PRIV_GLOBAL,
+	1,
+	&as_cmd_waiting,
+	{ .path = "contrib/as_waiting" },
+};
+
+static command_t as_reject = {
+	"REJECT",
+	N_("Reject the requested announcement for the given nick."),
+	PRIV_GLOBAL,
+	2,
+	&as_cmd_reject,
+	{ .path = "contrib/as_reject" },
+};
+
+static command_t as_activate = {
+	"ACTIVATE",
+	N_("Activate the requested announcement for a given nick."),
+	PRIV_GLOBAL,
+	2,
+	&as_cmd_activate,
+	{ .path = "contrib/as_activate" },
+};
+
+static command_t as_cancel = {
+	"CANCEL",
+	N_("Cancels your requested announcement."),
+	AC_AUTHENTICATED,
+	0,
+	&as_cmd_cancel,
+	{ .path = "contrib/as_cancel" },
+};
 
 static void
 mod_init(module_t *const restrict m)

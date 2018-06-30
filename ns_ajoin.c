@@ -9,8 +9,6 @@
 #include "atheme-compat.h"
 #include "uplink.h"
 
-static void ajoin_on_identify(user_t *u);
-
 static void
 ns_cmd_ajoin_syntaxerr(sourceinfo_t *si)
 {
@@ -166,8 +164,6 @@ ns_cmd_ajoin(sourceinfo_t *si, int parc, char *parv[])
 	}
 }
 
-command_t ns_ajoin = { "AJOIN", "Manages automatic-join on identify.", AC_AUTHENTICATED, 2, ns_cmd_ajoin, { .path = "contrib/ajoin" } };
-
 static void
 ajoin_on_identify(user_t *u)
 {
@@ -196,11 +192,21 @@ ajoin_on_identify(user_t *u)
 	}
 }
 
+static command_t ns_ajoin = {
+	.name           = "AJOIN",
+	.desc           = N_("Manages automatic-join on identify."),
+	.access         = AC_AUTHENTICATED,
+	.maxparc        = 2,
+	.cmd            = &ns_cmd_ajoin,
+	.help           = { .path = "contrib/ajoin" },
+};
+
 static void
 mod_init(module_t *const restrict m)
 {
 	hook_add_event("user_identify");
 	hook_add_user_identify(ajoin_on_identify);
+
 	service_named_bind_command("nickserv", &ns_ajoin);
 }
 
@@ -208,6 +214,7 @@ static void
 mod_deinit(const module_unload_intent_t intent)
 {
 	hook_del_user_identify(ajoin_on_identify);
+
 	service_named_unbind_command("nickserv", &ns_ajoin);
 }
 

@@ -989,7 +989,7 @@ mod_init(module_t *const restrict m)
 	{
 		(void) slog(LG_ERROR, "%s: mowgli_patricia_create() failed", m->name);
 
-		m->mflags |= MODTYPE_FAIL;
+		m->mflags |= MODFLAG_FAIL;
 		return;
 	}
 	if (! (trace_acttree = mowgli_patricia_create(&strcasecanon)))
@@ -998,7 +998,7 @@ mod_init(module_t *const restrict m)
 
 		(void) mowgli_patricia_destroy(trace_cmdtree, NULL, NULL);
 
-		m->mflags |= MODTYPE_FAIL;
+		m->mflags |= MODFLAG_FAIL;
 		return;
 	}
 

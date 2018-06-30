@@ -83,7 +83,7 @@ mod_init(module_t *const restrict m)
 
 	if (kq == -1)
 	{
-		m->mflags |= MODTYPE_FAIL;
+		m->mflags |= MODFLAG_FAIL;
 		return;
 	}
 

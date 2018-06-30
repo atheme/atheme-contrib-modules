@@ -353,7 +353,7 @@ mod_init(module_t *const restrict m)
 	{
 		(void) slog(LG_ERROR, "%s: sigfillset(3) failed: %s", m->name, strerror(errno));
 
-		m->mflags |= MODTYPE_FAIL;
+		m->mflags |= MODFLAG_FAIL;
 		return;
 	}
 
@@ -367,7 +367,7 @@ mod_init(module_t *const restrict m)
 	{
 		(void) slog(LG_ERROR, "%s: sigaction(2) for SIGBUS failed: %s", m->name, strerror(errno));
 
-		m->mflags |= MODTYPE_FAIL;
+		m->mflags |= MODFLAG_FAIL;
 		return;
 	}
 	if (sigaction(SIGFPE, &newsigaction, &oldfpeaction) != 0)
@@ -376,7 +376,7 @@ mod_init(module_t *const restrict m)
 
 		(void) sigaction(SIGBUS, &oldbusaction, NULL);
 
-		m->mflags |= MODTYPE_FAIL;
+		m->mflags |= MODFLAG_FAIL;
 		return;
 	}
 	if (sigaction(SIGILL, &newsigaction, &oldillaction) != 0)
@@ -386,7 +386,7 @@ mod_init(module_t *const restrict m)
 		(void) sigaction(SIGBUS, &oldbusaction, NULL);
 		(void) sigaction(SIGFPE, &oldfpeaction, NULL);
 
-		m->mflags |= MODTYPE_FAIL;
+		m->mflags |= MODFLAG_FAIL;
 		return;
 	}
 	if (sigaction(SIGSEGV, &newsigaction, &oldsegvaction) != 0)
@@ -397,7 +397,7 @@ mod_init(module_t *const restrict m)
 		(void) sigaction(SIGFPE, &oldfpeaction, NULL);
 		(void) sigaction(SIGILL, &oldillaction, NULL);
 
-		m->mflags |= MODTYPE_FAIL;
+		m->mflags |= MODFLAG_FAIL;
 		return;
 	}
 
@@ -411,7 +411,7 @@ mod_init(module_t *const restrict m)
 		(void) sigaction(SIGILL, &oldillaction, NULL);
 		(void) sigaction(SIGSEGV, &oldsegvaction, NULL);
 
-		m->mflags |= MODTYPE_FAIL;
+		m->mflags |= MODFLAG_FAIL;
 		return;
 	}
 
@@ -442,7 +442,7 @@ mod_init(module_t *const restrict m)
 	(void) slog(LG_ERROR, "%s: this module only supports Linux systems with GNU libc >= 2.1", m->name);
 	(void) slog(LG_ERROR, "%s: please check your configuration and build environment", m->name);
 
-	m->mflags |= MODTYPE_FAIL;
+	m->mflags |= MODFLAG_FAIL;
 }
 
 static void

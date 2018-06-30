@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2012 William Pitcock <nenolod@dereferenced.org>
- * Copyright (C) 2018 Atheme Development Group <https://atheme.github.io/>
+ * Copyright (C) 2018 Atheme Development Group (https://atheme.github.io/)
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -83,6 +83,9 @@ typedef char *stringref;
 #    define ATHEME_VATTR_ALIGNED(alignment)     /* No variable attribute support */
 #    define ATHEME_VATTR_UNUSED                 /* No variable attribute support */
 #  endif
+
+// This new name was introduced in the Atheme 7.3 development series.
+#define MODFLAG_FAIL MODTYPE_FAIL
 
 /* These 2 macros were introduced in the Atheme 7.3 development series and
  * they're much nicer to use.

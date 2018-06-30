@@ -5,11 +5,6 @@
 #include "atheme-compat.h"
 #include "uplink.h"		/* sts() */
 
-static void os_cmd_helpme(sourceinfo_t *si, int parc, char *parv[]);
-
-command_t os_helpme = { "HELPME", N_("Makes you into a network helper."),
-                        PRIV_HELPER, 0, os_cmd_helpme, { .path = "contrib/helpme" } };
-
 static void
 os_cmd_helpme(sourceinfo_t *si, int parc, char *parv[])
 {
@@ -20,6 +15,15 @@ os_cmd_helpme(sourceinfo_t *si, int parc, char *parv[])
 	sts(":%s MODE %s :+h", svs->nick, si->su->nick);
 	command_success_nodata(si, _("You are now a network helper."));
 }
+
+static command_t os_helpme = {
+	.name           = "HELPME",
+	.desc           = N_("Makes you into a network helper."),
+	.access         = PRIV_HELPER,
+	.maxparc        = 0,
+	.cmd            = &os_cmd_helpme,
+	.help           = { .path = "contrib/helpme" },
+};
 
 static void
 mod_init(module_t *const restrict m)

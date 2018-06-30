@@ -7,11 +7,6 @@
 
 #include "atheme-compat.h"
 
-static void ns_cmd_generatepass(sourceinfo_t *si, int parc, char *parv[]);
-
-command_t ns_generatepass = { "GENERATEPASS", "Generates a random password.",
-                        AC_NONE, 1, ns_cmd_generatepass, { .path = "contrib/generatepass" } };
-
 static void
 ns_cmd_generatepass(sourceinfo_t *si, int parc, char *parv[])
 {
@@ -30,6 +25,15 @@ ns_cmd_generatepass(sourceinfo_t *si, int parc, char *parv[])
 	free(newpass);
 	logcommand(si, CMDLOG_GET, "GENERATEPASS");
 }
+
+static command_t ns_generatepass = {
+	.name           = "GENERATEPASS",
+	.desc           = N_("Generates a random password."),
+	.access         = AC_NONE,
+	.maxparc        = 1,
+	.cmd            = &ns_cmd_generatepass,
+	.help           = { .path = "contrib/generatepass" },
+};
 
 static void
 mod_init(module_t *const restrict m)

@@ -10,10 +10,6 @@
 
 #include "atheme-compat.h"
 
-static void ns_cmd_fregister(sourceinfo_t *si, int parc, char *parv[]);
-
-command_t ns_fregister = { "FREGISTER", "Registers a nickname on behalf of another user.", PRIV_USER_FREGISTER, 20, ns_cmd_fregister, { .path = "contrib/fregister" } };
-
 static void
 ns_cmd_fregister(sourceinfo_t *si, int parc, char *parv[])
 {
@@ -101,6 +97,15 @@ ns_cmd_fregister(sourceinfo_t *si, int parc, char *parv[])
 	req.mn = mn;
 	hook_call_user_verify_register(&req);
 }
+
+static command_t ns_fregister = {
+	.name           = "FREGISTER",
+	.desc           = N_("Registers a nickname on behalf of another user."),
+	.access         = PRIV_USER_FREGISTER,
+	.maxparc        = 20,
+	.cmd            = &ns_cmd_fregister,
+	.help           = { .path = "contrib/fregister" },
+};
 
 static void
 mod_init(module_t *const restrict m)

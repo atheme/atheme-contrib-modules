@@ -8,10 +8,6 @@
 
 #include "atheme-compat.h"
 
-static void os_cmd_modeall(sourceinfo_t *si, int parc, char *parv[]);
-
-command_t os_modeall = { "MODEALL", N_("Changes modes on all channels."), PRIV_OMODE, 2, os_cmd_modeall, { .path = "contrib/os_modeall" } };
-
 static void
 set_channel_mode(service_t *s, channel_t *c, int modeparc, char *modeparv[])
 {
@@ -48,6 +44,15 @@ os_cmd_modeall(sourceinfo_t *si, int parc, char *parv[])
 		get_oper_name(si), mode);
 	logcommand(si, CMDLOG_ADMIN, "MODEALL: \2%s\2", mode);
 }
+
+static command_t os_modeall = {
+	.name           = "MODEALL",
+	.desc           = N_("Changes modes on all channels."),
+	.access         = PRIV_OMODE,
+	.maxparc        = 2,
+	.cmd            = &os_cmd_modeall,
+	.help           = { .path = "contrib/os_modeall" },
+};
 
 static void
 mod_init(module_t *const restrict m)

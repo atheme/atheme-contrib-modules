@@ -7,12 +7,6 @@
 
 #include "atheme-compat.h"
 
-static void cs_cmd_up(sourceinfo_t *si, int parc, char *parv[]);
-static void cs_cmd_down(sourceinfo_t *si, int parc, char *parv[]);
-
-command_t cs_up = { "UP", "Grants all access you have permission to on a given channel.", AC_NONE, 1, cs_cmd_up, { .path = "contrib/up" } };
-command_t cs_down = { "DOWN", "Removes all current access you posess on a given channel.", AC_NONE, 1, cs_cmd_down, { .path = "contrib/down" } };
-
 static void
 cs_cmd_up(sourceinfo_t *si, int parc, char *parv[])
 {
@@ -204,6 +198,24 @@ cs_cmd_down(sourceinfo_t *si, int parc, char *parv[])
 
 	command_success_nodata(si, "Downed successfully on \2%s\2.", mc->name);
 }
+
+static command_t cs_up = {
+	"UP",
+	N_("Grants all access you have permission to on a given channel."),
+	AC_NONE,
+	1,
+	&cs_cmd_up,
+	{ .path = "contrib/up" },
+};
+
+static command_t cs_down = {
+	"DOWN",
+	N_("Removes all current access you posess on a given channel."),
+	AC_NONE,
+	1,
+	&cs_cmd_down,
+	{ .path = "contrib/down" },
+};
 
 static void
 mod_init(module_t *const restrict m)

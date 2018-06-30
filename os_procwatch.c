@@ -12,14 +12,7 @@
 
 #include <sys/event.h>
 
-static void procwatch_readhandler(connection_t *cptr);
-
-static void os_cmd_procwatch(sourceinfo_t *si, int parc, char *parv[]);
-
-command_t os_procwatch = { "PROCWATCH", "Notifies snoop channel on process exit.",
-                        PRIV_ADMIN, 1, os_cmd_procwatch, { .path = "contrib/procwatch" } };
-
-static connection_t *kq_conn;
+static connection_t *kq_conn = NULL;
 
 static void
 procwatch_readhandler(connection_t *cptr)
@@ -55,32 +48,45 @@ os_cmd_procwatch(sourceinfo_t *si, int parc, char *parv[])
 
 	errno = 0;
 	v = strtol(parv[0], &end, 10);
+
 	if (errno != 0 || *end != '\0' || v < 0 || (pid_t)v != v)
 	{
 		command_fail(si, fault_needmoreparams, STR_INVALID_PARAMS, "PROCWATCH");
 		command_fail(si, fault_needmoreparams, _("Syntax: PROCWATCH <pid>"));
 		return;
 	}
+
 	EV_SET(&ev, v, EVFILT_PROC, EV_ADD | EV_ENABLE, NOTE_EXIT, 0, NULL);
+
 	if (kevent(kq_conn->fd, &ev, 1, NULL, 0, NULL) == -1)
 	{
 		command_fail(si, fault_toomany, _("Failed to add pid %ld"), v);
 		return;
 	}
+
 	command_success_nodata(si, "Added pid %ld to list.", v);
 }
+
+static command_t os_procwatch = {
+	.name           = "PROCWATCH",
+	.desc           = N_("Notifies snoop channel on process exit."),
+	.access         = PRIV_ADMIN,
+	.maxparc        = 1,
+	.cmd            = &os_cmd_procwatch,
+	.help           = { .path = "contrib/procwatch" },
+};
 
 static void
 mod_init(module_t *const restrict m)
 {
-	int kq;
+	const int kq = kqueue();
 
-	kq = kqueue();
 	if (kq == -1)
 	{
-		m->mflags = MODTYPE_FAIL;
+		m->mflags |= MODTYPE_FAIL;
 		return;
 	}
+
 	kq_conn = connection_add("procwatch kqueue", kq, 0, procwatch_readhandler, NULL);
 
 	service_named_bind_command("operserv", &os_procwatch);
@@ -89,9 +95,10 @@ mod_init(module_t *const restrict m)
 static void
 mod_deinit(const module_unload_intent_t intent)
 {
+	service_named_unbind_command("operserv", &os_procwatch);
+
 	if (kq_conn != NULL)
 		connection_close_soon(kq_conn);
-	service_named_unbind_command("operserv", &os_procwatch);
 }
 
 SIMPLE_DECLARE_MODULE_V1("contrib/os_procwatch", MODULE_UNLOAD_CAPABILITY_OK)

@@ -10,10 +10,7 @@
 /* allow us-ascii letters, digits and the following characters */
 #define VALID_SPECIALS "-"
 
-static int counter;
-
-static void handle_verify_register(hook_user_req_t *req);
-static void hook_user_identify(user_t *u);
+static int counter = 0;
 
 static void
 user_add_host(myuser_t *mu)

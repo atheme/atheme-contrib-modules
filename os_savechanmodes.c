@@ -7,14 +7,6 @@
 
 #include "atheme-compat.h"
 
-static void os_cmd_savechanmodes(sourceinfo_t *si, int parc, char *parv[]);
-static void os_cmd_loadchanmodes(sourceinfo_t *si, int parc, char *parv[]);
-
-command_t os_savechanmodes = { "SAVECHANMODES", "Dumps channel modes to a file.",
-		  	   PRIV_ADMIN, 1, os_cmd_savechanmodes, { .path = "contrib/savechanmodes" } };
-command_t os_loadchanmodes = { "LOADCHANMODES", "Restores channel modes from a file.",
-		  	   PRIV_ADMIN, 1, os_cmd_loadchanmodes, { .path = "contrib/loadchanmodes" } };
-
 static void
 os_cmd_savechanmodes(sourceinfo_t *si, int parc, char *parv[])
 {
@@ -156,6 +148,24 @@ os_cmd_loadchanmodes(sourceinfo_t *si, int parc, char *parv[])
 	command_success_nodata(si, "Remember to restart services to make %s leave channels it should not be in.",
 			chansvs.nick);
 }
+
+static command_t os_savechanmodes = {
+	.name           = "SAVECHANMODES",
+	.desc           = N_("Dumps channel modes to a file."),
+	.access         = PRIV_ADMIN,
+	.maxparc        = 1,
+	.cmd            = &os_cmd_savechanmodes,
+	.help           = { .path = "contrib/savechanmodes" },
+};
+
+static command_t os_loadchanmodes = {
+	.name           = "LOADCHANMODES",
+	.desc           = N_("Restores channel modes from a file."),
+	.access         = PRIV_ADMIN,
+	.maxparc        = 1,
+	.cmd            = &os_cmd_loadchanmodes,
+	.help           = { .path = "contrib/loadchanmodes" },
+};
 
 static void
 mod_init(module_t *const restrict m)

@@ -13,9 +13,7 @@
  * so if you do not want +n or +t, negate them in the configuration.
  * - Quora
  */
-char * mlocktweak;
-
-static void handle_channel_register(hook_channel_req_t *hdata);
+static char *mlocktweak = NULL;
 
 static void
 handle_channel_register(hook_channel_req_t *hdata)

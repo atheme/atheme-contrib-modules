@@ -15,16 +15,9 @@
 
 #define DEFCON_CMODE "R"
 
-static void os_cmd_defcon(sourceinfo_t *si, int parc, char *parv[]);
-static void defcon_nouserreg(hook_user_register_check_t *hdata);
-static void defcon_nochanreg(hook_channel_register_check_t *hdatac);
-static void defcon_useradd(hook_user_nick_t *data);
-static void defcon_timeoutfunc(void *dummy);
 static int level = 5;
 static unsigned int defcon_timeout = 900;
 static mowgli_eventloop_timer_t *defcon_timer = NULL;
-
-command_t os_defcon = { "DEFCON", N_("Implements Defense Condition lockdowns."), PRIV_ADMIN, 1, os_cmd_defcon, { .path = "contrib/defcon" } };
 
 static void
 defcon_nouserreg(hook_user_register_check_t *hdata)
@@ -204,11 +197,21 @@ os_cmd_defcon(sourceinfo_t *si, int parc, char *parv[])
 	logcommand(si, CMDLOG_ADMIN, "DEFCON: \2%d\2", level);
 }
 
+static command_t os_defcon = {
+	.name           = "DEFCON",
+	.desc           = N_("Implements Defense Condition lockdowns."),
+	.access         = PRIV_ADMIN,
+	.maxparc        = 1,
+	.cmd            = &os_cmd_defcon,
+	.help           = { .path = "contrib/defcon" },
+};
+
 static void
 mod_init(module_t *const restrict m)
 {
+	TAINT_ON("Using os_defcon", "Use of os_defcon is unsupported and not recommended. Use only at your own risk.");
+
 	service_named_bind_command("operserv", &os_defcon);
-	TAINT_ON("Using os_defcon", "Use of os_defcon is unsupported and not recommend. Use only at your own risk.");
 
 	/* Hooks for all the stuff defcon disables */
 	hook_add_event("user_can_register");

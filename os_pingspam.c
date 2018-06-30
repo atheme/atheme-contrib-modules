@@ -7,7 +7,7 @@
 
 #include "atheme-compat.h"
 
-char *notices[] =
+static const char *notices[] =
 {
 	"Scanning for proxies.",
 	"Killing off bottlers.",
@@ -28,7 +28,7 @@ char *notices[] =
 	"BAN KAI~!$"
 };
 
-char *phrases[] =
+static const char *phrases[] =
 {
 	"",
 	" please-ignore",
@@ -37,15 +37,29 @@ char *phrases[] =
 	" <3 neostats",
 };
 
-void pingspam(user_t *u);
-static void user_add_hook(hook_user_nick_t *data);
-static void os_cmd_pingspam(sourceinfo_t *si, int parc, char *parv[]);
-static void os_cmd_autopingspam(sourceinfo_t *si, int parc, char *parv[]);
+static bool spamming = false;
 
-command_t os_pingspam = { "PINGSPAM", "Spam a user with pings from every service, plus some bonus notices.", PRIV_OMODE, 1, os_cmd_pingspam, { .path = "contrib/pingspam" } };
-command_t os_autopingspam = { "AUTOPINGSPAM", "Spam connecting users with pings from every service, plus some bonus notices (setting).", PRIV_ADMIN, 1, os_cmd_autopingspam, { .path = "contrib/autopingspam" } };
+static void
+pingspam(user_t *u)
+{
+	user_t *sptr;
+	mowgli_node_t *n;
+	int i;
+	service_t *svs;
 
-int spamming;
+	if((svs = service_find("global")) != NULL)
+		for(i = 0;i < 6;i++)
+			notice(svs->me->nick, u->nick, "%s", notices[rand() % sizeof(notices) / sizeof(char*)]);
+
+	MOWGLI_ITER_FOREACH(n, me.me->userlist.head)
+	{
+		sptr = n->data;
+		msg(sptr->nick, u->nick, "\001PING %ld%s\001",
+				time(NULL),
+				phrases[rand() % sizeof(phrases) / sizeof(char*)]
+		   );
+	}
+}
 
 static void
 user_add_hook(hook_user_nick_t *data)
@@ -97,41 +111,37 @@ os_cmd_autopingspam(sourceinfo_t *si, int parc, char *parv[])
 
 	if(strcasecmp(mode, "on") == 0 || atoi(mode))
 	{
-		spamming = 1;
+		spamming = true;
 		command_success_nodata(si, "Auto-pingspam is now \2ON\2");
-	}else{
-		spamming = 0;
+	}
+	else
+	{
+		spamming = false;
 		command_success_nodata(si, "Auto-pingspam is now \2OFF\2");
 	}
 }
 
-void
-pingspam(user_t *u)
-{
-	user_t *sptr;
-	mowgli_node_t *n;
-	int i;
-	service_t *svs;
+static command_t os_pingspam = {
+	.name           = "PINGSPAM",
+	.desc           = _("Spam a user with pings from every service, plus some bonus notices."),
+	.access         = PRIV_OMODE,
+	.maxparc        = 1,
+	.cmd            = &os_cmd_pingspam,
+	.help           = { .path = "contrib/pingspam" },
+};
 
-	if((svs = service_find("global")) != NULL)
-		for(i = 0;i < 6;i++)
-			notice(svs->me->nick, u->nick, "%s", notices[rand() % sizeof(notices) / sizeof(char*)]);
-
-	MOWGLI_ITER_FOREACH(n, me.me->userlist.head)
-	{
-		sptr = n->data;
-		msg(sptr->nick, u->nick, "\001PING %ld%s\001",
-				time(NULL),
-				phrases[rand() % sizeof(phrases) / sizeof(char*)]
-		   );
-	}
-}
+static command_t os_autopingspam = {
+	.name           = "AUTOPINGSPAM",
+	.desc           = _("Spam connecting users with pings from every service, plus some bonus notices (setting)."),
+	.access         = PRIV_ADMIN,
+	.maxparc        = 1,
+	.cmd            = &os_cmd_autopingspam,
+	.help           = { .path = "contrib/autopingspam" },
+};
 
 static void
 mod_init(module_t *const restrict m)
 {
-	spamming = 0;
-
 	service_named_bind_command("operserv", &os_pingspam);
 	service_named_bind_command("operserv", &os_autopingspam);
 
@@ -140,10 +150,11 @@ mod_init(module_t *const restrict m)
 }
 
 static void
-mod_deinit(const module_unload_intent_t intent)
+mod_deinit(const module_unload_intent_t ATHEME_VATTR_UNUSED intent)
 {
 	service_named_unbind_command("operserv", &os_pingspam);
 	service_named_unbind_command("operserv", &os_autopingspam);
+
 	hook_del_user_add(user_add_hook);
 }
 

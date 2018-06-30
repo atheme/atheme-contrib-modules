@@ -23,7 +23,7 @@
  * cs_access_alias.c
  * sasl_blacklist.c
  */
-#define CONTRIB_VENDOR_FREENODE         "Freenode IRC Network <http://www.freenode.net/>"
+#define CONTRIB_VENDOR_FREENODE         "Freenode IRC Network <https://freenode.net/>"
 
 /*
  * ns_mxcheck.c

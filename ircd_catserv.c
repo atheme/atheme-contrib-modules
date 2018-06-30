@@ -7,15 +7,7 @@
 
 #include "atheme-compat.h"
 
-service_t *catserv;
-
-static void catserv_cmd_meow(sourceinfo_t *si, int parc, char *parv[]);
-static void catserv_cmd_help(sourceinfo_t *si, int parc, char *parv[]);
-
-command_t catserv_meow = { "MEOW", "Makes the cute little kitty-cat meow!",
-				AC_NONE, 0, catserv_cmd_meow, { .path = "" } };
-command_t catserv_help = { "HELP", "Displays contextual help information.",
-				AC_NONE, 1, catserv_cmd_help, { .path = "help" } };
+static service_t *catserv = NULL;
 
 static void
 catserv_cmd_meow(sourceinfo_t *si, int parc, char *parv[])
@@ -28,6 +20,24 @@ catserv_cmd_help(sourceinfo_t *si, int parc, char *parv[])
 {
 	command_help(si, si->service->commands);
 }
+
+static command_t catserv_meow = {
+	.name           = "MEOW",
+	.desc           = N_("Makes the cute little kitty-cat meow!"),
+	.access         = AC_NONE,
+	.maxparc        = 0,
+	.cmd            = &catserv_cmd_meow,
+	.help           = { .path = "" },
+};
+
+static command_t catserv_help = {
+	.name           = "HELP",
+	.desc           = N_("Displays contextual help information."),
+	.access         = AC_NONE,
+	.maxparc        = 1,
+	.cmd            = &catserv_cmd_help,
+	.help           = { .path = "help" },
+};
 
 static void
 mod_init(module_t *const restrict m)

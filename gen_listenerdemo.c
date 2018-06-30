@@ -8,7 +8,7 @@
 #include "atheme-compat.h"
 #include "datastream.h"
 
-connection_t *listener;
+static connection_t *listener = NULL;
 
 static int
 my_read(connection_t * cptr, char *buf)

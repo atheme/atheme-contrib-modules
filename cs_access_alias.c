@@ -8,10 +8,10 @@
 #include "atheme-compat.h"
 #include "template.h"
 
-static void cs_cmd_access(sourceinfo_t *si, int parc, char *parv[]);
-
-command_t cs_access = { "ACCESS", "Manipulates channel access lists.",
-                         AC_NONE, 4, cs_cmd_access, { .path = "contrib/access" } };
+typedef struct {
+	const char *res;
+	unsigned int level;
+} template_iter_t;
 
 static void
 compat_cmd(sourceinfo_t *si, const char *cmdname, char *channel, char *arg1, char *arg2, char *arg3)
@@ -33,11 +33,6 @@ compat_cmd(sourceinfo_t *si, const char *cmdname, char *channel, char *arg1, cha
 	else
 		command_fail(si, fault_unimplemented, _("Command \2%s\2 not loaded?"), cmdname);
 }
-
-typedef struct {
-	const char *res;
-	unsigned int level;
-} template_iter_t;
 
 static int
 global_template_search(const char *key, void *data, void *privdata)
@@ -199,6 +194,15 @@ cs_cmd_access(sourceinfo_t *si, int parc, char *parv[])
 	else
 		command_fail(si, fault_badparams, _("Invalid command. Use \2/%s%s help\2 for a command listing."), (ircd->uses_rcommand == FALSE) ? "msg " : "", si->service->disp);
 }
+
+static command_t cs_access = {
+	.name           = "ACCESS",
+	.desc           = N_("Manipulates channel access lists."),
+	.access         = AC_NONE,
+	.maxparc        = 4,
+	.cmd            = &cs_cmd_access,
+	.help           = { .path = "contrib/access" },
+};
 
 static void
 mod_init(module_t *const restrict m)

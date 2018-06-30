@@ -191,7 +191,7 @@ resign_player(player_t *player)
 	mowgli_node_delete(n, &wumpus.players);
 	mowgli_node_free(n);
 
-	free(player);
+	sfree(player);
 }
 
 /* ------------------------------ game functions */
@@ -399,7 +399,7 @@ end_game(void)
 			MOWGLI_ITER_FOREACH_SAFE(n, tn, r->exits.head)
 				mowgli_node_delete(n, &r->exits);
 		}
-		free(wumpus.rmemctx);
+		sfree(wumpus.rmemctx);
 		wumpus.rmemctx = NULL;
 	}
 

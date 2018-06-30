@@ -195,10 +195,10 @@ os_cmd_dnsblexempt(sourceinfo_t *si, int parc, char *parv[])
 
 				mowgli_node_delete(n, &dnsbl_elist);
 
-				free(de->creator);
-				free(de->reason);
-				free(de->ip);
-				free(de);
+				sfree(de->creator);
+				sfree(de->reason);
+				sfree(de->ip);
+				sfree(de);
 
 				return;
 			}
@@ -276,7 +276,7 @@ blacklist_dns_callback(mowgli_dns_reply_t *reply, int result, void *vptr)
 
 	if (blcptr->u == NULL)
 	{
-		free(blcptr);
+		sfree(blcptr);
 		return;
 	}
 
@@ -305,14 +305,14 @@ blacklist_dns_callback(mowgli_dns_reply_t *reply, int result, void *vptr)
 	l = dnsbl_queries(blcptr->u);
 	mowgli_node_delete(&blcptr->node, l);
 
-	free(blcptr);
+	sfree(blcptr);
 }
 
 /* XXX: no IPv6 implementation, not to concerned right now though. */
 static void
 initiate_blacklist_dnsquery(struct Blacklist *blptr, user_t *u)
 {
-	struct BlacklistClient *blcptr = malloc(sizeof(struct BlacklistClient));
+	struct BlacklistClient *blcptr = smalloc(sizeof(struct BlacklistClient));
 	char buf[IRCD_RES_HOSTLEN + 1];
 	int ip[4];
 	mowgli_list_t *l;
@@ -410,7 +410,7 @@ new_blacklist(char *name)
 
 	if (blptr == NULL)
 	{
-		blptr = malloc(sizeof(struct Blacklist));
+		blptr = smalloc(sizeof(struct Blacklist));
 		mowgli_node_add(blptr, mowgli_node_create(), &blacklist_list);
 	}
 
@@ -442,7 +442,7 @@ abort_blacklist_queries(user_t *u)
 		mowgli_node_delete(&blcptr->node, l);
 		unref_blacklist(blcptr->blacklist);
 		mowgli_dns_delete_query(dns_base, &blcptr->dns_query);
-		free(blcptr);
+		sfree(blcptr);
 	}
 }
 #endif
@@ -457,7 +457,7 @@ destroy_blacklists(void)
 	{
 		blptr = n->data;
 		blptr->hits = 0; /* keep it simple and consistent */
-		free(n->data);
+		sfree(n->data);
 		mowgli_node_delete(n, &blacklist_list);
 		mowgli_node_free(n);
 	}
@@ -472,7 +472,7 @@ dnsbl_config_handler(mowgli_config_file_entry_t *ce)
 	{
 		char *line = sstrdup(cce->varname);
 		new_blacklist(line);
-		free(line);
+		sfree(line);
 	}
 
 	return 0;

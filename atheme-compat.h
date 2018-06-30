@@ -59,6 +59,11 @@ typedef char *stringref;
 #  define atheme_object_sink_ref(obj)           object_sink_ref(obj)
 #  define atheme_object_unref(obj)              object_unref(obj)
 
+/* This function was introduced in the Atheme 7.3 development series and
+ * we want to make use of it.
+ */
+#  define sfree(ptr)                            free(ptr)
+
 /* These attribute macros were introduced in the Atheme 7.3 development
  * series, and it would be nice to be able to make use of them.
  */

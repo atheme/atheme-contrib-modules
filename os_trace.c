@@ -240,7 +240,7 @@ trace_regexp_cleanup(void *q)
 	if (domain->regex != NULL)
 		regex_destroy(domain->regex);
 
-	free(domain);
+	sfree(domain);
 }
 
 static void *
@@ -282,7 +282,7 @@ trace_server_cleanup(void *q)
 
 	return_if_fail(domain != NULL);
 
-	free(domain);
+	sfree(domain);
 }
 
 static void *
@@ -329,7 +329,7 @@ trace_glob_cleanup(void *q)
 
 	return_if_fail(domain != NULL);
 
-	free(domain);
+	sfree(domain);
 }
 
 static void *
@@ -374,7 +374,7 @@ trace_channel_cleanup(void *q)
 
 	return_if_fail(domain != NULL);
 
-	free(domain);
+	sfree(domain);
 }
 
 static void *
@@ -427,7 +427,7 @@ trace_nickage_cleanup(void *q)
 
 	return_if_fail(domain != NULL);
 
-	free(domain);
+	sfree(domain);
 }
 
 static void *
@@ -480,7 +480,7 @@ trace_numchan_cleanup(void *q)
 
 	return_if_fail(domain != NULL);
 
-	free(domain);
+	sfree(domain);
 }
 
 static void *
@@ -529,7 +529,7 @@ trace_identified_cleanup(void *q)
 
 	return_if_fail(domain != NULL);
 
-	free(domain);
+	sfree(domain);
 }
 
 static void
@@ -574,7 +574,8 @@ trace_print_cleanup(struct trace_action *a, bool succeeded)
 
 	if (!a->matched && succeeded)
 		command_success_nodata(a->si, _("No matches."));
-	free(a);
+
+	sfree(a);
 }
 
 static struct trace_action *
@@ -628,7 +629,8 @@ trace_kill_cleanup(struct trace_action *a, bool succeeded)
 
 	if (!a->matched && succeeded)
 		command_success_nodata(a->si, _("No matches."));
-	free(a);
+
+	sfree(a);
 }
 
 static struct trace_action *
@@ -743,7 +745,8 @@ trace_akill_cleanup(struct trace_action *a, bool succeeded)
 
 	if (!a->matched && succeeded)
 		command_success_nodata(a->si, _("No matches."));
-	free(a);
+
+	sfree(a);
 }
 
 static struct trace_action *
@@ -783,7 +786,7 @@ trace_count_cleanup(struct trace_action *act, bool succeeded)
 	if (succeeded)
 		command_success_nodata(act->si, _("\2%d\2 matches"), a->matches);
 
-	free(a);
+	sfree(a);
 }
 
 static struct trace_query_constructor trace_regexp = {
@@ -970,7 +973,7 @@ os_cmd_trace(sourceinfo_t *si, int parc, char *parv[])
 	if (succeeded)
 		logcommand(si, CMDLOG_ADMIN, "TRACE: \2%s\2 \2%s\2", parv[0], params);
 
-	free(params);
+	sfree(params);
 }
 
 static command_t os_trace = {

@@ -154,10 +154,10 @@ ns_cmd_goodmail(sourceinfo_t *si, int parc, char *parv[])
 
 				mowgli_node_delete(n, &ns_maillist);
 
-				free(l->mail);
-				free(l->creator);
-				free(l->reason);
-				free(l);
+				sfree(l->mail);
+				sfree(l->creator);
+				sfree(l->reason);
+				sfree(l);
 
 				return;
 			}

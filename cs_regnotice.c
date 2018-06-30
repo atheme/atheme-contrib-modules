@@ -51,7 +51,7 @@ regnotice_config_purge(void *unused)
 	{
 		char *line = n->data;
 
-		free(line);
+		sfree(line);
 		mowgli_node_delete(n, &regnotices);
 		mowgli_node_free(n);
 	}

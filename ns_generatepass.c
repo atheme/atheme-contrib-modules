@@ -22,7 +22,7 @@ ns_cmd_generatepass(sourceinfo_t *si, int parc, char *parv[])
 	newpass = random_string(n);
 
 	command_success_string(si, newpass, "Randomly generated password: %s", newpass);
-	free(newpass);
+	sfree(newpass);
 	logcommand(si, CMDLOG_GET, "GENERATEPASS");
 }
 

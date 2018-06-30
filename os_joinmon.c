@@ -171,10 +171,10 @@ os_cmd_joinmon(sourceinfo_t *si, int parc, char *parv[])
 
 				mowgli_node_delete(n, &os_monlist);
 
-				free(l->user);
-				free(l->creator);
-				free(l->reason);
-				free(l);
+				sfree(l->user);
+				sfree(l->creator);
+				sfree(l->reason);
+				sfree(l);
 
 				return;
 			}

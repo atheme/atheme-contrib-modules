@@ -63,7 +63,7 @@ guestnoreg_config_purge(void *unused)
         {
                 char *nick = n->data;
 
-                free(nick);
+                sfree(nick);
                 mowgli_node_delete(n, &guestnicks);
                 mowgli_node_free(n);
         }

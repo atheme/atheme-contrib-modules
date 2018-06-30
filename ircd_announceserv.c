@@ -75,9 +75,9 @@ account_drop_request(myuser_t *mu)
 
 			strshare_unref(l->nick);
 			strshare_unref(l->creator);
-			free(l->subject);
-			free(l->text);
-			free(l);
+			sfree(l->subject);
+			sfree(l->text);
+			sfree(l);
 
 			return;
 		}
@@ -184,7 +184,7 @@ as_cmd_request(sourceinfo_t *si, int parc, char *parv[])
 	 * Still, it's required so the message will cut off properly, and I can't find a less hacky way to do it. */
 	logcommand(si, CMDLOG_REQUEST, "REQUEST:");
 	slog(CMDLOG_REQUEST, "[%s - %s] %s", subject2, l->creator, buf);
-	free(subject2);
+	sfree(subject2);
 }
 
 static void
@@ -220,12 +220,12 @@ as_cmd_activate(sourceinfo_t *si, int parc, char *parv[])
 
 			mowgli_node_delete(n, &as_reqlist);
 
-			free(subject2);
+			sfree(subject2);
 			strshare_unref(l->nick);
-			free(l->subject);
+			sfree(l->subject);
 			strshare_unref(l->creator);
-			free(l->text);
-			free(l);
+			sfree(l->text);
+			sfree(l);
 
 			notice_global_sts(si->service->me, "*", buf);
 			return;
@@ -263,10 +263,10 @@ as_cmd_reject(sourceinfo_t *si, int parc, char *parv[])
 
 			mowgli_node_delete(n, &as_reqlist);
 			strshare_unref(l->nick);
-			free(l->subject);
+			sfree(l->subject);
 			strshare_unref(l->creator);
-			free(l->text);
-			free(l);
+			sfree(l->text);
+			sfree(l);
 			return;
 		}
 	}
@@ -295,7 +295,7 @@ as_cmd_waiting(sourceinfo_t *si, int parc, char *parv[])
 		command_success_nodata(si, "Account:\2%s\2, Subject: %s, Requested On: \2%s\2, Announcement:",
 			l->nick, subject2, buf);
 		command_success_nodata(si, "%s", l->text);
-		free(subject2);
+		sfree(subject2);
 	}
 
 	command_success_nodata(si, "End of list.");
@@ -321,9 +321,9 @@ as_cmd_cancel(sourceinfo_t *si, int parc, char *parv[])
 
 			strshare_unref(l->nick);
 			strshare_unref(l->creator);
-			free(l->subject);
-			free(l->text);
-			free(l);
+			sfree(l->subject);
+			sfree(l->text);
+			sfree(l);
 
 			command_success_nodata(si, "Your pending announcement has been canceled.");
 

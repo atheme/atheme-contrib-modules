@@ -295,11 +295,11 @@ cs_cmd_badwords(sourceinfo_t *si, int parc, char *parv[])
 
 				mowgli_node_delete(&bw->node, l);
 
-				free(bw->creator);
-				free(bw->channel);
-				free(bw->badword);
-				free(bw->action);
-				free(bw);
+				sfree(bw->creator);
+				sfree(bw->channel);
+				sfree(bw->badword);
+				sfree(bw->action);
+				sfree(bw);
 
 				return;
 			}

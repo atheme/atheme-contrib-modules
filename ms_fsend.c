@@ -7,14 +7,6 @@
 
 #include "atheme-compat.h"
 
-static void ms_cmd_fsend(sourceinfo_t *si, int parc, char *parv[]);
-
-/* MARK is prolly the most appropriate priv (that I can think of), if you can
- * think of a better one, feel free to change it. --jdhore
- */
-command_t ms_fsend = { "FSEND", N_("Forcibly sends a memo to a user."),
-                        PRIV_MARK, 2, ms_cmd_fsend, { .path = "contrib/fsend" } };
-
 static void
 ms_cmd_fsend(sourceinfo_t *si, int parc, char *parv[])
 {
@@ -150,9 +142,19 @@ ms_cmd_fsend(sourceinfo_t *si, int parc, char *parv[])
 	{
 		command_fail(si, fault_nosuch_target, _("Group memos may not be forced."));
 	}
-
-	return;
 }
+
+/* MARK is prolly the most appropriate priv (that I can think of), if you can
+ * think of a better one, feel free to change it. --jdhore
+ */
+static command_t ms_fsend = {
+	.name           = "FSEND",
+	.desc           = N_("Forcibly sends a memo to a user."),
+	.access         = PRIV_MARK,
+	.maxparc        = 2,
+	.cmd            = &ms_cmd_fsend,
+	.help           = { .path = "contrib/fsend" },
+};
 
 static void
 mod_init(module_t *const restrict m)

@@ -7,13 +7,6 @@
 
 #include "atheme-compat.h"
 
-static void userinfo_check_join(hook_channel_joinpart_t *hdata);
-static void cs_cmd_userinfo(sourceinfo_t *si, int parc, char *parv[]);
-
-command_t cs_userinfo = { "USERINFO", N_("Sets a userinfo message."),
-			AC_NONE, 3, cs_cmd_userinfo, { .path = "contrib/userinfo" } };
-
-/* USERINFO <channel> [user] [message] */
 static void
 cs_cmd_userinfo(sourceinfo_t *si, int parc, char *parv[])
 {
@@ -109,7 +102,6 @@ cs_cmd_userinfo(sourceinfo_t *si, int parc, char *parv[])
 					entity(mu)->name, mc->name);
 		logcommand(si, CMDLOG_SET, "USERINFO:ADD: \2%s\2 on \2%s\2 (\2%s\2)", entity(mu)->name, mc->name, parv[2]);
 	}
-	return;
 }
 
 static void
@@ -136,6 +128,15 @@ userinfo_check_join(hook_channel_joinpart_t *hdata)
 		return;
 	msg(chansvs.nick, cu->chan->name, "[%s] %s", cu->user->nick, md->value);
 }
+
+static command_t cs_userinfo = {
+	"USERINFO",
+	N_("Sets a userinfo message."),
+	AC_NONE,
+	3,
+	&cs_cmd_userinfo,
+	{ .path = "contrib/userinfo" },
+};
 
 static void
 mod_init(module_t *const restrict m)

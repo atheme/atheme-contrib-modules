@@ -39,6 +39,7 @@ info_hook(sourceinfo_t *si)
 static void
 mod_init(module_t *m)
 {
+	MODULE_CONFLICT(m, "nickserv/waitreg");
 
 	hook_add_event("user_can_register");
 	hook_add_user_can_register(waitreg_hook);

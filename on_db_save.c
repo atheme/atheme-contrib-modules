@@ -4,15 +4,13 @@
 
 #ifndef _WIN32
 
-static char *command = NULL;
-
-static void on_db_save(void *unused);
-
 static struct update_command_state {
 	connection_t *out, *err;
 	pid_t pid;
 	int running;
 } update_command_proc;
+
+static char *command = NULL;
 
 static void
 update_command_finished(pid_t pid, int status, void *data)

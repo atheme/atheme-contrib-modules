@@ -7,10 +7,6 @@
 
 #include "atheme-compat.h"
 
-static void command_roulette(sourceinfo_t *si, int parc, char *parv[]);
-
-command_t cmd_roulette = { "ROULETTE", N_("A game of Russian Roulette."), AC_NONE, 2, command_roulette, { .path = "contrib/roulette" } };
-
 /*
  * Handle reporting for both fantasy commands and normal commands in GameServ
  * quickly and easily. Of course, sourceinfo has a vtable that can be manipulated,
@@ -46,11 +42,19 @@ command_roulette(sourceinfo_t *si, int parc, char *parv[])
 	gs_command_report(si, "%s", roulette_responses[rand() % 6 == 0]);
 }
 
+static command_t cmd_roulette = {
+	.name           = "ROULETTE",
+	.desc           = N_("A game of Russian Roulette."),
+	.access         = AC_NONE,
+	.maxparc        = 2,
+	.cmd            = &command_roulette,
+	.help           = { .path = "contrib/roulette" },
+};
+
 static void
-mod_init(module_t * m)
+mod_init(module_t *const restrict m)
 {
 	service_named_bind_command("gameserv", &cmd_roulette);
-
 	service_named_bind_command("chanserv", &cmd_roulette);
 }
 
@@ -58,7 +62,6 @@ static void
 mod_deinit(const module_unload_intent_t intent)
 {
 	service_named_unbind_command("gameserv", &cmd_roulette);
-
 	service_named_unbind_command("chanserv", &cmd_roulette);
 }
 

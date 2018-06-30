@@ -12,10 +12,6 @@
 
 #include "atheme-compat.h"
 
-static void os_cmd_kill(sourceinfo_t *si, int parc, char *parv[]);
-
-command_t os_kill = { "KILL", "Kill a user with Services.", PRIV_OMODE, 2, os_cmd_kill, { .path = "contrib/kill" } };
-
 static void
 os_cmd_kill(sourceinfo_t *si, int parc, char *parv[])
 {
@@ -38,6 +34,15 @@ os_cmd_kill(sourceinfo_t *si, int parc, char *parv[])
 
 	kill_user(si->service->me, target, "Requested: %s", parv[1]);
 }
+
+static command_t os_kill = {
+	.name           = "KILL",
+	.desc           = N_("Kill a user with Services."),
+	.access         = PRIV_OMODE,
+	.maxparc        = 2,
+	.cmd            = &os_cmd_kill,
+	.help           = { .path = "contrib/kill" },
+};
 
 static void
 mod_init(module_t *const restrict m)

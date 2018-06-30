@@ -1,16 +1,19 @@
 #include "atheme-compat.h"
 
-static void cs_cmd_ping(sourceinfo_t *si, int parc, char *parv[]);
-
-command_t cs_ping = { "PING", "Verifies network connectivity by responding with pong.",
-			AC_NONE, 0, cs_cmd_ping, { .path = "contrib/cs_ping" } };
-
 static void
 cs_cmd_ping(sourceinfo_t *si, int parc, char *parv[])
 {
 	command_success_nodata(si, "Pong!");
-	return;
 }
+
+static command_t cs_ping = {
+	.name           = "PING",
+	.desc           = N_("Verifies network connectivity by responding with pong."),
+	.access         = AC_NONE,
+	.maxparc        = 0,
+	.cmd            = &cs_cmd_ping,
+	.help           = { .path = "contrib/cs_ping" },
+};
 
 static void
 mod_init(module_t *const restrict m)

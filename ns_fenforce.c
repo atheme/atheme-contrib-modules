@@ -7,10 +7,6 @@
 
 #include "atheme-compat.h"
 
-static void ns_cmd_fenforce(sourceinfo_t *si, int parc, char *parv[]);
-
-command_t ns_fenforce = { "FENFORCE", "Enables or disables protection of another user's nicknames.", PRIV_USER_ADMIN, 2, ns_cmd_fenforce, { .path = "contrib/fenforce" } };
-
 static void
 ns_cmd_fenforce(sourceinfo_t *si, int parc, char *parv[])
 {
@@ -65,6 +61,15 @@ ns_cmd_fenforce(sourceinfo_t *si, int parc, char *parv[])
 		command_fail(si, fault_badparams, STR_INVALID_PARAMS, "FENFORCE");
 	}
 }
+
+static command_t ns_fenforce = {
+	.name           = "FENFORCE",
+	.desc           = N_("Enables or disables protection of another user's nicknames."),
+	.access         = PRIV_USER_ADMIN,
+	.maxparc        = 2,
+	.cmd            = &ns_cmd_fenforce,
+	.help           = { .path = "contrib/fenforce" },
+};
 
 static void
 mod_init(module_t *const restrict m)

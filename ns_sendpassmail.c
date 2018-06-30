@@ -7,10 +7,6 @@
 
 #include "atheme-compat.h"
 
-static void ns_cmd_sendpassmail(sourceinfo_t *si, int parc, char *parv[]);
-
-command_t ns_sendpassmail = { "SENDPASSMAIL", N_("Email registration passwords."), AC_NONE, 2, ns_cmd_sendpassmail, { .path = "contrib/ns_sendpassmail" } };
-
 struct sendpassmail_state
 {
 	sourceinfo_t *origin;
@@ -136,6 +132,15 @@ ns_cmd_sendpassmail(sourceinfo_t *si, int parc, char *parv[])
 
 	command_success_nodata(si, _("A password reset email has been sent for all accounts matching address \2%s\2, if any."), email);
 }
+
+static command_t ns_sendpassmail = {
+	.name           = "SENDPASSMAIL",
+	.desc           = N_("Email registration passwords."),
+	.access         = AC_NONE,
+	.maxparc        = 2,
+	.cmd            = &ns_cmd_sendpassmail,
+	.help           = { .path = "contrib/ns_sendpassmail" },
+};
 
 static void
 mod_init(module_t *const restrict m)

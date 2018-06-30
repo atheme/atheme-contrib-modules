@@ -7,10 +7,6 @@
 
 #include "atheme-compat.h"
 
-static void ns_cmd_listlogins(sourceinfo_t *si, int parc, char *parv[]);
-
-command_t ns_listlogins = { "LISTLOGINS", N_("Lists details of clients authenticated as you."), AC_AUTHENTICATED, 1, ns_cmd_listlogins, { .path = "contrib/listlogins" } };
-
 static void
 ns_cmd_listlogins(sourceinfo_t *si, int parc, char *parv[])
 {
@@ -34,6 +30,15 @@ ns_cmd_listlogins(sourceinfo_t *si, int parc, char *parv[])
 	command_success_nodata(si, ngettext(N_("\2%d\2 client found"), N_("\2%d\2 clients found"), matches), matches);
 	logcommand(si, CMDLOG_GET, "LISTLOGINS: (\2%d\2 matches)", matches);
 }
+
+static command_t ns_listlogins = {
+	.name           = "LISTLOGINS",
+	.desc           = N_("Lists details of clients authenticated as you."),
+	.access         = AC_AUTHENTICATED,
+	.maxparc        = 1,
+	.cmd            = &ns_cmd_listlogins,
+	.help           = { .path = "contrib/listlogins" },
+};
 
 static void
 mod_init(module_t *const restrict m)

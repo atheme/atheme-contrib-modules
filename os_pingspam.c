@@ -123,7 +123,7 @@ os_cmd_autopingspam(sourceinfo_t *si, int parc, char *parv[])
 
 static command_t os_pingspam = {
 	.name           = "PINGSPAM",
-	.desc           = _("Spam a user with pings from every service, plus some bonus notices."),
+	.desc           = N_("Spam a user with pings from every service, plus some bonus notices."),
 	.access         = PRIV_OMODE,
 	.maxparc        = 1,
 	.cmd            = &os_cmd_pingspam,
@@ -132,7 +132,7 @@ static command_t os_pingspam = {
 
 static command_t os_autopingspam = {
 	.name           = "AUTOPINGSPAM",
-	.desc           = _("Spam connecting users with pings from every service, plus some bonus notices (setting)."),
+	.desc           = N_("Spam connecting users with pings from every service, plus some bonus notices (setting)."),
 	.access         = PRIV_ADMIN,
 	.maxparc        = 1,
 	.cmd            = &os_cmd_autopingspam,

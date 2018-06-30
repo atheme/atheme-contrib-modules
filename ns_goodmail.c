@@ -7,14 +7,6 @@
 
 #include "atheme-compat.h"
 
-static void check_registration(hook_user_register_check_t *hdata);
-static void ns_cmd_goodmail(sourceinfo_t *si, int parc, char *parv[]);
-
-static void write_gedb(database_handle_t *db);
-static void db_h_ge(database_handle_t *db, const char *type);
-
-command_t ns_goodmail = { "GOODMAIL", N_("Restrict registration to certain email addresses."), PRIV_USER_ADMIN, 3, ns_cmd_goodmail, { .path = "contrib/ns_goodmail" } };
-
 struct goodmail_ {
 	char *mail;
 	time_t mail_ts;
@@ -24,7 +16,7 @@ struct goodmail_ {
 
 typedef struct goodmail_ goodmail_t;
 
-mowgli_list_t ns_maillist;
+static mowgli_list_t ns_maillist = { NULL, NULL, 0 };
 
 static void
 write_gedb(database_handle_t *db)
@@ -198,13 +190,22 @@ ns_cmd_goodmail(sourceinfo_t *si, int parc, char *parv[])
 	}
 }
 
+static command_t ns_goodmail = {
+	.name           = "GOODMAIL",
+	.desc           = N_("Restrict registration to certain email addresses."),
+	.access         = PRIV_USER_ADMIN,
+	.maxparc        = 3,
+	.cmd            = &ns_cmd_goodmail,
+	.help           = { .path = "contrib/ns_goodmail" },
+};
+
 static void
 mod_init(module_t *const restrict m)
 {
 	if (!module_find_published("backend/opensex"))
 	{
 		slog(LG_INFO, "Module %s requires use of the OpenSEX database backend, refusing to load.", m->name);
-		m->mflags = MODTYPE_FAIL;
+		m->mflags |= MODTYPE_FAIL;
 		return;
 	}
 

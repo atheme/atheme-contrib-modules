@@ -5,18 +5,6 @@
 
 #include "atheme-compat.h"
 
-static void on_channel_message(hook_cmessage_data_t *data);
-static void cs_cmd_badwords(sourceinfo_t *si, int parc, char *parv[]);
-static void cs_set_cmd_blockbadwords(sourceinfo_t *si, int parc, char *parv[]);
-static void cs_set_cmd_blockbadwordsops(sourceinfo_t *si, int parc, char *parv[]);
-
-static void write_badword_db(database_handle_t *db);
-static void db_h_bw(database_handle_t *db, const char *type);
-
-command_t cs_badwords = { "BADWORDS", N_("Manage the list of channel bad words."), AC_AUTHENTICATED, 4, cs_cmd_badwords, { .path = "contrib/badwords" } };
-command_t cs_set_blockbadwords = { "BLOCKBADWORDS", N_("Set whether users can say badwords in channel or not."), AC_NONE, 2, cs_set_cmd_blockbadwords, { .path = "contrib/set_blockbadwords" } };
-command_t cs_set_blockbadwordsops = { "BLOCKBADWORDSOPS", N_("Set whether ops can say badwords in channel or not."), AC_NONE, 2, cs_set_cmd_blockbadwordsops, { .path = "contrib/set_blockbadwordsops" } };
-
 struct badword_ {
 	char *badword;
 	time_t add_ts;
@@ -28,7 +16,7 @@ struct badword_ {
 
 typedef struct badword_ badword_t;
 
-mowgli_patricia_t **cs_set_cmdtree;
+static mowgli_patricia_t **cs_set_cmdtree = NULL;
 
 static inline mowgli_list_t *
 badwords_list_of(mychan_t *mc)
@@ -199,7 +187,6 @@ on_channel_message(hook_cmessage_data_t *data)
 	}
 }
 
-/* SET BADWORD */
 static void
 cs_cmd_badwords(sourceinfo_t *si, int parc, char *parv[])
 {
@@ -480,6 +467,33 @@ cs_set_cmd_blockbadwordsops(sourceinfo_t *si, int parc, char *parv[])
 	}
 }
 
+static command_t cs_badwords = {
+	.name           = "BADWORDS",
+	.desc           = N_("Manage the list of channel bad words."),
+	.access         = AC_AUTHENTICATED,
+	.maxparc        = 4,
+	.cmd            = &cs_cmd_badwords,
+	.help           = { .path = "contrib/badwords" },
+};
+
+static command_t cs_set_blockbadwords = {
+	.name           = "BLOCKBADWORDS",
+	.desc           = N_("Set whether users can say badwords in channel or not."),
+	.access         = AC_NONE,
+	.maxparc        = 2,
+	.cmd            = &cs_set_cmd_blockbadwords,
+	.help           = { .path = "contrib/set_blockbadwords" },
+};
+
+static command_t cs_set_blockbadwordsops = {
+	.name           = "BLOCKBADWORDSOPS",
+	.desc           = N_("Set whether ops can say badwords in channel or not."),
+	.access         = AC_NONE,
+	.maxparc        = 2,
+	.cmd            = &cs_set_cmd_blockbadwordsops,
+	.help           = { .path = "contrib/set_blockbadwordsops" },
+};
+
 static void
 mod_init(module_t *const restrict m)
 {
@@ -488,7 +502,7 @@ mod_init(module_t *const restrict m)
 	if (!module_find_published("backend/opensex"))
 	{
 		slog(LG_INFO, "Module %s requires use of the OpenSEX database backend, refusing to load.", m->name);
-		m->mflags = MODTYPE_FAIL;
+		m->mflags |= MODTYPE_FAIL;
 		return;
 	}
 

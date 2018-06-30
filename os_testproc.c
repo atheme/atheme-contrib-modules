@@ -18,11 +18,6 @@ struct testprocdata
 
 static struct testprocdata procdata;
 
-static void os_cmd_testproc(sourceinfo_t *si, int parc, char *parv[]);
-
-command_t os_testproc = { "TESTPROC", "Does something with child processes.",
-                        AC_NONE, 0, os_cmd_testproc, { .path = "contrib/testproc" } };
-
 static void
 testproc_recvqhandler(connection_t *cptr)
 {
@@ -113,6 +108,15 @@ os_cmd_testproc(sourceinfo_t *si, int parc, char *parv[])
 	}
 }
 
+static command_t os_testproc = {
+	.name           = "TESTPROC",
+	.desc           = N_("Does something with child processes."),
+	.access         = AC_NONE,
+	.maxparc        = 0,
+	.cmd            = &os_cmd_testproc,
+	.help           = { .path = "contrib/testproc" },
+};
+
 static void
 mod_init(module_t *const restrict m)
 {
@@ -124,6 +128,7 @@ mod_deinit(const module_unload_intent_t intent)
 {
 	if (procdata.pip != NULL)
 		connection_close_soon(procdata.pip);
+
 	service_named_unbind_command("operserv", &os_testproc);
 }
 

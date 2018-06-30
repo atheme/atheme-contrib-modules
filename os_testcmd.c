@@ -13,22 +13,6 @@ struct testcmddata
 	bool got_result;
 };
 
-static void os_cmd_testcmd(sourceinfo_t *si, int parc, char *parv[]);
-
-static void testcmd_command_fail(sourceinfo_t *si, cmd_faultcode_t code, const char *message);
-static void testcmd_command_success_nodata(sourceinfo_t *si, const char *message);
-static void testcmd_command_success_string(sourceinfo_t *si, const char *result, const char *message);
-
-command_t os_testcmd = { "TESTCMD", "Executes a command without a user_t.",
-                        AC_NONE, 3, os_cmd_testcmd, { .path = "contrib/testcmd" } };
-
-struct sourceinfo_vtable testcmd_vtable = {
-	.description = "testcmd",
-	.cmd_fail = testcmd_command_fail,
-	.cmd_success_nodata = testcmd_command_success_nodata,
-	.cmd_success_string = testcmd_command_success_string
-};
-
 static void
 testcmd_command_fail(sourceinfo_t *si, cmd_faultcode_t code, const char *message)
 {
@@ -62,6 +46,13 @@ testcmd_command_success_string(sourceinfo_t *si, const char *result, const char 
 static void
 os_cmd_testcmd(sourceinfo_t *si, int parc, char *parv[])
 {
+	static struct sourceinfo_vtable testcmd_vtable = {
+		.description = "testcmd",
+		.cmd_fail = &testcmd_command_fail,
+		.cmd_success_nodata = &testcmd_command_success_nodata,
+		.cmd_success_string = &testcmd_command_success_string
+	};
+
 	service_t *svs;
 	command_t *cmd;
 	sourceinfo_t newsi;
@@ -113,6 +104,15 @@ os_cmd_testcmd(sourceinfo_t *si, int parc, char *parv[])
 	if (!udata.got_result)
 		command_success_nodata(si, "Command returned without giving a result");
 }
+
+static command_t os_testcmd = {
+	.name           = "TESTCMD",
+	.desc           = N_("Executes a command without a user_t."),
+	.access         = AC_NONE,
+	.maxparc        = 3,
+	.cmd            = &os_cmd_testcmd,
+	.help           = { .path = "contrib/testcmd" },
+};
 
 static void
 mod_init(module_t *const restrict m)

@@ -1,9 +1,5 @@
 #include "atheme-compat.h"
 
-static void os_cmd_tabletest(sourceinfo_t *si, int parc, char *parv[]);
-
-command_t os_tabletest = { "TABLETEST", "Table test.", AC_NONE, 0, os_cmd_tabletest, { .path = "" } };
-
 static void
 os_cmd_tabletest(sourceinfo_t *si, int parc, char *parv[])
 {
@@ -30,6 +26,15 @@ os_cmd_tabletest(sourceinfo_t *si, int parc, char *parv[])
 
 	atheme_object_unref(t);
 }
+
+static command_t os_tabletest = {
+	.name           = "TABLETEST",
+	.desc           = N_("Table test."),
+	.access         = AC_NONE,
+	.maxparc        = 0,
+	.cmd            = &os_cmd_tabletest,
+	.help           = { .path = "" },
+};
 
 static void
 mod_init(module_t *const restrict m)

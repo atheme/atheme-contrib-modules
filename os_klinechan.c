@@ -9,16 +9,6 @@
 
 #include "atheme-compat.h"
 
-static void os_cmd_klinechan(sourceinfo_t *si, int parc, char *parv[]);
-static void os_cmd_listklinechans(sourceinfo_t *si, int parc, char *parv[]);
-
-command_t os_klinechan = { "KLINECHAN", "Klines all users joining a channel.",
-			PRIV_MASS_AKILL, 3, os_cmd_klinechan, { .path = "contrib/klinechan" } };
-command_t os_listklinechans = { "LISTKLINECHAN", "Lists active K:line channels.", PRIV_MASS_AKILL, 1, os_cmd_listklinechans, { .path = "contrib/listklinechans" } };
-
-static void klinechan_check_join(hook_channel_joinpart_t *hdata);
-static void klinechan_show_info(hook_channel_req_t *hdata);
-
 static void
 klinechan_check_join(hook_channel_joinpart_t *hdata)
 {
@@ -203,13 +193,33 @@ os_cmd_listklinechans(sourceinfo_t *si, int parc, char *parv[])
 						    N_("\2%d\2 matches for pattern \2%s\2"), matches), matches, pattern);
 }
 
+static command_t os_klinechan = {
+	.name           = "KLINECHAN",
+	.desc           = N_("Klines all users joining a channel."),
+	.access         = PRIV_MASS_AKILL,
+	.maxparc        = 3,
+	.cmd            = &os_cmd_klinechan,
+	.help           = { .path = "contrib/klinechan" },
+};
+
+static command_t os_listklinechans = {
+	.name           = "LISTKLINECHAN",
+	.desc           = N_("Lists active K:line channels."),
+	.access         = PRIV_MASS_AKILL,
+	.maxparc        = 1,
+	.cmd            = &os_cmd_listklinechans,
+	.help           = { .path = "contrib/listklinechans" },
+};
+
 static void
 mod_init(module_t *const restrict m)
 {
 	service_named_bind_command("operserv", &os_klinechan);
 	service_named_bind_command("operserv", &os_listklinechans);
+
 	hook_add_event("channel_join");
 	hook_add_first_channel_join(klinechan_check_join);
+
 	hook_add_event("channel_info");
 	hook_add_channel_info(klinechan_show_info);
 }
@@ -219,6 +229,7 @@ mod_deinit(const module_unload_intent_t intent)
 {
 	service_named_unbind_command("operserv", &os_klinechan);
 	service_named_unbind_command("operserv", &os_listklinechans);
+
 	hook_del_channel_join(klinechan_check_join);
 	hook_del_channel_info(klinechan_show_info);
 }

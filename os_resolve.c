@@ -96,14 +96,12 @@ os_cmd_resolve_func(sourceinfo_t *si, int parc, char *parv[])
 }
 
 static command_t os_cmd_resolve = {
-	"RESOLVE",
-	N_("Perform DNS lookup on hostname"),
-	PRIV_ADMIN,
-	1,
-	&os_cmd_resolve_func,
-	{
-		.path = "contrib/os_resolve",
-	},
+	.name           = "RESOLVE",
+	.desc           = N_("Perform DNS lookup on hostname"),
+	.access         = PRIV_ADMIN,
+	.maxparc        = 1,
+	.cmd            = &os_cmd_resolve_func,
+	.help           = { .path = "contrib/os_resolve", },
 };
 
 static void

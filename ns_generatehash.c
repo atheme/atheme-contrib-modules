@@ -7,11 +7,6 @@
 
 #include "atheme-compat.h"
 
-static void ns_cmd_generatehash(sourceinfo_t *si, int parc, char *parv[]);
-
-command_t ns_generatehash = { "GENERATEHASH", "Generates a hash for SOPER.",
-                        AC_NONE, 1, ns_cmd_generatehash, { .path = "contrib/generatehash" } };
-
 static void
 ns_cmd_generatehash(sourceinfo_t *si, int parc, char *parv[])
 {
@@ -33,6 +28,15 @@ ns_cmd_generatehash(sourceinfo_t *si, int parc, char *parv[])
 
 	logcommand(si, CMDLOG_GET, "GENERATEHASH");
 }
+
+static command_t ns_generatehash = {
+	.name           = "GENERATEHASH",
+	.desc           = N_("Generates a hash for SOPER."),
+	.access         = AC_NONE,
+	.maxparc        = 1,
+	.cmd            = &ns_cmd_generatehash,
+	.help           = { .path = "contrib/generatehash" },
+};
 
 static void
 mod_init(module_t *const restrict m)

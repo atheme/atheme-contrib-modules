@@ -9,10 +9,6 @@
 
 #define FORBID_EMAIL "noemail"
 
-static void ns_cmd_forbid(sourceinfo_t *si, int parc, char *parv[]);
-
-command_t ns_forbid = { "FORBID", "Disallows use of a nickname.", PRIV_USER_ADMIN, 3, ns_cmd_forbid, { .path = "contrib/forbid" } };
-
 static void
 make_forbid(sourceinfo_t *si, const char *account, const char *reason)
 {
@@ -128,6 +124,15 @@ ns_cmd_forbid(sourceinfo_t *si, int parc, char *parv[])
 		command_fail(si, fault_needmoreparams, _("Usage: FORBID <nickname> ON|OFF [reason]"));
 	}
 }
+
+static command_t ns_forbid = {
+	.name           = "FORBID",
+	.desc           = N_("Disallows use of a nickname."),
+	.access         = PRIV_USER_ADMIN,
+	.maxparc        = 3,
+	.cmd            = &ns_cmd_forbid,
+	.help           = { .path = "contrib/forbid" },
+};
 
 static void
 mod_init(module_t *const restrict m)

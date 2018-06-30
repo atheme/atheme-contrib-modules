@@ -7,14 +7,6 @@
 
 #include "atheme-compat.h"
 
-static void watch_user_joins(hook_channel_joinpart_t *hdata);
-static void os_cmd_joinmon(sourceinfo_t *si, int parc, char *parv[]);
-
-static void write_jmdb(database_handle_t *db);
-static void db_h_jm(database_handle_t *db, const char *type);
-
-command_t os_joinmon = { "JOINMON", N_("Monitors what channels a user is joining."), PRIV_USER_ADMIN, 3, os_cmd_joinmon, { .path = "contrib/joinmon" } };
-
 struct joinmon_ {
 	char *user;
 	/* This module is Jamaican...mon. */
@@ -25,7 +17,7 @@ struct joinmon_ {
 
 typedef struct joinmon_ joinmon_t;
 
-mowgli_list_t os_monlist;
+static mowgli_list_t os_monlist = { NULL, NULL, 0 };
 
 static void
 write_jmdb(database_handle_t *db)
@@ -215,13 +207,22 @@ os_cmd_joinmon(sourceinfo_t *si, int parc, char *parv[])
 	}
 }
 
+static command_t os_joinmon = {
+	.name           = "JOINMON",
+	.desc           = N_("Monitors what channels a user is joining."),
+	.access         = PRIV_USER_ADMIN,
+	.maxparc        = 3,
+	.cmd            = &os_cmd_joinmon,
+	.help           = { .path = "contrib/joinmon" },
+};
+
 static void
 mod_init(module_t *const restrict m)
 {
 	if (!module_find_published("backend/opensex"))
 	{
 		slog(LG_INFO, "Module %s requires use of the OpenSEX database backend, refusing to load.", m->name);
-		m->mflags = MODTYPE_FAIL;
+		m->mflags |= MODTYPE_FAIL;
 		return;
 	}
 

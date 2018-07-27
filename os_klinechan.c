@@ -4,7 +4,7 @@
  *
  * Autokline channels.
  *
- * Default AKILL Time: 24 Hours (86400 seconds)
+ * Default AKILL Time is based on the value of SET KLINETIME.
  */
 
 #include "atheme-compat.h"
@@ -57,7 +57,7 @@ klinechan_check_join(hook_channel_joinpart_t *hdata)
 					cu->user->user, cu->user->host,
 					cu->chan->name);
 
-			k = kline_add(cu->user->user, khost, reason, 86400, "*");
+			k = kline_add("*", khost, reason, config_options.kline_time, "*");
 			cu->user->flags |= UF_KLINESENT;
 		}
 	}
@@ -195,7 +195,7 @@ os_cmd_listklinechans(sourceinfo_t *si, int parc, char *parv[])
 
 static command_t os_klinechan = {
 	.name           = "KLINECHAN",
-	.desc           = N_("Klines all users joining a channel."),
+	.desc           = N_("Klines all users joining a channel for the duration set by SET KLINETIME."),
 	.access         = PRIV_MASS_AKILL,
 	.maxparc        = 3,
 	.cmd            = &os_cmd_klinechan,

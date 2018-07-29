@@ -92,17 +92,12 @@ nicklist_config_handler_real(mowgli_config_file_entry_t *entry)
 static void
 aknl_nickhook(hook_user_nick_t *data)
 {
-	user_t *u;
-	bool doit = false;
-	const char *username;
-	kline_t *k;
-
 	return_if_fail(data != NULL);
 
-	if (!data->u)
+	if (! data->u)
 		return;
 
-	u = data->u;
+	user_t *const u = data->u;
 
 	if (is_internal_client(u))
 		return;
@@ -110,32 +105,34 @@ aknl_nickhook(hook_user_nick_t *data)
 	if (is_autokline_exempt(u))
 		return;
 
-	username = u->user;
+	if (u->flags & UF_KLINESENT)
+		return;
+
+	const char *username = u->user;
+
 	if (*username == '~')
 		username++;
 
-	if (mowgli_patricia_retrieve(akillalllist, u->nick) != NULL &&
-	    mowgli_patricia_retrieve(akillalllist, username) != NULL &&
-	    mowgli_patricia_retrieve(akillalllist, u->gecos) != NULL)
-		doit = true;
+	bool doit = false;
 
-	if (mowgli_patricia_retrieve(akillnicklist, u->nick) != NULL)
+	if (mowgli_patricia_retrieve(akillnicklist, u->nick))
 		doit = true;
-
-	if (mowgli_patricia_retrieve(akilluserlist, username) != NULL)
+	else if (mowgli_patricia_retrieve(akilluserlist, username))
 		doit = true;
-
-	if (mowgli_patricia_retrieve(akillreallist, u->gecos) != NULL)
+	else if (mowgli_patricia_retrieve(akillreallist, u->gecos))
 		doit = true;
-
-	if (!doit)
+	else if (mowgli_patricia_retrieve(akillalllist, u->nick))
+		doit = true;
+	else if (mowgli_patricia_retrieve(akillalllist, username))
+		doit = true;
+	else if (mowgli_patricia_retrieve(akillalllist, u->gecos))
+		doit = true;
+	else
 		return;
 
-	if (! (u->flags & UF_KLINESENT)) {
-		slog(LG_INFO, "AKNL: k-lining \2%s\2!%s@%s [%s] due to appearing to be a possible spambot", u->nick, u->user, u->host, u->gecos);
-		k = kline_add(u->user, u->host, "Possible spambot", 86400, "*");
-		u->flags |= UF_KLINESENT;
-	}
+	slog(LG_INFO, "AKNL: k-lining \2%s\2!%s@%s [%s] due to appearing to be a possible spambot", u->nick, u->user, u->host, u->gecos);
+	kline_add(u->user, u->host, "Possible spambot", 86400, "*");
+	u->flags |= UF_KLINESENT;
 }
 
 static void

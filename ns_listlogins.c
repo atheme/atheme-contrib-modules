@@ -43,6 +43,8 @@ static command_t ns_listlogins = {
 static void
 mod_init(module_t *const restrict m)
 {
+	MODULE_CONFLICT(m, "nickserv/listlogins")
+
 	service_named_bind_command("nickserv", &ns_listlogins);
 }
 

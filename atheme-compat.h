@@ -58,6 +58,9 @@ typedef char *stringref;
 #  define atheme_object_ref(obj)                object_ref(obj)
 #  define atheme_object_sink_ref(obj)           object_sink_ref(obj)
 #  define atheme_object_unref(obj)              object_unref(obj)
+#  define atheme_random()                       arc4random()
+#  define atheme_random_uniform(bound)          arc4random_uniform(bound)
+#  define atheme_random_buf(dest, size)         arc4random_buf(dest, size)
 
 /* This function was introduced in the Atheme 7.3 development series and
  * we want to make use of it.

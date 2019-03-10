@@ -1,6 +1,9 @@
 #include "atheme-compat.h"
-#include "conf.h"
-#include "datastream.h"
+
+#if (CURRENT_ABI_REVISION < 730000)
+#  include "conf.h"
+#  include "datastream.h"
+#endif
 
 #ifndef _WIN32
 

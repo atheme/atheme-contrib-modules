@@ -6,7 +6,10 @@
  */
 
 #include "atheme-compat.h"
-#include "datastream.h"
+
+#if (CURRENT_ABI_REVISION < 730000)
+#  include "datastream.h"
+#endif
 
 static connection_t *listener = NULL;
 

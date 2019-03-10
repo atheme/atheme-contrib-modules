@@ -6,7 +6,11 @@
  */
 
 #include "atheme-compat.h"
-#include "conf.h"
+
+#if (CURRENT_ABI_REVISION < 730000)
+#  include "conf.h"
+#endif
+
 #include <limits.h>
 
 unsigned int waitreg_time = 0;

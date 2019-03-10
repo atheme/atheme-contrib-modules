@@ -3,7 +3,10 @@
  */
 
 #include "atheme-compat.h"
-#include "uplink.h"		/* sts() */
+
+#if (CURRENT_ABI_REVISION < 730000)
+#  include "uplink.h"		/* sts() */
+#endif
 
 static void
 os_cmd_helpme(sourceinfo_t *si, int parc, char *parv[])

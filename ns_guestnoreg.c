@@ -14,7 +14,10 @@
  */
 
 #include "atheme-compat.h"
-#include "conf.h"
+
+#if (CURRENT_ABI_REVISION < 730000)
+#  include "conf.h"
+#endif
 
 static mowgli_list_t guestnicks = { NULL, NULL, 0 };
 

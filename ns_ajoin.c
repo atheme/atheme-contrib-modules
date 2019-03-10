@@ -7,7 +7,10 @@
  */
 
 #include "atheme-compat.h"
-#include "uplink.h"
+
+#if (CURRENT_ABI_REVISION < 730000)
+#  include "uplink.h"
+#endif
 
 static void
 ns_cmd_ajoin_syntaxerr(sourceinfo_t *si)

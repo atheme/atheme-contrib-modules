@@ -7,6 +7,10 @@
 
 #include "atheme-compat.h"
 
+#if (CURRENT_ABI_REVISION < 730000)
+#  include "serno.h"
+#endif
+
 #if (defined(__linux__) || defined(__Linux__)) && defined(__GLIBC__)
 #  if (__GLIBC__ == 2) && defined(__GLIBC_MINOR__) && (__GLIBC_MINOR__ >= 1)
 #    define HAVE_BACKTRACE_SUPPORT      1
@@ -22,8 +26,6 @@
 #include <execinfo.h>
 #include <signal.h>
 #include <sys/resource.h>
-
-#include "serno.h"
 
 #define MIN_STACK_FRAMES        3
 #define MAX_STACK_FRAMES        64

@@ -6,7 +6,10 @@
  */
 
 #include "atheme-compat.h"
-#include "template.h"
+
+#if (CURRENT_ABI_REVISION < 730000)
+#  include "template.h"
+#endif
 
 typedef struct {
 	const char *res;

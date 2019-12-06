@@ -23,7 +23,7 @@ ns_cmd_fenforce(sourceinfo_t *si, int parc, char *parv[])
 	mu = myuser_find_ext(parv[0]);
 	if (!mu)
 	{
-		command_fail(si, fault_nosuch_target, _("\2%s\2 is not registered."), parv[0]);
+		command_fail(si, fault_nosuch_target, STR_IS_NOT_REGISTERED, parv[0]);
 		return;
 	}
 	setting = parv[1];

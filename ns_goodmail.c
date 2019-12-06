@@ -105,7 +105,7 @@ ns_cmd_goodmail(sourceinfo_t *si, int parc, char *parv[])
 
 		if (si->smu == NULL)
 		{
-			command_fail(si, fault_noprivs, _("You are not logged in."));
+			command_fail(si, fault_noprivs, STR_NOT_LOGGED_IN);
 			return;
 		}
 

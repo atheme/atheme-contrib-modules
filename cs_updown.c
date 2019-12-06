@@ -18,25 +18,25 @@ cs_cmd_up(sourceinfo_t *si, int parc, char *parv[])
 	if (!name)
 	{
 		command_fail(si, fault_needmoreparams, STR_INSUFFICIENT_PARAMS, "UP");
-		command_fail(si, fault_needmoreparams, "Syntax: UP <#channel>");
+		command_fail(si, fault_needmoreparams, _("Syntax: UP <#channel>"));
 		return;
 	}
 
 	if (!(mc = mychan_find(name)))
 	{
-		command_fail(si, fault_nosuch_target, "\2%s\2 is not registered.", name);
+		command_fail(si, fault_nosuch_target, STR_IS_NOT_REGISTERED, name);
 		return;
 	}
 
 	if (metadata_find(mc, "private:close:closer"))
 	{
-		command_fail(si, fault_noprivs, "\2%s\2 is closed.", name);
+		command_fail(si, fault_noprivs, _("\2%s\2 is closed."), name);
 		return;
 	}
 
 	if (!mc->chan)
 	{
-		command_fail(si, fault_nosuch_target, "\2%s\2 does not exist.", name);
+		command_fail(si, fault_nosuch_target, _("The channel \2%s\2 does not exist."), name);
 		return;
 	}
 
@@ -47,7 +47,7 @@ cs_cmd_up(sourceinfo_t *si, int parc, char *parv[])
 
 	if (!cu)
 	{
-		command_fail(si, fault_nosuch_target, "You are not on \2%s\2.", mc->name);
+		command_fail(si, fault_nosuch_target, _("You are not in the channel \2%s\2."), mc->name);
 		return;
 	}
 
@@ -108,7 +108,7 @@ cs_cmd_up(sourceinfo_t *si, int parc, char *parv[])
 		}
 	}
 
-	command_success_nodata(si, "Upped successfully on \2%s\2.", mc->name);
+	command_success_nodata(si, _("Upped successfully on \2%s\2."), mc->name);
 }
 
 static void
@@ -121,25 +121,25 @@ cs_cmd_down(sourceinfo_t *si, int parc, char *parv[])
 	if (!name)
 	{
 		command_fail(si, fault_needmoreparams, STR_INSUFFICIENT_PARAMS, "DOWN");
-		command_fail(si, fault_needmoreparams, "Syntax: DOWN <#channel>");
+		command_fail(si, fault_needmoreparams, _("Syntax: DOWN <#channel>"));
 		return;
 	}
 
 	if (!(mc = mychan_find(name)))
 	{
-		command_fail(si, fault_nosuch_target, "\2%s\2 is not registered.", name);
+		command_fail(si, fault_nosuch_target, STR_IS_NOT_REGISTERED, name);
 		return;
 	}
 
 	if (metadata_find(mc, "private:close:closer"))
 	{
-		command_fail(si, fault_noprivs, "\2%s\2 is closed.", name);
+		command_fail(si, fault_noprivs, _("\2%s\2 is closed."), name);
 		return;
 	}
 
 	if (!mc->chan)
 	{
-		command_fail(si, fault_nosuch_target, "\2%s\2 does not exist.", name);
+		command_fail(si, fault_nosuch_target, _("The channel \2%s\2 does not exist."), name);
 		return;
 	}
 
@@ -150,7 +150,7 @@ cs_cmd_down(sourceinfo_t *si, int parc, char *parv[])
 
 	if (!cu)
 	{
-		command_fail(si, fault_nosuch_target, "You are not on \2%s\2.", mc->name);
+		command_fail(si, fault_nosuch_target, _("You are not in the channel \2%s\2."), mc->name);
 		return;
 	}
 
@@ -196,7 +196,7 @@ cs_cmd_down(sourceinfo_t *si, int parc, char *parv[])
 		cu->modes &= ~CSTATUS_VOICE;
 	}
 
-	command_success_nodata(si, "Downed successfully on \2%s\2.", mc->name);
+	command_success_nodata(si, _("Downed successfully on \2%s\2."), mc->name);
 }
 
 static command_t cs_up = {

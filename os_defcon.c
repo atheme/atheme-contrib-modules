@@ -193,7 +193,7 @@ os_cmd_defcon(sourceinfo_t *si, int parc, char *parv[])
 
 	notice_global_sts(si->service->me, "*", buf);
 	command_success_nodata(si, _("Defense condition set to level \2%d\2."), level);
-	wallops(_("\2%s\2 set Defense condition to level \2%d\2."), get_oper_name(si), level);
+	wallops("\2%s\2 set Defense condition to level \2%d\2.", get_oper_name(si), level);
 	logcommand(si, CMDLOG_ADMIN, "DEFCON: \2%d\2", level);
 }
 

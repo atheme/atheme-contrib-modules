@@ -208,11 +208,12 @@ cs_cmd_badwords(sourceinfo_t *si, int parc, char *parv[])
 
 	if (!(mc = mychan_find(channel)))
 	{
-		command_fail(si, fault_nosuch_target, _("Channel \2%s\2 is not registered."), channel);
+		command_fail(si, fault_nosuch_target, STR_IS_NOT_REGISTERED, channel);
 		return;
 	}
 
 	l = badwords_list_of(mc);
+
 	if (!strcasecmp("ADD", command))
 	{
 
@@ -225,11 +226,13 @@ cs_cmd_badwords(sourceinfo_t *si, int parc, char *parv[])
 
 		if (!chanacs_source_has_flag(mc, si, CA_SET))
 		{
-			command_fail(si, fault_noprivs, _("You are not authorized to perform this command."));
+			command_fail(si, fault_noprivs, STR_NOT_AUTHORIZED);
 			return;
 		}
 
-		if(!strcasecmp("KICK", action) || !strcasecmp("KICKBAN", action) || !strcasecmp("WARN", action) || !strcasecmp("BAN", action) || (!strcasecmp("QUIET", action) && ircd != NULL && strchr(ircd->ban_like_modes, 'q')))
+		if (!strcasecmp("KICK", action) || !strcasecmp("KICKBAN", action) || !strcasecmp("WARN", action) ||
+		    !strcasecmp("BAN", action) || (!strcasecmp("QUIET", action) && ircd != NULL &&
+		    strchr(ircd->ban_like_modes, 'q')))
 		{
 			if (l != NULL)
 			{
@@ -239,7 +242,8 @@ cs_cmd_badwords(sourceinfo_t *si, int parc, char *parv[])
 
 					if (!irccasecmp(bw->badword, word))
 					{
-						command_success_nodata(si, _("\2%s\2 has already been entered into the bad word list."), word);
+						command_success_nodata(si, _("\2%s\2 has already been entered "
+						                             "into the bad word list."), word);
 						return;
 					}
 				}
@@ -274,7 +278,7 @@ cs_cmd_badwords(sourceinfo_t *si, int parc, char *parv[])
 
 		if (!chanacs_source_has_flag(mc, si, CA_SET))
 		{
-			command_fail(si, fault_noprivs, _("You are not authorized to perform this command."));
+			command_fail(si, fault_noprivs, STR_NOT_AUTHORIZED);
 			return;
 		}
 
@@ -304,6 +308,7 @@ cs_cmd_badwords(sourceinfo_t *si, int parc, char *parv[])
 				return;
 			}
 		}
+
 		command_success_nodata(si, _("Word \2%s\2 not found in bad word database."), word);
 	}
 	else if (!strcasecmp("LIST", command))
@@ -313,7 +318,7 @@ cs_cmd_badwords(sourceinfo_t *si, int parc, char *parv[])
 
 		if (!chanacs_source_has_flag(mc, si, CA_ACLVIEW))
 		{
-			command_fail(si, fault_noprivs, _("You are not authorized to perform this command."));
+			command_fail(si, fault_noprivs, STR_NOT_AUTHORIZED);
 			return;
 		}
 
@@ -329,9 +334,10 @@ cs_cmd_badwords(sourceinfo_t *si, int parc, char *parv[])
 
 			tm = *localtime(&bw->add_ts);
 			strftime(buf, BUFSIZE, TIME_FORMAT, &tm);
-			command_success_nodata(si, "Word: \2%s\2 Action: \2%s\2 (%s - %s)",
-				bw->badword, bw->action, bw->creator, buf);
+			command_success_nodata(si, _("Word: \2%s\2, Action: \2%s\2 (%s - %s)"),
+			                             bw->badword, bw->action, bw->creator, buf);
 		}
+
 		command_success_nodata(si, "End of list.");
 		logcommand(si, CMDLOG_GET, "BADWORDS:LIST");
 	}
@@ -350,7 +356,7 @@ cs_set_cmd_blockbadwords(sourceinfo_t *si, int parc, char *parv[])
 
 	if (!(mc = mychan_find(parv[0])))
 	{
-		command_fail(si, fault_nosuch_target, _("Channel \2%s\2 is not registered."), parv[0]);
+		command_fail(si, fault_nosuch_target, STR_IS_NOT_REGISTERED, parv[0]);
 		return;
 	}
 
@@ -362,7 +368,7 @@ cs_set_cmd_blockbadwords(sourceinfo_t *si, int parc, char *parv[])
 
 	if (!chanacs_source_has_flag(mc, si, CA_SET))
 	{
-		command_fail(si, fault_noprivs, _("You are not authorized to perform this command."));
+		command_fail(si, fault_noprivs, STR_NOT_AUTHORIZED);
 		return;
 	}
 
@@ -372,15 +378,15 @@ cs_set_cmd_blockbadwords(sourceinfo_t *si, int parc, char *parv[])
 
 		if (md)
 		{
-			command_fail(si, fault_nochange, _("The \2%s\2 flag is already set for channel \2%s\2."), "BLOCKBADWORDS", mc->name);
+			command_fail(si, fault_nochange, _("The \2%s\2 flag is already set for channel \2%s\2."),
+			                                   "BLOCKBADWORDS", mc->name);
 			return;
 		}
 
 		metadata_add(mc, "blockbadwords", "on");
-
 		logcommand(si, CMDLOG_SET, "SET:BLOCKBADWORDS:ON: \2%s\2", mc->name);
-		command_success_nodata(si, _("The \2%s\2 flag has been set for channel \2%s\2."), "BLOCKBADWORDS", mc->name);
-		return;
+		command_success_nodata(si, _("The \2%s\2 flag has been set for channel \2%s\2."),
+		                             "BLOCKBADWORDS", mc->name);
 	}
 	else if (!strcasecmp("OFF", parv[1]))
 	{
@@ -388,21 +394,18 @@ cs_set_cmd_blockbadwords(sourceinfo_t *si, int parc, char *parv[])
 
 		if (!md)
 		{
-			command_fail(si, fault_nochange, _("The \2%s\2 flag is not set for channel \2%s\2."), "BLOCKBADWORDS", mc->name);
+			command_fail(si, fault_nochange, _("The \2%s\2 flag is not set for channel \2%s\2."),
+			                                   "BLOCKBADWORDS", mc->name);
 			return;
 		}
 
 		metadata_delete(mc, "blockbadwords");
-
 		logcommand(si, CMDLOG_SET, "SET:BLOCKBADWORDS:OFF: \2%s\2", mc->name);
-		command_success_nodata(si, _("The \2%s\2 flag has been removed for channel \2%s\2."), "BLOCKBADWORDS", mc->name);
-		return;
+		command_success_nodata(si, _("The \2%s\2 flag has been removed for channel \2%s\2."),
+		                             "BLOCKBADWORDS", mc->name);
 	}
 	else
-	{
 		command_fail(si, fault_badparams, STR_INVALID_PARAMS, "BLOCKBADWORDS");
-		return;
-	}
 }
 
 static void
@@ -412,7 +415,7 @@ cs_set_cmd_blockbadwordsops(sourceinfo_t *si, int parc, char *parv[])
 
 	if (!(mc = mychan_find(parv[0])))
 	{
-		command_fail(si, fault_nosuch_target, _("Channel \2%s\2 is not registered."), parv[0]);
+		command_fail(si, fault_nosuch_target, STR_IS_NOT_REGISTERED, parv[0]);
 		return;
 	}
 
@@ -424,7 +427,7 @@ cs_set_cmd_blockbadwordsops(sourceinfo_t *si, int parc, char *parv[])
 
 	if (!chanacs_source_has_flag(mc, si, CA_SET))
 	{
-		command_fail(si, fault_noprivs, _("You are not authorized to perform this command."));
+		command_fail(si, fault_noprivs, STR_NOT_AUTHORIZED);
 		return;
 	}
 
@@ -434,15 +437,15 @@ cs_set_cmd_blockbadwordsops(sourceinfo_t *si, int parc, char *parv[])
 
 		if (md)
 		{
-			command_fail(si, fault_nochange, _("The \2%s\2 flag is already set for channel \2%s\2."), "BLOCKBADWORDSOPS", mc->name);
+			command_fail(si, fault_nochange, _("The \2%s\2 flag is already set for channel \2%s\2."),
+			                                   "BLOCKBADWORDSOPS", mc->name);
 			return;
 		}
 
 		metadata_add(mc, "blockbadwordsops", "on");
-
 		logcommand(si, CMDLOG_SET, "SET:BLOCKBADWORDSOPS:ON: \2%s\2", mc->name);
-		command_success_nodata(si, _("The \2%s\2 flag has been set for channel \2%s\2."), "BLOCKBADWORDSOPS", mc->name);
-		return;
+		command_success_nodata(si, _("The \2%s\2 flag has been set for channel \2%s\2."),
+		                             "BLOCKBADWORDSOPS", mc->name);
 	}
 	else if (!strcasecmp("OFF", parv[1]))
 	{
@@ -450,21 +453,18 @@ cs_set_cmd_blockbadwordsops(sourceinfo_t *si, int parc, char *parv[])
 
 		if (!md)
 		{
-			command_fail(si, fault_nochange, _("The \2%s\2 flag is not set for channel \2%s\2."), "BLOCKBADWORDSOPS", mc->name);
+			command_fail(si, fault_nochange, _("The \2%s\2 flag is not set for channel \2%s\2."),
+			                                   "BLOCKBADWORDSOPS", mc->name);
 			return;
 		}
 
 		metadata_delete(mc, "blockbadwordsops");
-
 		logcommand(si, CMDLOG_SET, "SET:BLOCKBADWORDSOPS:OFF: \2%s\2", mc->name);
-		command_success_nodata(si, _("The \2%s\2 flag has been removed for channel \2%s\2."), "BLOCKBADWORDSOPS", mc->name);
-		return;
+		command_success_nodata(si, _("The \2%s\2 flag has been removed for channel \2%s\2."),
+		                             "BLOCKBADWORDSOPS", mc->name);
 	}
 	else
-	{
 		command_fail(si, fault_badparams, STR_INVALID_PARAMS, "BLOCKBADWORDSOPS");
-		return;
-	}
 }
 
 static command_t cs_badwords = {

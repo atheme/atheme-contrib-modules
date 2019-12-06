@@ -106,7 +106,7 @@ os_cmd_klinechan(sourceinfo_t *si, int parc, char *parv[])
 
 	if (!(mc = mychan_find(target)))
 	{
-		command_fail(si, fault_nosuch_target, "\2%s\2 is not registered.", target);
+		command_fail(si, fault_nosuch_target, STR_IS_NOT_REGISTERED, target);
 		return;
 	}
 
@@ -169,7 +169,7 @@ os_cmd_listklinechans(sourceinfo_t *si, int parc, char *parv[])
 	mowgli_patricia_iteration_state_t state;
 	mychan_t *mc;
 	metadata_t *md;
-	int matches = 0;
+	unsigned int matches = 0;
 
 	pattern = parc >= 1 ? parv[0] : "*";
 
@@ -185,12 +185,13 @@ os_cmd_listklinechans(sourceinfo_t *si, int parc, char *parv[])
 		}
 	}
 
-	logcommand(si, CMDLOG_ADMIN, "LISTKLINECHANS: \2%s\2 (\2%d\2 matches)", pattern, matches);
+	logcommand(si, CMDLOG_ADMIN, "LISTKLINECHANS: \2%s\2 (\2%u\2 matches)", pattern, matches);
+
 	if (matches == 0)
 		command_success_nodata(si, _("No K:line channels matched pattern \2%s\2"), pattern);
 	else
-		command_success_nodata(si, ngettext(N_("\2%d\2 match for pattern \2%s\2"),
-						    N_("\2%d\2 matches for pattern \2%s\2"), matches), matches, pattern);
+		command_success_nodata(si, ngettext(N_("\2%u\2 match for pattern \2%s\2"),
+						    N_("\2%u\2 matches for pattern \2%s\2"), matches), matches, pattern);
 }
 
 static command_t os_klinechan = {

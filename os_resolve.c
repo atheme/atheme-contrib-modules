@@ -109,14 +109,14 @@ mod_init(module_t *const restrict m)
 {
 	if (! (request_heap = mowgli_heap_create(sizeof(struct resolve_request), 32, BH_NOW)))
 	{
-		(void) slog(LG_ERROR, _("%s: failed to create Mowgli heap object"), m->name);
+		(void) slog(LG_ERROR, "%s: failed to create Mowgli heap object", m->name);
 		m->mflags |= MODFLAG_FAIL;
 		return;
 	}
 
 	if (! (dns_base = mowgli_dns_create(base_eventloop, MOWGLI_DNS_TYPE_ASYNC)))
 	{
-		(void) slog(LG_ERROR, _("%s: failed to create Mowgli DNS resolver object"), m->name);
+		(void) slog(LG_ERROR, "%s: failed to create Mowgli DNS resolver object", m->name);
 		m->mflags |= MODFLAG_FAIL;
 		return;
 	}

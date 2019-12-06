@@ -71,7 +71,7 @@ destroy_forbid(sourceinfo_t *si, const char *account)
 	mu = myuser_find(account);
 	if (!mu)
 	{
-		command_fail(si, fault_nosuch_target, _("\2%s\2 is not registered."), account);
+		command_fail(si, fault_nosuch_target, STR_IS_NOT_REGISTERED, account);
 		return;
 	}
 
@@ -102,7 +102,7 @@ ns_cmd_forbid(sourceinfo_t *si, int parc, char *parv[])
 	if (!account || !action)
 	{
 		command_fail(si, fault_needmoreparams, STR_INSUFFICIENT_PARAMS, "FORBID");
-		command_fail(si, fault_needmoreparams, "Syntax: FORBID <nickname> ON|OFF [reason]");
+		command_fail(si, fault_needmoreparams, _("Syntax: FORBID <nickname> ON|OFF [reason]"));
 		return;
 	}
 

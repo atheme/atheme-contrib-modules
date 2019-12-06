@@ -96,7 +96,7 @@ as_cmd_help(sourceinfo_t *si, int parc, char *parv[])
 		command_success_nodata(si, _("\2%s\2 allows users to request a network announcement."), si->service->nick);
 		command_success_nodata(si, " ");
 		command_success_nodata(si, _("For more information on a command, type:"));
-		command_success_nodata(si, "\2/%s%s help <command>\2", (ircd->uses_rcommand == false) ? "msg " : "", si->service->disp);
+		command_success_nodata(si, "  \2/msg %s HELP <command>\2", si->service->disp);
 		command_success_nodata(si, " ");
 
 		command_help(si, si->service->commands);
@@ -200,7 +200,7 @@ as_cmd_activate(sourceinfo_t *si, int parc, char *parv[])
 	if (!nick)
 	{
 		command_fail(si, fault_needmoreparams, STR_INSUFFICIENT_PARAMS, "ACTIVATE");
-		command_fail(si, fault_needmoreparams, _("Syntax: ACTIVATE <nick>"));
+		command_fail(si, fault_needmoreparams, _("Syntax: ACTIVATE <nickname>"));
 		return;
 	}
 
@@ -246,7 +246,7 @@ as_cmd_reject(sourceinfo_t *si, int parc, char *parv[])
 	if (!nick)
 	{
 		command_fail(si, fault_needmoreparams, STR_INSUFFICIENT_PARAMS, "REJECT");
-		command_fail(si, fault_needmoreparams, _("Syntax: REJECT <nick>"));
+		command_fail(si, fault_needmoreparams, _("Syntax: REJECT <nickname>"));
 		return;
 	}
 
@@ -364,7 +364,7 @@ static command_t as_waiting = {
 
 static command_t as_reject = {
 	"REJECT",
-	N_("Reject the requested announcement for the given nick."),
+	N_("Reject the requested announcement for the given nickname."),
 	PRIV_GLOBAL,
 	2,
 	&as_cmd_reject,
@@ -373,7 +373,7 @@ static command_t as_reject = {
 
 static command_t as_activate = {
 	"ACTIVATE",
-	N_("Activate the requested announcement for a given nick."),
+	N_("Activate the requested announcement for a given nickname."),
 	PRIV_GLOBAL,
 	2,
 	&as_cmd_activate,

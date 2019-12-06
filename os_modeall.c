@@ -22,7 +22,7 @@ os_cmd_modeall(sourceinfo_t *si, int parc, char *parv[])
 	int modeparc;
 	char *modeparv[256];
 	mowgli_patricia_iteration_state_t state;
-	int count = 0;
+	unsigned int count = 0;
 
         if (!mode)
         {
@@ -39,7 +39,7 @@ os_cmd_modeall(sourceinfo_t *si, int parc, char *parv[])
 		count++;
 	}
 
-	command_success_nodata(si, _("Set modes \2%s\2 on \2%d\2 channels."), mode, count);
+	command_success_nodata(si, _("Set modes \2%s\2 on \2%u\2 channels."), mode, count);
 	wallops("\2%s\2 is using MODEALL (set: \2%s\2)",
 		get_oper_name(si), mode);
 	logcommand(si, CMDLOG_ADMIN, "MODEALL: \2%s\2", mode);

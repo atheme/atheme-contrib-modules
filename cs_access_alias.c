@@ -115,7 +115,7 @@ access_list(sourceinfo_t *si, mychan_t *mc, int parc, char *parv[])
 			operoverride = true;
 		else
 		{
-			command_fail(si, fault_noprivs, _("You are not authorized to perform this operation."));
+			command_fail(si, fault_noprivs, STR_NOT_AUTHORIZED);
 			return;
 		}
 	}
@@ -161,7 +161,7 @@ cs_cmd_access(sourceinfo_t *si, int parc, char *parv[])
 	if (parc < 2)
 	{
 		command_fail(si, fault_needmoreparams, STR_INSUFFICIENT_PARAMS, "ACCESS");
-		command_fail(si, fault_needmoreparams, _("Syntax: ACCESS <#channel> ADD|DEL|LIST [nick] [level]"));
+		command_fail(si, fault_needmoreparams, _("Syntax: ACCESS <#channel> ADD|DEL|LIST [nickname] [level]"));
 		return;
 	}
 	if (parv[0][0] == '#')
@@ -171,14 +171,14 @@ cs_cmd_access(sourceinfo_t *si, int parc, char *parv[])
 	else
 	{
 		command_fail(si, fault_badparams, STR_INVALID_PARAMS, "ACCESS");
-		command_fail(si, fault_badparams, _("Syntax: ACCESS <#channel> ADD|DEL|LIST [nick] [level]"));
+		command_fail(si, fault_badparams, _("Syntax: ACCESS <#channel> ADD|DEL|LIST [nickname] [level]"));
 		return;
 	}
 
 	mc = mychan_find(chan);
 	if (mc == NULL)
 	{
-		command_fail(si, fault_nosuch_target, _("\2%s\2 is not registered."), chan);
+		command_fail(si, fault_nosuch_target, STR_IS_NOT_REGISTERED, chan);
 		return;
 	}
 
@@ -187,7 +187,7 @@ cs_cmd_access(sourceinfo_t *si, int parc, char *parv[])
 	else if (parc < 3)
 	{
 		command_fail(si, fault_needmoreparams, STR_INSUFFICIENT_PARAMS, "ACCESS");
-		command_fail(si, fault_needmoreparams, _("Syntax: ACCESS <#channel> ADD|DEL <nick> [level]"));
+		command_fail(si, fault_needmoreparams, _("Syntax: ACCESS <#channel> ADD|DEL <nickname> [level]"));
 		return;
 	}
 	else if (!strcasecmp(cmd, "ADD"))
@@ -195,7 +195,7 @@ cs_cmd_access(sourceinfo_t *si, int parc, char *parv[])
 	else if (!strcasecmp(cmd, "DEL"))
 		compat_cmd(si, "FLAGS", chan, parv[2], killit, NULL);
 	else
-		command_fail(si, fault_badparams, _("Invalid command. Use \2/%s%s help\2 for a command listing."), (ircd->uses_rcommand == FALSE) ? "msg " : "", si->service->disp);
+		command_fail(si, fault_badparams, _("Invalid command. Use \2/msg %s HELP\2 for a command listing."), si->service->disp);
 }
 
 static command_t cs_access = {

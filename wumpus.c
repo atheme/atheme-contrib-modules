@@ -206,7 +206,7 @@ build_maze(unsigned int size)
 	if (size < 10)
 		return false;
 
-	slog(LG_DEBUG, "wumpus: building maze of %d chambers", size);
+	slog(LG_DEBUG, "wumpus: building maze of %u chambers", size);
 
 	/* allocate rooms */
 	wumpus.mazesize = size;
@@ -240,11 +240,11 @@ build_maze(unsigned int size)
 				}
 			}
 
-			slog(LG_DEBUG, "wumpus: creating link for route %d -> %d", i, t);
+			slog(LG_DEBUG, "wumpus: creating link for route %u -> %d", i, t);
 			mowgli_node_add(&wumpus.rmemctx[t], mowgli_node_create(), &r->exits);
 		}
 
-		slog(LG_DEBUG, "wumpus: finished creating exit paths for chamber %d", i);
+		slog(LG_DEBUG, "wumpus: finished creating exit paths for chamber %u", i);
 	}
 
 	/* place the wumpus in the maze */
@@ -262,7 +262,7 @@ build_maze(unsigned int size)
 
 			r->contents = E_PIT;
 
-			slog(LG_DEBUG, "wumpus: added pit to chamber %d", j);
+			slog(LG_DEBUG, "wumpus: added pit to chamber %u", j);
 		}
 	}
 
@@ -278,7 +278,7 @@ build_maze(unsigned int size)
 
 				r->contents = E_BATS;
 
-				slog(LG_DEBUG, "wumpus: added bats to chamber %d", j);
+				slog(LG_DEBUG, "wumpus: added bats to chamber %u", j);
 			}
 		}
 	}
@@ -295,7 +295,7 @@ build_maze(unsigned int size)
 
 				r->contents = E_ARROWS;
 
-				slog(LG_DEBUG, "wumpus: added arrows to chamber %d", j);
+				slog(LG_DEBUG, "wumpus: added arrows to chamber %u", j);
 			}
 		}
 	}

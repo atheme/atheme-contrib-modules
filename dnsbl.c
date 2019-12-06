@@ -104,8 +104,8 @@ os_cmd_set_dnsblaction(sourceinfo_t *si, int parc, char *parv[])
 
 	if (!act)
 	{
-		command_fail(si, fault_needmoreparams, STR_INSUFFICIENT_PARAMS, "DNSBLACTION");
-		command_fail(si, fault_needmoreparams, _("Syntax: SET DNSBLACTION <action>"));
+		command_fail(si, fault_needmoreparams, STR_INSUFFICIENT_PARAMS, "SET DNSBLACTION");
+		command_fail(si, fault_needmoreparams, _("Syntax: SET DNSBLACTION <action> <SNOOP|KLINE|NOTIFY|NONE>"));
 		return;
 	}
 
@@ -114,20 +114,15 @@ os_cmd_set_dnsblaction(sourceinfo_t *si, int parc, char *parv[])
 		action = sstrdup(act);
 		command_success_nodata(si, _("DNSBLACTION successfully set to \2%s\2"), act);
 		logcommand(si, CMDLOG_ADMIN, "SET:DNSBLACTION: \2%s\2", act);
-		return;
 	}
 	else if (!strcasecmp("NONE", act))
 	{
 		action = NULL;
 		command_success_nodata(si, _("DNSBLACTION successfully set to \2%s\2"), act);
 		logcommand(si, CMDLOG_ADMIN, "SET:DNSBLACTION: \2%s\2", act);
-		return;
 	}
 	else
-	{
 		command_fail(si, fault_badparams, _("Invalid action given."));
-		return;
-	}
 }
 
 static void
@@ -151,7 +146,7 @@ os_cmd_dnsblexempt(sourceinfo_t *si, int parc, char *parv[])
 
 		if (!ip || !reason)
 		{
-			command_fail(si, fault_needmoreparams, STR_INSUFFICIENT_PARAMS, "DNSBLEXEMPT");
+			command_fail(si, fault_needmoreparams, STR_INSUFFICIENT_PARAMS, "DNSBLEXEMPT ADD");
 			command_fail(si, fault_needmoreparams, _("Syntax: DNSBLEXEMPT ADD <ip> <reason>"));
 			return;
 		}
@@ -162,7 +157,8 @@ os_cmd_dnsblexempt(sourceinfo_t *si, int parc, char *parv[])
 
 			if (!irccasecmp(de->ip, ip))
 			{
-				command_success_nodata(si, _("\2%s\2 has already been entered into the DNSBL exempts list."), ip);
+				command_success_nodata(si, _("\2%s\2 has already been entered into "
+				                             "the DNSBL exempts list."), ip);
 				return;
 			}
 		}
@@ -182,7 +178,7 @@ os_cmd_dnsblexempt(sourceinfo_t *si, int parc, char *parv[])
 
 		if (!ip)
 		{
-			command_fail(si, fault_needmoreparams, STR_INSUFFICIENT_PARAMS, "DNSBLEXEMPT");
+			command_fail(si, fault_needmoreparams, STR_INSUFFICIENT_PARAMS, "DNSBLEXEMPT DEL");
 			command_fail(si, fault_needmoreparams, _("Syntax: DNSBLEXEMPT DEL <ip>"));
 			return;
 		}
@@ -197,7 +193,6 @@ os_cmd_dnsblexempt(sourceinfo_t *si, int parc, char *parv[])
 				command_success_nodata(si, _("DNSBL Exempt IP \2%s\2 has been deleted."), de->ip);
 
 				mowgli_node_delete(n, &dnsbl_elist);
-
 				sfree(de->creator);
 				sfree(de->reason);
 				sfree(de->ip);
@@ -206,6 +201,7 @@ os_cmd_dnsblexempt(sourceinfo_t *si, int parc, char *parv[])
 				return;
 			}
 		}
+
 		command_success_nodata(si, _("IP \2%s\2 not found in DNSBL Exempt database."), ip);
 	}
 	else if (!strcasecmp("LIST", command))
@@ -219,51 +215,52 @@ os_cmd_dnsblexempt(sourceinfo_t *si, int parc, char *parv[])
 
 			tm = *localtime(&de->exempt_ts);
 			strftime(buf, BUFSIZE, TIME_FORMAT, &tm);
-			command_success_nodata(si, "IP: \2%s\2 Reason: \2%s\2 (%s - %s)",
-					de->ip, de->reason, de->creator, buf);
+			command_success_nodata(si, _("IP: \2%s\2, Reason: \2%s\2 (%s - %s)"),
+			                             de->ip, de->reason, de->creator, buf);
 		}
-		command_success_nodata(si, "End of list.");
+
+		command_success_nodata(si, _("End of list."));
 		logcommand(si, CMDLOG_GET, "DNSBL:EXEMPT:LIST");
 	}
 	else
 	{
 		command_fail(si, fault_needmoreparams, STR_INVALID_PARAMS, "DNSBLEXEMPT");
 		command_fail(si, fault_needmoreparams, _("Syntax: DNSBLEXEMPT ADD|DEL|LIST [ip] [reason]"));
-		return;
 	}
 }
 
 static void
 dnsbl_hit(user_t *u, struct Blacklist *blptr)
 {
-	service_t *svs;
-	kline_t *k;
-
-	svs = service_find("operserv");
+	service_t *const svs = service_find("operserv");
 
 	if (!strcasecmp("SNOOP", action))
 	{
-		slog(LG_INFO, "DNSBL: \2%s\2!%s@%s [%s] is listed in DNS Blacklist %s.", u->nick, u->user, u->host, u->gecos, blptr->host);
+		slog(LG_INFO, "DNSBL: \2%s\2!%s@%s [%s] is listed in DNS Blacklist %s.",
+		              u->nick, u->user, u->host, u->gecos, blptr->host);
+
 		/* abort_blacklist_queries(u); */
-		return;
 	}
 	else if (!strcasecmp("NOTIFY", action))
 	{
-		slog(LG_INFO, "DNSBL: \2%s\2!%s@%s [%s] is listed in DNS Blacklist %s.", u->nick, u->user, u->host, u->gecos, blptr->host);
+		slog(LG_INFO, "DNSBL: \2%s\2!%s@%s [%s] is listed in DNS Blacklist %s.",
+		              u->nick, u->user, u->host, u->gecos, blptr->host);
+
 		notice(svs->nick, u->nick, "Your IP address %s is listed in DNS Blacklist %s", u->ip, blptr->host);
+
 		/* abort_blacklist_queries(u); */
-		return;
 	}
 	else if (!strcasecmp("KLINE", action))
 	{
 		if (! (u->flags & UF_KLINESENT)) {
-			slog(LG_INFO, "DNSBL: k-lining \2%s\2!%s@%s [%s] who is listed in DNS Blacklist %s.", u->nick, u->user, u->host, u->gecos, blptr->host);
+			slog(LG_INFO, "DNSBL: k-lining \2%s\2!%s@%s [%s] who is listed in DNS Blacklist %s.",
+			              u->nick, u->user, u->host, u->gecos, blptr->host);
+
 			/* abort_blacklist_queries(u); */
 			notice(svs->nick, u->nick, "Your IP address %s is listed in DNS Blacklist %s", u->ip, blptr->host);
-			k = kline_add(u->user, u->host, "Banned (DNS Blacklist)", 86400, "*");
+			kline_add(u->user, u->host, "Banned (DNS Blacklist)", 86400, "*");
 			u->flags |= UF_KLINESENT;
 		}
-		return;
 	}
 }
 
@@ -291,9 +288,7 @@ blacklist_dns_callback(mowgli_dns_reply_t *reply, int result, void *vptr)
 			listed++;
 		else if (blcptr->blacklist->lastwarning + 3600 < CURRTIME)
 		{
-			slog(LG_DEBUG,
-					"Garbage reply from blacklist %s",
-					blcptr->blacklist->host);
+			slog(LG_DEBUG, "Garbage reply from blacklist %s", blcptr->blacklist->host);
 			blcptr->blacklist->lastwarning = CURRTIME;
 		}
 	}
@@ -317,7 +312,7 @@ initiate_blacklist_dnsquery(struct Blacklist *blptr, user_t *u)
 {
 	struct BlacklistClient *blcptr = smalloc(sizeof(struct BlacklistClient));
 	char buf[IRCD_RES_HOSTLEN + 1];
-	int ip[4];
+	unsigned int ip[4];
 	mowgli_list_t *l;
 
 	blcptr->blacklist = blptr;
@@ -327,10 +322,10 @@ initiate_blacklist_dnsquery(struct Blacklist *blptr, user_t *u)
 	blcptr->dns_query.callback = blacklist_dns_callback;
 
 	/* A sscanf worked fine for chary for many years, it'll be fine here */
-	sscanf(u->ip, "%d.%d.%d.%d", &ip[3], &ip[2], &ip[1], &ip[0]);
+	sscanf(u->ip, "%u.%u.%u.%u", &ip[3], &ip[2], &ip[1], &ip[0]);
 
 	/* becomes 2.0.0.127.torbl.ahbl.org or whatever */
-	snprintf(buf, sizeof buf, "%d.%d.%d.%d.%s", ip[0], ip[1], ip[2], ip[3], blptr->host);
+	snprintf(buf, sizeof buf, "%u.%u.%u.%u.%s", ip[0], ip[1], ip[2], ip[3], blptr->host);
 
 	mowgli_dns_gethost_byname(dns_base, buf, &blcptr->dns_query, MOWGLI_DNS_T_A);
 
@@ -365,7 +360,7 @@ os_cmd_dnsblscan(sourceinfo_t *si, int parc, char *parv[])
 	if (!user)
 	{
 		command_fail(si, fault_needmoreparams, STR_INSUFFICIENT_PARAMS, "DNSBLSCAN");
-		command_fail(si, fault_needmoreparams, _("Syntax: DNSBLSCAN <user>"));
+		command_fail(si, fault_needmoreparams, _("Syntax: DNSBLSCAN <nickname>"));
 		return;
 	}
 
@@ -373,14 +368,10 @@ os_cmd_dnsblscan(sourceinfo_t *si, int parc, char *parv[])
 	{
 		lookup_blacklists(u);
 		logcommand(si, CMDLOG_ADMIN, "DNSBLSCAN: %s", user);
-		command_success_nodata(si, "%s has been scanned.", user);
-		return;
+		command_success_nodata(si, _("%s has been scanned."), user);
 	}
 	else
-	{
-		command_fail(si, fault_badparams, "User %s is not on the network, you can not scan them.", user);
-		return;
-	}
+		command_fail(si, fault_badparams, _("User %s is not on the network, you cannot scan them."), user);
 }
 
 /* private interfaces */
@@ -519,15 +510,15 @@ osinfo_hook(sourceinfo_t *si)
 	mowgli_node_t *n;
 
 	if (action)
-		command_success_nodata(si, "Action taken when a user is an a DNSBL: %s", action);
+		command_success_nodata(si, _("Action taken when a user is an a DNSBL: %s"), action);
 	else
-		command_success_nodata(si, "Action taken when a user is an a DNSBL: %s", "None");
+		command_success_nodata(si, _("Action taken when a user is an a DNSBL: %s"), _("None"));
 
 	MOWGLI_ITER_FOREACH(n, blacklist_list.head)
 	{
 		struct Blacklist *blptr = (struct Blacklist *) n->data;
 
-		command_success_nodata(si, "Blacklist(s): %s", blptr->host);
+		command_success_nodata(si, _("Using Blacklist: %s"), blptr->host);
 	}
 }
 

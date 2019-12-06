@@ -27,7 +27,7 @@ cs_cmd_userinfo(sourceinfo_t *si, int parc, char *parv[])
 	mc = mychan_find(parv[0]);
 	if (!mc)
 	{
-		command_fail(si, fault_nosuch_target, _("\2%s\2 is not registered."), parv[0]);
+		command_fail(si, fault_nosuch_target, STR_IS_NOT_REGISTERED, parv[0]);
 		return;
 	}
 
@@ -43,7 +43,7 @@ cs_cmd_userinfo(sourceinfo_t *si, int parc, char *parv[])
 	{
 		if (!(restrictflags & CA_ACLVIEW))
 		{
-			command_fail(si, fault_noprivs, _("You are not authorized to perform this operation."));
+			command_fail(si, fault_noprivs, STR_NOT_AUTHORIZED);
 			return;
 		}
 		command_success_nodata(si, _("Nickname            Info"));
@@ -68,13 +68,13 @@ cs_cmd_userinfo(sourceinfo_t *si, int parc, char *parv[])
 	{
 		if (!(restrictflags & CA_FLAGS))
 		{
-			command_fail(si, fault_noprivs, _("You are not authorized to perform this operation."));
+			command_fail(si, fault_noprivs, STR_NOT_AUTHORIZED);
 			return;
 		}
 		mu = myuser_find_ext(parv[1]);
 		if (mu == NULL)
 		{
-			command_fail(si, fault_nosuch_target, _("\2%s\2 is not registered."), parv[1]);
+			command_fail(si, fault_nosuch_target, STR_IS_NOT_REGISTERED, parv[1]);
 			return;
 		}
 		ca = chanacs_find_literal(mc, entity(mu), 0);

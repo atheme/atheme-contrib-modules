@@ -24,36 +24,33 @@ ms_cmd_fsend(sourceinfo_t *si, int parc, char *parv[])
 	/* Arg validation */
 	if (!target || !m)
 	{
-		command_fail(si, fault_needmoreparams,
-			STR_INSUFFICIENT_PARAMS, "FSEND");
-
-		command_fail(si, fault_needmoreparams,
-			"Syntax: FSEND <user> <memo>");
-
+		command_fail(si, fault_needmoreparams, STR_INSUFFICIENT_PARAMS, "FSEND");
+		command_fail(si, fault_needmoreparams, _("Syntax: FSEND <user> <memo>"));
 		return;
 	}
 
 	if (!si->smu)
         {
-                command_fail(si, fault_noprivs, _("You are not logged in."));
+                command_fail(si, fault_noprivs, STR_NOT_LOGGED_IN);
                 return;
         }
 
 	/* rate limit it -- jilles */
 	if (CURRTIME - si->smu->memo_ratelimit_time > MEMO_MAX_TIME)
 		si->smu->memo_ratelimit_num = 0;
+
 	if (si->smu->memo_ratelimit_num > MEMO_MAX_NUM && !has_priv(si, PRIV_FLOOD))
 	{
-		command_fail(si, fault_toomany, _("You have used this command too many times; please wait a while and try again."));
+		command_fail(si, fault_toomany, _("You have used this command too many times; "
+		                                  "please wait a while and try again."));
 		return;
 	}
 
 	/* Check for memo text length -- includes/common.h */
 	if (strlen(m) > COMPAT_MEMOLEN)
 	{
-		command_fail(si, fault_badparams,
-			"Please make sure your memo is not greater than %u characters", COMPAT_MEMOLEN);
-
+		command_fail(si, fault_badparams, _("Please make sure your memo is not greater than %u characters"),
+		                                    COMPAT_MEMOLEN);
 		return;
 	}
 
@@ -76,7 +73,7 @@ ms_cmd_fsend(sourceinfo_t *si, int parc, char *parv[])
 		if (!(tmu = myuser_find_ext(target)))
 		{
 			command_fail(si, fault_nosuch_target,
-				"\2%s\2 is not registered.", target);
+				STR_IS_NOT_REGISTERED, target);
 
 			return;
 		}
@@ -87,7 +84,7 @@ ms_cmd_fsend(sourceinfo_t *si, int parc, char *parv[])
 		/* Check to make sure target inbox not full */
 		if (tmu->memos.count >= me.mdlimit)
 		{
-			command_fail(si, fault_toomany, _("%s's inbox is full"), target);
+			command_fail(si, fault_toomany, _("The inbox for \2%s\2 is full"), target);
 			logcommand(si, CMDLOG_SET, "failed SEND to \2%s\2 (target inbox full)", entity(tmu)->name);
 			return;
 		}
@@ -121,15 +118,19 @@ ms_cmd_fsend(sourceinfo_t *si, int parc, char *parv[])
 		 */
 		tu = user_find_named(target);
 		if (tu != NULL && tu->myuser == tmu)
-			command_success_nodata(si, _("%s is currently online, and you may talk directly, by sending a private message."), target);
+			command_success_nodata(si, _("%s is currently online, and you may talk directly, "
+			                             "by sending a private message."), target);
 
 		/* Is the user online? If so, tell them about the new memo. */
 		if (si->su == NULL || !irccasecmp(si->su->nick, entity(si->smu)->name))
-			myuser_notice(memoserv->nick, tmu, "You have a new memo from %s (%zu).", entity(si->smu)->name, MOWGLI_LIST_LENGTH(&tmu->memos));
+			myuser_notice(memoserv->nick, tmu, "You have a new memo from %s (%zu).",
+			              entity(si->smu)->name, MOWGLI_LIST_LENGTH(&tmu->memos));
 		else
-			myuser_notice(memoserv->nick, tmu, "You have a new memo from %s (nick: %s) (%zu).", entity(si->smu)->name, si->su->nick, MOWGLI_LIST_LENGTH(&tmu->memos));
-		myuser_notice(memoserv->nick, tmu, _("To read it, type /%s%s READ %zu"),
-					ircd->uses_rcommand ? "" : "msg ", memoserv->disp, MOWGLI_LIST_LENGTH(&tmu->memos));
+			myuser_notice(memoserv->nick, tmu, "You have a new memo from %s (nickname: %s) (%zu).",
+			              entity(si->smu)->name, si->su->nick, MOWGLI_LIST_LENGTH(&tmu->memos));
+
+		myuser_notice(memoserv->nick, tmu, "To read it, type \2/msg %s READ %zu\2",
+		              memoserv->disp, MOWGLI_LIST_LENGTH(&tmu->memos));
 
 		/* Tell user memo sent */
 		command_success_nodata(si, _("The memo has been successfully sent to \2%s\2."), target);

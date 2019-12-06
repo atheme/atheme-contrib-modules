@@ -16,7 +16,7 @@ static void
 ns_cmd_ajoin_syntaxerr(sourceinfo_t *si)
 {
 	command_fail(si, fault_badparams, STR_INSUFFICIENT_PARAMS, "AJOIN");
-	command_fail(si, fault_badparams, "Syntax: AJOIN <list|add|del|clear> [#channel]");
+	command_fail(si, fault_badparams, _("Syntax: AJOIN <LIST|ADD|DEL|CLEAR> [#channel]"));
 }
 
 static void
@@ -32,18 +32,20 @@ ns_cmd_ajoin(sourceinfo_t *si, int parc, char *parv[])
 	if (!strcasecmp(parv[0], "LIST"))
 	{
 		command_success_nodata(si, "\2AJOIN LIST\2:");
+
 		if ((md = metadata_find(si->smu, "private:autojoin")))
 		{
 			mowgli_strlcpy(buf, md->value, sizeof buf);
-
 			chan = strtok(buf, ",");
+
 			while (chan != NULL)
 			{
 				command_success_nodata(si, "%s", chan);
 				chan = strtok(NULL, ",");
 			}
 		}
-		command_success_nodata(si, "End of \2AJOIN LIST\2");
+
+		command_success_nodata(si, _("End of \2AJOIN LIST\2"));
 	}
 	else if (!strcasecmp(parv[0], "ADD"))
 	{
@@ -53,23 +55,24 @@ ns_cmd_ajoin(sourceinfo_t *si, int parc, char *parv[])
 		if ((md = metadata_find(si->smu, "private:autojoin")))
 		{
 			mowgli_strlcpy(buf, md->value, sizeof buf);
-
 			chan = strtok(buf, ",");
+
 			while (chan != NULL)
 			{
 				if (!strcasecmp(chan, parv[1]))
 				{
-					command_fail(si, fault_badparams, "%s is already on your AJOIN list.", parv[1]);
+					command_fail(si, fault_badparams, _("%s is already on your AJOIN list."), parv[1]);
 					return;
 				}
+
 				chan = strtok(NULL, ",");
 			}
 
 			// Little arbitrary, but stop both overflow and RAM consumption going out of control
 			if (strlen(md->value) + strlen(parv[1]) > 400)
 			{
-					command_fail(si, fault_badparams, "Sorry, you have too many AJOIN entries set.");
-					return;
+				command_fail(si, fault_badparams, _("Sorry, you have too many AJOIN entries set."));
+				return;
 			}
 
 			mowgli_strlcpy(buf, md->value, sizeof buf);
@@ -82,12 +85,13 @@ ns_cmd_ajoin(sourceinfo_t *si, int parc, char *parv[])
 		{
 			metadata_add(si->smu, "private:autojoin", parv[1]);
 		}
-		command_success_nodata(si, "%s added to AJOIN successfully.", parv[1]);
+
+		command_success_nodata(si, _("%s added to AJOIN successfully."), parv[1]);
 	}
 	else if (!strcasecmp(parv[0], "CLEAR"))
 	{
 		metadata_delete(si->smu, "private:autojoin");
-		command_success_nodata(si, "AJOIN list cleared successfully.");
+		command_success_nodata(si, _("AJOIN list cleared successfully."));
 	}
 	else if (!strcasecmp(parv[0], "DEL"))
 	{
@@ -96,7 +100,7 @@ ns_cmd_ajoin(sourceinfo_t *si, int parc, char *parv[])
 
 		if (!(md = metadata_find(si->smu, "private:autojoin")))
 		{
-			command_fail(si, fault_badparams, "%s is not on your AJOIN list.", parv[1]);
+			command_fail(si, fault_badparams, _("%s is not on your AJOIN list."), parv[1]);
 			return;
 		}
 
@@ -108,7 +112,9 @@ ns_cmd_ajoin(sourceinfo_t *si, int parc, char *parv[])
 		int rmlen = 0;
 		int itempos = 0;
 		int i = 0, j = 0;
-		// This loop will find the item (if present), find the length of the item, and find the length of the entire string.
+
+		// This loop will find the item (if present), find the length of the item,
+		// and find the length of the entire string.
 		for (; list[i]; i++)
 		{
 			if (!rmlen)
@@ -123,6 +129,7 @@ ns_cmd_ajoin(sourceinfo_t *si, int parc, char *parv[])
 					}
 
 					j++;
+
 					if (!remove1[j])
 					{
 						// Found the entire string
@@ -136,13 +143,14 @@ ns_cmd_ajoin(sourceinfo_t *si, int parc, char *parv[])
 
 		if (remove1[j])
 		{
-			command_fail(si, fault_badparams, "%s is not on your AJOIN list.", parv[1]);
+			command_fail(si, fault_badparams, _("%s is not on your AJOIN list."), parv[1]);
 			return;
 		}
 
 		listlen = i;
 
-		// listlen is the length of the list, rmlen is the length of the item to remove, itempos is the beginning of that item.
+		// listlen is the length of the list, rmlen is the length of the item to remove,
+		// itempos is the beginning of that item.
 		if (!list[itempos + rmlen])
 		{
 			// This item is the last item in the list, so we can simply truncate
@@ -157,13 +165,14 @@ ns_cmd_ajoin(sourceinfo_t *si, int parc, char *parv[])
 		else
 		{
 			// There are items after this one, so we must copy memory
-			// Account for the comma following this item (if there is a space, account for that too, depends on how you format your list)
+			// Account for the comma following this item (if there is a space,
+			// account for that too, depends on how you format your list)
 			rmlen += 1;
 			memmove(list + itempos, list + itempos + rmlen, listlen - rmlen - itempos);
 			list[listlen - rmlen] = '\0';
 		}
 
-		command_success_nodata(si, "%s removed from AJOIN successfully.", parv[1]);
+		command_success_nodata(si, _("%s removed from AJOIN successfully."), parv[1]);
 	}
 }
 

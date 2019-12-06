@@ -26,7 +26,7 @@ ns_cmd_fregister(sourceinfo_t *si, int parc, char *parv[])
 	if (!account || !pass || !email)
 	{
 		command_fail(si, fault_needmoreparams, STR_INSUFFICIENT_PARAMS, "FREGISTER");
-		command_fail(si, fault_needmoreparams, "Syntax: FREGISTER <account> <password> <email> [CRYPTPASS]");
+		command_fail(si, fault_needmoreparams, _("Syntax: FREGISTER <account> <password> <email> [CRYPTPASS]"));
 		return;
 	}
 

@@ -58,7 +58,7 @@ struct trace_query_nickage_domain
 struct trace_query_numchan_domain
 {
 	struct trace_query_domain       domain;
-	int                             numchan;
+	unsigned int                    numchan;
 	int                             comparison;
 };
 
@@ -97,7 +97,7 @@ struct trace_action_akill
 struct trace_action_count
 {
 	struct trace_action     base;
-	int                     matches;
+	unsigned int            matches;
 };
 
 /*
@@ -460,7 +460,7 @@ trace_numchan_exec(user_t *u, void *q)
 	return_val_if_fail(domain != NULL, false);
 	return_val_if_fail(u != NULL, false);
 
-	int numchan = u->channels.count;
+	unsigned int numchan = u->channels.count;
 	if (domain->comparison == 1)
 		return (numchan < domain->numchan);
 	else if (domain->comparison == 2)
@@ -784,7 +784,7 @@ trace_count_cleanup(struct trace_action *act, bool succeeded)
 	return_if_fail(a != NULL);
 
 	if (succeeded)
-		command_success_nodata(act->si, _("\2%d\2 matches"), a->matches);
+		command_success_nodata(act->si, _("\2%u\2 matches"), a->matches);
 
 	sfree(a);
 }

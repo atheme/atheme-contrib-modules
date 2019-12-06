@@ -27,6 +27,27 @@
 
 
 
+#ifndef STR_INSUFFICIENT_PARAMS
+#  define STR_INSUFFICIENT_PARAMS       _("Insufficient parameters for \2%s\2.")
+#endif
+#ifndef STR_INVALID_PARAMS
+#  define STR_INVALID_PARAMS            _("Invalid parameters for \2%s\2.")
+#endif
+#ifndef STR_NO_PRIVILEGE
+#  define STR_NO_PRIVILEGE              _("You do not have the \2%s\2 privilege.")
+#endif
+#ifndef STR_NOT_LOGGED_IN
+#  define STR_NOT_LOGGED_IN             STR_NOT_LOGGED_IN
+#endif
+#ifndef STR_NOT_AUTHORIZED
+#  define STR_NOT_AUTHORIZED            _("You are not authorized to perform this operation.")
+#endif
+#ifndef STR_NOT_AUTHORIZED_TARGET
+#  define STR_NOT_AUTHORIZED_TARGET     _("You are not authorized to use the target argument.")
+#endif
+
+
+
 #if (CURRENT_ABI_REVISION < 710000)
 
 typedef char *stringref;
@@ -141,6 +162,10 @@ typedef char *stringref;
 // This definition was removed in the Atheme 7.3 development series.
 #  define IRCD_RES_HOSTLEN      255
 
+// This is a no-op in at least 7.3+ and were removed.
+static inline struct hook *hook_add_event(const char *name) { return NULL; }
+static inline void hook_del_event(struct hook *hook) { }
+
 /* These typedefs were removed in the Atheme 7.3 development series,
  * but we can't use the new names because they consist of structures
  * or enums and we can't make structure aliases to other structures
@@ -152,14 +177,48 @@ typedef enum db_save_strategy                   db_save_strategy_t;
 typedef enum log_type                           log_type_t;
 typedef enum module_unload_capability           module_unload_capability_t;
 typedef enum module_unload_intent               module_unload_intent_t;
+
+typedef struct hook                             hook_t;
+typedef struct hook_channel_joinpart            hook_channel_joinpart_t;
+typedef struct hook_channel_message             hook_cmessage_data_t;
+typedef struct hook_channel_mode                hook_channel_mode_t;
+typedef struct hook_channel_mode_change         hook_channel_mode_change_t;
+typedef struct hook_channel_topic_check         hook_channel_topic_check_t;
+typedef struct hook_server_delete               hook_server_delete_t;
+typedef struct hook_user_nick                   hook_user_nick_t;
+typedef struct hook_user_delete_info            hook_user_delete_t;
+
+typedef struct hook_channel_acl_req             hook_channel_acl_req_t;
+typedef struct hook_channel_register_check      hook_channel_register_check_t;
+typedef struct hook_channel_req                 hook_channel_req_t;
+typedef struct hook_channel_successtion_req     hook_channel_succession_req_t;
+typedef struct hook_expiry_req                  hook_expiry_req_t;
+typedef struct hook_host_request                hook_host_request_t;
+typedef struct hook_info_noexist                hook_info_noexist_req;
+typedef struct hook_metadata_change             hook_metadata_change_t;
+typedef struct hook_module_load                 hook_module_load_t;
+typedef struct hook_myentity_req                hook_myentity_req_t;
+typedef struct hook_nick_enforce                hook_nick_enforce_t;
+typedef struct hook_user_needforce              hook_user_needforce_t;
+typedef struct hook_user_register_check         hook_user_register_check_t;
+typedef struct hook_user_rename                 hook_user_rename_t;
+typedef struct hook_user_req                    hook_user_req_t;
+typedef struct hook_user_login_check            hook_user_login_check_t;
+typedef struct hook_user_logout_check           hook_user_logout_check_t;
+typedef struct hook_user_rename_check           hook_user_rename_check_t;
+
 typedef struct atheme_regex                     atheme_regex_t;
 typedef struct authcookie                       authcookie_t;
+typedef struct chanacs                          chanacs_t;
 typedef struct chanban                          chanban_t;
+typedef struct channel                          channel_t;
 typedef struct chansvs                          chansvs_t;
+typedef struct chanuser                         chanuser_t;
 typedef struct claro_state                      claro_state_t;
 typedef struct command                          command_t;
 typedef struct connection                       connection_t;
 typedef struct crypt_impl                       crypt_impl_t;
+typedef struct database_handle                  database_handle_t;
 typedef struct database_module                  database_module_t;
 typedef struct database_vtable                  database_vtable_t;
 typedef struct default_template                 default_template_t;
@@ -168,7 +227,6 @@ typedef struct res_dns_reply                    dns_reply_t;
 typedef struct email_canonicalizer_item         email_canonicalizer_item_t;
 typedef struct entity_chanacs_validation_vtable entity_chanacs_validation_vtable_t;
 typedef struct groupacs                         groupacs_t;
-typedef struct hook                             hook_t;
 typedef struct ircd                             ircd_t;
 typedef struct kline                            kline_t;
 typedef struct language                         language_t;
@@ -176,8 +234,12 @@ typedef struct logfile                          logfile_t;
 typedef struct metadata                         metadata_t;
 typedef struct module                           module_t;
 typedef struct mycertfp                         mycertfp_t;
+typedef struct mychan                           mychan_t;
+typedef struct myentity                         myentity_t;
 typedef struct mygroup                          mygroup_t;
 typedef struct mymemo                           mymemo_t;
+typedef struct mynick                           mynick_t;
+typedef struct myuser                           myuser_t;
 typedef struct myuser_name                      myuser_name_t;
 typedef struct nicksvs                          nicksvs_t;
 typedef struct nsaddr                           nsaddr_t;
@@ -186,7 +248,11 @@ typedef struct operclass                        operclass_t;
 typedef struct path_handler                     path_handler_t;
 typedef struct proto_cmd                        pcommand_t;
 typedef struct qline                            qline_t;
+typedef struct sasl_message                     sasl_message_t;
+typedef struct server                           server_t;
+typedef struct service                          service_t;
 typedef struct soper                            soper_t;
+typedef struct sourceinfo                       sourceinfo_t;
 typedef struct svsignore                        svsignore_t;
 typedef struct atheme_table                     table_t;
 typedef struct atheme_table_cell                table_cell_t;
@@ -195,9 +261,11 @@ typedef struct taint_reason                     taint_reason_t;
 typedef struct tld                              tld_t;
 typedef struct uid_provider                     uid_provider_t;
 typedef struct uplink                           uplink_t;
+typedef struct user                             user_t;
 typedef struct v4_moduleheader                  v4_moduleheader_t;
 typedef struct xline                            xline_t;
 typedef union sockaddr_any                      sockaddr_any_t;
+
 typedef conf_handler_fn                         conf_handler_t;
 typedef atheme_object_destructor_fn             destructor_t;
 typedef email_canonicalizer_fn                  email_canonicalizer_t;

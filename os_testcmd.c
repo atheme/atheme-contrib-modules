@@ -18,7 +18,7 @@ testcmd_command_fail(sourceinfo_t *si, cmd_faultcode_t code, const char *message
 {
 	struct testcmddata *udata = si->callerdata;
 
-	command_success_nodata(udata->prevsi, "Command failed with fault %d, \"%s\"", code, message);
+	command_success_nodata(udata->prevsi, "Command failed with fault %u, \"%s\"", (unsigned int) code, message);
 	udata->got_result = true;
 }
 
@@ -63,7 +63,7 @@ os_cmd_testcmd(sourceinfo_t *si, int parc, char *parv[])
 	if (parc < 2)
 	{
 		command_fail(si, fault_needmoreparams, STR_INSUFFICIENT_PARAMS, "TESTCMD");
-		command_fail(si, fault_needmoreparams, "Syntax: TESTCMD <service> <command> [arguments]");
+		command_fail(si, fault_needmoreparams, _("Syntax: TESTCMD <service> <command> [arguments]"));
 		return;
 	}
 

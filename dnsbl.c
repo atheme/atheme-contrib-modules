@@ -44,8 +44,8 @@
 #include "atheme-compat.h"
 
 #if (CURRENT_ABI_REVISION < 730000)
-#  include "conf.h"
-#endif
+
+#include "conf.h"
 
 /* A configured DNSBL */
 struct Blacklist {
@@ -645,5 +645,24 @@ mod_deinit(module_unload_intent_t intent)
 	service_named_unbind_command("operserv", &os_dnsblexempt);
 	service_named_unbind_command("operserv", &os_dnsblscan);
 }
+
+#else /* (CURRENT_ABI_REVISION < 730000) */
+
+static void
+mod_init(module_t *m)
+{
+	(void) slog(LG_INFO, "%s: this module has been replaced with modules/proxyscan/dnsbl on v7.3", m->name);
+	(void) slog(LG_INFO, "%s: loading that module instead. Please update your configuration file.", m->name);
+
+	MODULE_TRY_REQUEST_DEPENDENCY(m, "proxyscan/dnsbl");
+}
+
+static void
+mod_deinit(module_unload_intent_t intent)
+{
+
+}
+
+#endif /* (CURRENT_ABI_REVISION >= 730000) */
 
 SIMPLE_DECLARE_MODULE_V1("contrib/dnsbl", MODULE_UNLOAD_CAPABILITY_OK)

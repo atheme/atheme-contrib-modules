@@ -19,6 +19,7 @@ cs_cmd_fregister(sourceinfo_t *si, int parc, char *parv[])
 	hook_channel_register_check_t hdatac;
 	hook_channel_req_t hdata;
 	unsigned int fl;
+	bool joined_channel = false;
 
 	/* This command is not useful on registered channels, ignore it if
 	 * it is a fantasy command so users can program bots to react on
@@ -64,11 +65,16 @@ cs_cmd_fregister(sourceinfo_t *si, int parc, char *parv[])
 		return;
 	}
 
-	/* make sure the channel exists */
+	/* make sure the channel exists, otherwise create it by joining */
 	if (!(c = channel_find(name)))
 	{
-		command_fail(si, fault_nosuch_target, _("The channel \2%s\2 must exist in order to register it."), name);
-		return;
+		join(name, chansvs.nick);
+		if (!(c = channel_find(name)))
+		{
+			command_fail(si, fault_internalerror, _("Unable to create channel \2%s\2."), name);
+  			return;
+		}
+  		joined_channel = true;
 	}
 
 	hdatac.si = si;
@@ -104,6 +110,11 @@ cs_cmd_fregister(sourceinfo_t *si, int parc, char *parv[])
 				chansvs.deftemplates);
 
 	command_success_nodata(si, _("\2%s\2 is now registered to \2%s\2."), mc->name, entity(si->smu)->name);
+	
+	if (joined_channel && config_options.leave_chans)
+	{
+		part(name, chansvs.nick);
+	}
 
 	hdata.si = si;
 	hdata.mc = mc;

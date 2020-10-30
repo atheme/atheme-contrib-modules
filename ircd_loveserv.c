@@ -371,7 +371,7 @@ static command_t ls_help = {
 static void
 mod_init(module_t *const restrict m)
 {
-        loveserv = service_add("LoveServ", NULL);
+        loveserv = service_add("loveserv", NULL);
 
 	service_bind_command(loveserv, &ls_admirer);
 	service_bind_command(loveserv, &ls_rose);

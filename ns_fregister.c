@@ -26,7 +26,8 @@ ns_cmd_fregister(sourceinfo_t *si, int parc, char *parv[])
 	if (!account || !pass || !email)
 	{
 		command_fail(si, fault_needmoreparams, STR_INSUFFICIENT_PARAMS, "FREGISTER");
-		command_fail(si, fault_needmoreparams, _("Syntax: FREGISTER <account> <password> <email> [CRYPTPASS]"));
+		command_fail(si, fault_needmoreparams, _("Syntax: FREGISTER <account> <password> <email> "
+		                                         "[CRYPTPASS] [HIDEMAIL] [NOOP] [NEVEROP]"));
 		return;
 	}
 
@@ -42,9 +43,12 @@ ns_cmd_fregister(sourceinfo_t *si, int parc, char *parv[])
 			uflags |= MU_NEVEROP;
 	}
 
-	if (!(uflags & MU_CRYPTPASS) && strlen(pass) > 32)
+	if (strlen(pass) > COMPAT_PASSLEN)
 	{
-		command_fail(si, fault_badparams, STR_INVALID_PARAMS, "FREGISTER");
+		if (uflags & MU_CRYPTPASS)
+			command_fail(si, fault_badparams, "The provided password hash is too long");
+		else
+			command_fail(si, fault_badparams, "The provided password is too long");
 		return;
 	}
 

@@ -27,23 +27,29 @@
 
 
 
+#ifndef STR_EMAIL_NOT_VERIFIED
+#  define STR_EMAIL_NOT_VERIFIED        _("You must verify your e-mail address before you may perform this operation.")
+#endif
 #ifndef STR_INSUFFICIENT_PARAMS
 #  define STR_INSUFFICIENT_PARAMS       _("Insufficient parameters for \2%s\2.")
 #endif
 #ifndef STR_INVALID_PARAMS
 #  define STR_INVALID_PARAMS            _("Invalid parameters for \2%s\2.")
 #endif
+#ifndef STR_IS_NOT_REGISTERED
+#  define STR_IS_NOT_REGISTERED         _("\2%s\2 is not registered.")
+#endif
 #ifndef STR_NO_PRIVILEGE
 #  define STR_NO_PRIVILEGE              _("You do not have the \2%s\2 privilege.")
-#endif
-#ifndef STR_NOT_LOGGED_IN
-#  define STR_NOT_LOGGED_IN             STR_NOT_LOGGED_IN
 #endif
 #ifndef STR_NOT_AUTHORIZED
 #  define STR_NOT_AUTHORIZED            _("You are not authorized to perform this operation.")
 #endif
 #ifndef STR_NOT_AUTHORIZED_TARGET
 #  define STR_NOT_AUTHORIZED_TARGET     _("You are not authorized to use the target argument.")
+#endif
+#ifndef STR_NOT_LOGGED_IN
+#  define STR_NOT_LOGGED_IN             _("You are not logged in.")
 #endif
 
 

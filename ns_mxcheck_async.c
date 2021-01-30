@@ -24,19 +24,17 @@ count_mx(const char *host)
 	unsigned char nsbuf[4096];
 	ns_msg amsg;
 
-	int l = res_query(host, ns_c_any, ns_t_mx, nsbuf, sizeof nsbuf);
-
-	if (l < 0)
-	{
+	if (! host || ! *host)
 		return 0;
-	}
-	else
-	{
-		ns_initparse(nsbuf, l, &amsg);
-		l = ns_msg_count(amsg, ns_s_an);
-	}
 
-	return l;
+	const int len = res_query(host, ns_c_any, ns_t_mx, nsbuf, sizeof nsbuf);
+
+	if (len < 0)
+		return 0;
+
+	(void) ns_initparse(nsbuf, len, &amsg);
+
+	return ns_msg_count(amsg, ns_s_an);
 }
 
 static void

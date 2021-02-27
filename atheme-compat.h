@@ -270,7 +270,6 @@ typedef struct uplink                           uplink_t;
 typedef struct user                             user_t;
 typedef struct v4_moduleheader                  v4_moduleheader_t;
 typedef struct xline                            xline_t;
-typedef union sockaddr_any                      sockaddr_any_t;
 
 typedef conf_handler_fn                         conf_handler_t;
 typedef atheme_object_destructor_fn             destructor_t;

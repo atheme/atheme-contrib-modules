@@ -24,6 +24,7 @@ jobs:
         cd modules/contrib/
         git checkout master
         git pull
+        echo -n $(git rev-parse --short=20 HEAD) > /tmp/version.txt
         cd ../../
 
     - name: Install dependencies
@@ -63,7 +64,6 @@ jobs:
         export PATH="${PATH}:$(find "${HOME}/utils/" -mindepth 1 -maxdepth 1 -type d -name 'cov-analysis-*')/bin"
         hash -r
         which cov-build
-        echo -n $(git rev-parse --short=20 HEAD) > /tmp/version.txt
         ./configure                                                     \
             --prefix="${HOME}/atheme-build"                             \
             --disable-heap-allocator                                    \

@@ -1,0 +1,68 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - 'master'
+    paths-ignore:
+      - '.github/workflows/periodic-*'
+      - 'help/**'
+      - 'README.md'
+
+jobs:
+  linux:
+    name: Linux
+    runs-on: ubuntu-20.04
+
+    strategy:
+      fail-fast: true
+      matrix:
+        compiler:
+          - clang-10
+          - gcc-10
+
+    env:
+      ATHEME_CONF_ARGS: '--enable-contrib'
+      CC: ${{ matrix.compiler }}
+
+    steps:
+    - name: Clone Atheme source code repository
+      uses: actions/checkout@v2
+      with:
+        ref: master
+        repository: 'atheme/atheme'
+        submodules: recursive
+
+    - name: Update Atheme contrib submodule
+      run: |
+        cd modules/contrib/
+        git checkout master
+        git pull
+        cd ../../
+
+    - name: Install dependencies
+      working-directory: /tmp
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y --no-install-recommends                 \
+          ${CC}                                                         \
+          build-essential                                               \
+          gettext                                                       \
+          git                                                           \
+          libargon2-0-dev                                               \
+          libcrack2-dev                                                 \
+          libgcrypt20-dev                                               \
+          libgettextpo-dev                                              \
+          libidn11-dev                                                  \
+          libldap2-dev                                                  \
+          libpasswdqc-dev                                               \
+          libpcre3-dev                                                  \
+          libperl-dev                                                   \
+          libqrencode-dev                                               \
+          libsodium-dev                                                 \
+          libssl-dev                                                    \
+          lld-10                                                        \
+          # EOF
+
+    - name: Run CI build script
+      run: scripts/ci-build.sh

@@ -38,7 +38,7 @@ klinechan_check_join(hook_channel_joinpart_t *hdata)
 		khost = cu->user->ip ? cu->user->ip : cu->user->host;
 		if (has_priv_user(cu->user, PRIV_JOIN_STAFFONLY))
 			notice(svs->me->nick, cu->user->nick,
-					"Warning: %s klines normal users",
+					"[%s] Warning: This channel klines normal users",
 					cu->chan->name);
 		else if (is_autokline_exempt(cu->user))
 		{

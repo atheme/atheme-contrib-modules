@@ -7,6 +7,14 @@
 #include <netinet/in.h>
 #include <resolv.h>
 
+#ifndef C_ANY
+#  define C_ANY ns_c_any
+#endif
+
+#ifndef T_MX
+#  define T_MX ns_t_mx
+#endif
+
 static int
 count_mx(const char *host)
 {
@@ -16,7 +24,7 @@ count_mx(const char *host)
 	if (! host || ! *host)
 		return 0;
 
-	const int len = res_query(host, ns_c_any, ns_t_mx, nsbuf, sizeof nsbuf);
+	const int len = res_query(host, C_ANY, T_MX, nsbuf, sizeof nsbuf);
 
 	if (len < 0)
 		return 0;

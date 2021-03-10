@@ -6,7 +6,7 @@
  */
 
 #include "atheme-compat.h"
-#include "../chanserv/chanserv.h"
+#include "../../chanserv/chanserv.h"
 
 static void
 cs_cmd_fregister(sourceinfo_t *si, int parc, char *parv[])

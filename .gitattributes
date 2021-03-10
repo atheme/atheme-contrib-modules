@@ -1,0 +1,8 @@
+/build-aux/                     linguist-generated
+/configure                      linguist-generated
+/src/contrib-sysconf.h.in       linguist-generated
+
+/m4/ax_subdirs_configure.m4     linguist-vendored
+
+*.c                             linguist-language=C
+*.h                             linguist-language=C

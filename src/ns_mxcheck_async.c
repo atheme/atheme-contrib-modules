@@ -1,18 +1,31 @@
 #include "atheme-compat.h"
 
-#ifndef _WIN32
+#ifdef HAVE_RES_QUERY
 
-#include <arpa/nameser.h>
-#include <netdb.h>
-#include <netinet/in.h>
-#include <resolv.h>
+#ifdef HAVE_SYS_TYPES_H
+#  include <sys/types.h>
+#endif
+#ifdef HAVE_NETINET_IN_H
+#  include <netinet/in.h>
+#endif
+#ifdef HAVE_ARPA_NAMESER_H
+#  include <arpa/nameser.h>
+#endif
+#ifdef HAVE_NETDB_H
+#  include <netdb.h>
+#endif
+#ifdef HAVE_RESOLV_H
+#  include <resolv.h>
+#endif
 
 #ifndef C_ANY
 #  define C_ANY ns_c_any
 #endif
-
 #ifndef T_MX
 #  define T_MX ns_t_mx
+#endif
+#ifndef S_AN
+#  define S_AN ns_s_an
 #endif
 
 #define MAX_CHILDPROCS 10
@@ -42,7 +55,7 @@ count_mx(const char *host)
 
 	(void) ns_initparse(nsbuf, len, &amsg);
 
-	return ns_msg_count(amsg, ns_s_an);
+	return ns_msg_count(amsg, S_AN);
 }
 
 static void
@@ -149,6 +162,22 @@ mod_deinit(const module_unload_intent_t intent)
 	childproc_delete_all(childproc_cb);
 }
 
-VENDOR_DECLARE_MODULE_V1("contrib/ns_mxcheck_async", MODULE_UNLOAD_CAPABILITY_OK, CONTRIB_VENDOR_JAMIE_PENMAN)
+#else /* HAVE_RES_QUERY */
 
-#endif
+static void
+mod_init(module_t *const restrict m)
+{
+	(void) slog(LG_ERROR, "%s: this module requires a functioning res_query(3); refusing to load", m->name);
+
+	m->mflags |= MODFLAG_FAIL;
+}
+
+static void
+mod_deinit(const module_unload_intent_t intent)
+{
+
+}
+
+#endif /* !HAVE_RES_QUERY */
+
+VENDOR_DECLARE_MODULE_V1("contrib/ns_mxcheck_async", MODULE_UNLOAD_CAPABILITY_OK, CONTRIB_VENDOR_JAMIE_PENMAN)

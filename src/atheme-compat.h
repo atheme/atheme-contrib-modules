@@ -23,6 +23,17 @@
 #define ATHEME_CONTRIB_COMPAT_H 1
 
 #include "atheme.h"
+
+#undef PACKAGE
+#undef PACKAGE_BUGREPORT
+#undef PACKAGE_NAME
+#undef PACKAGE_STRING
+#undef PACKAGE_TARNAME
+#undef PACKAGE_URL
+#undef PACKAGE_VERSION
+#undef VERSION
+
+#include "contrib-sysconf.h"
 #include "contrib-vendors.h"
 
 
@@ -98,7 +109,7 @@ typedef char *stringref;
  * series, and it would be nice to be able to make use of them.
  */
 #  if defined(__GNUC__) || defined(__INTEL_COMPILER)
-#    define ATHEME_FATTR_DEPRECATED             __attribute__((deprecated)
+#    define ATHEME_FATTR_DEPRECATED             __attribute__((deprecated))
 #    define ATHEME_FATTR_MALLOC                 __attribute__((malloc))
 #    define ATHEME_FATTR_NORETURN               __attribute__((noreturn))
 #    define ATHEME_FATTR_PRINTF(fmt, start)     __attribute__((format(__printf__, fmt, start)))
@@ -200,7 +211,7 @@ typedef struct hook_channel_req                 hook_channel_req_t;
 typedef struct hook_channel_successtion_req     hook_channel_succession_req_t;
 typedef struct hook_expiry_req                  hook_expiry_req_t;
 typedef struct hook_host_request                hook_host_request_t;
-typedef struct hook_info_noexist                hook_info_noexist_req;
+typedef struct hook_info_noexist                hook_info_noexist_req_t;
 typedef struct hook_metadata_change             hook_metadata_change_t;
 typedef struct hook_module_load                 hook_module_load_t;
 typedef struct hook_myentity_req                hook_myentity_req_t;

@@ -1,0 +1,3 @@
+This repository does not compile standalone.
+
+Please build Atheme IRC Services with './configure --enable-contrib' instead.

@@ -97,6 +97,25 @@ is_restricted_host(char const *const restrict host)
 }
 
 static bool
+is_restricted_session(struct sasl_session const *const restrict sess)
+{
+	if (! sess)
+		return false;
+
+	return is_restricted_host(sess->host) || is_restricted_host(sess->ip);
+}
+
+static bool
+is_restricted_user(struct user const *const u)
+{
+	if (! u)
+		return false;
+
+	return is_restricted_host(u->host) || is_restricted_host(u->chost) ||
+	       is_restricted_host(u->vhost) || is_restricted_host(u->ip);
+}
+
+static bool
 is_permitted_mechanism(char const *const restrict mech)
 {
 	if (! mech || ! *mech)
@@ -125,10 +144,10 @@ blacklist_can_login(hook_user_login_check_t *const restrict c)
 	{
 		const struct sasl_sourceinfo *const ssi = (struct sasl_sourceinfo *) c->si;
 
-		if (! ssi->sess || ! ssi->sess->mechptr || ! (ssi->sess->host || ssi->sess->ip))
+		if (ssi->sess && ! ssi->sess->mechptr)
 			return;
 
-		if (is_restricted_host(ssi->sess->host) || is_restricted_host(ssi->sess->ip))
+		if (is_restricted_session(ssi->sess))
 		{
 			char const *const log_target = service_get_log_target(saslsvs);
 
@@ -142,28 +161,50 @@ blacklist_can_login(hook_user_login_check_t *const restrict c)
 			}
 		}
 	}
-	else if (c->si->su)
+	else if (is_restricted_user(c->si->su))
 	{
-		if (is_restricted_host(c->si->su->host) || is_restricted_host(c->si->su->chost) ||
-		    is_restricted_host(c->si->su->vhost) || is_restricted_host(c->si->su->ip))
-		{
-			(void) logcommand(c->si, CMDLOG_LOGIN, "failed IDENTIFY to \2%s\2 (restricted address)",
-			                  entity(c->mu)->name);
+		(void) logcommand(c->si, CMDLOG_LOGIN, "failed IDENTIFY to \2%s\2 (restricted address)",
+		                  entity(c->mu)->name);
 
-			c->allowed = false;
-		}
+		c->allowed = false;
 	}
 }
 
 static void
 blacklist_can_register(hook_user_register_check_t *const restrict c)
 {
-	if (is_restricted_host(c->si->su->host) || is_restricted_host(c->si->su->chost) ||
-	    is_restricted_host(c->si->su->vhost) || is_restricted_host(c->si->su->ip))
+	if (is_restricted_user(c->si->su))
 	{
 		(void) logcommand(c->si, CMDLOG_LOGIN, "denied REGISTER of \2%s\2 (restricted address)", c->account);
 
 		c->approved++;
+	}
+}
+
+static void
+blacklist_can_rename(hook_user_rename_check_t *const restrict c)
+{
+	if (is_restricted_user(c->si->su))
+	{
+		(void) logcommand(c->si, CMDLOG_LOGIN, "denied SET ACCOUNTNAME of \2%s\2 to \2%s\2 (restricted address)",
+		                  entity(c->mu)->name, c->mn->nick);
+
+		c->allowed = false;
+	}
+}
+
+static void
+blacklist_can_logout(hook_user_logout_check_t *const restrict c)
+{
+	// Likely a SASL reauthentication due to services restart/join.
+	if (c->relogin || ! c->si)
+		return;
+
+	if (is_restricted_user(c->si->su))
+	{
+		(void) logcommand(c->si, CMDLOG_LOGIN, "denied LOGOUT (restricted address)");
+
+		c->allowed = false;
 	}
 }
 
@@ -188,6 +229,12 @@ mod_init(module_t *const restrict m)
 	(void) hook_add_event("user_can_register");
 	(void) hook_add_user_can_register(&blacklist_can_register);
 
+	(void) hook_add_event("user_can_logout");
+	(void) hook_add_user_can_logout(&blacklist_can_logout);
+
+	(void) hook_add_event("user_can_rename");
+	(void) hook_add_user_can_rename(&blacklist_can_rename);
+
 	(void) add_conf_item("RESTRICTED_HOSTS", &saslsvs->conf_table, &c_restricted_hosts);
 	(void) add_conf_item("PERMITTED_MECHANISMS", &saslsvs->conf_table, &c_permitted_mechanisms);
 }
@@ -200,6 +247,8 @@ mod_deinit(const module_unload_intent_t ATHEME_VATTR_UNUSED intent)
 
 	(void) hook_del_user_can_login(&blacklist_can_login);
 	(void) hook_del_user_can_register(&blacklist_can_register);
+	(void) hook_del_user_can_logout(&blacklist_can_logout);
+	(void) hook_del_user_can_rename(&blacklist_can_rename);
 
 	(void) blacklist_clear_list(&restricted_hosts);
 	(void) blacklist_clear_list(&permitted_mechanisms);

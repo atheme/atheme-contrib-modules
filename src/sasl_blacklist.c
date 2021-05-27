@@ -229,9 +229,9 @@ blacklist_can_logout(hook_user_logout_check_t *const restrict c)
 static void
 mod_init(module_t *const restrict m)
 {
-	// We do this to depend on saslserv/main, so that if it is reloaded, we are too
-	const struct sasl_core_functions *sasl_core_functions;
-	MODULE_TRY_REQUEST_SYMBOL(m, sasl_core_functions, "saslserv/main", "sasl_core_functions");
+	// We cache saslsvs and opersvs, so if those are updated we want to be reloaded
+	MODULE_TRY_REQUEST_DEPENDENCY(m, "operserv/main");
+	MODULE_TRY_REQUEST_DEPENDENCY(m, "saslserv/main");
 
 	if (! (saslsvs = service_find("saslserv")))
 	{

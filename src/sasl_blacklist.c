@@ -19,6 +19,7 @@ static mowgli_list_t restricted_hosts;
 static mowgli_list_t permitted_mechanisms;
 
 static struct service *saslsvs = NULL;
+static struct service *opersvs = NULL;
 
 static void
 blacklist_clear_list(mowgli_list_t *const restrict list)
@@ -78,7 +79,7 @@ c_permitted_mechanisms(mowgli_config_file_entry_t *const restrict ce)
 }
 
 static bool
-is_restricted_host(char const *const restrict host)
+is_restricted_host(const char *const restrict host)
 {
 	if (! host || ! *host)
 		return false;
@@ -97,7 +98,26 @@ is_restricted_host(char const *const restrict host)
 }
 
 static bool
-is_permitted_mechanism(char const *const restrict mech)
+is_restricted_session(const struct sasl_session *const restrict sess)
+{
+	if (! sess)
+		return false;
+
+	return is_restricted_host(sess->host) || is_restricted_host(sess->ip);
+}
+
+static bool
+is_restricted_user(const struct user *const restrict u)
+{
+	if (! u)
+		return false;
+
+	return is_restricted_host(u->host) || is_restricted_host(u->chost) ||
+	       is_restricted_host(u->vhost) || is_restricted_host(u->ip);
+}
+
+static bool
+is_permitted_mechanism(const char *const restrict mech)
 {
 	if (! mech || ! *mech)
 		return false;
@@ -115,6 +135,26 @@ is_permitted_mechanism(char const *const restrict mech)
 	return false;
 }
 
+static void ATHEME_FATTR_PRINTF(2, 3)
+log_user(const struct user *const restrict u, const char *const restrict fmt, ...)
+{
+	va_list args;
+	char lbuf[BUFSIZE];
+	bool showaccount = u->myuser == NULL || irccasecmp(entity(u->myuser)->name, u->nick);
+
+	va_start(args, fmt);
+	vsnprintf(lbuf, BUFSIZE, fmt, args);
+	va_end(args);
+
+	slog(LG_VERBOSE, "%s %s%s%s%s %s",
+	     service_get_log_target(opersvs),
+	     u->nick,
+	     showaccount ? " (" : "",
+	     showaccount ? (u->myuser ? entity(u->myuser)->name : "") : "",
+	     showaccount ? ")" : "",
+	     lbuf);
+}
+
 static void
 blacklist_can_login(hook_user_login_check_t *const restrict c)
 {
@@ -125,16 +165,16 @@ blacklist_can_login(hook_user_login_check_t *const restrict c)
 	{
 		const struct sasl_sourceinfo *const ssi = (struct sasl_sourceinfo *) c->si;
 
-		if (! ssi->sess || ! ssi->sess->mechptr || ! (ssi->sess->host || ssi->sess->ip))
+		if (ssi->sess && ! ssi->sess->mechptr)
 			return;
 
-		if (is_restricted_host(ssi->sess->host) || is_restricted_host(ssi->sess->ip))
+		if (is_restricted_session(ssi->sess))
 		{
-			char const *const log_target = service_get_log_target(saslsvs);
+			const char *const log_target = service_get_log_target(saslsvs);
 
 			if (! is_permitted_mechanism(ssi->sess->mechptr->name))
 			{
-				(void) slog(CMDLOG_LOGIN, "%s %s:%s failed LOGIN to \2%s\2 ('%s' not allowed)",
+				(void) slog(LG_VERBOSE, "%s %s:%s denied login to \2%s\2 ('%s' not allowed)",
 				            log_target, entity(c->mu)->name, ssi->sess->uid, entity(c->mu)->name,
 				            ssi->sess->mechptr->name);
 
@@ -142,41 +182,68 @@ blacklist_can_login(hook_user_login_check_t *const restrict c)
 			}
 		}
 	}
-	else if (c->si->su)
+	else if (is_restricted_user(c->si->su))
 	{
-		if (is_restricted_host(c->si->su->host) || is_restricted_host(c->si->su->chost) ||
-		    is_restricted_host(c->si->su->vhost) || is_restricted_host(c->si->su->ip))
-		{
-			(void) logcommand(c->si, CMDLOG_LOGIN, "failed IDENTIFY to \2%s\2 (restricted address)",
-			                  entity(c->mu)->name);
+		(void) log_user(c->si->su, "denied login to \2%s\2 (restricted address)",
+		                entity(c->mu)->name);
 
-			c->allowed = false;
-		}
+		c->allowed = false;
 	}
 }
 
 static void
 blacklist_can_register(hook_user_register_check_t *const restrict c)
 {
-	if (is_restricted_host(c->si->su->host) || is_restricted_host(c->si->su->chost) ||
-	    is_restricted_host(c->si->su->vhost) || is_restricted_host(c->si->su->ip))
+	if (is_restricted_user(c->si->su))
 	{
-		(void) logcommand(c->si, CMDLOG_LOGIN, "denied REGISTER of \2%s\2 (restricted address)", c->account);
+		(void) log_user(c->si->su, "denied registration of \2%s\2 (restricted address)",
+		                c->account);
 
 		c->approved++;
 	}
 }
 
 static void
+blacklist_can_rename(hook_user_rename_check_t *const restrict c)
+{
+	if (is_restricted_user(c->si->su))
+	{
+		(void) log_user(c->si->su, "denied account name change from \2%s\2 to \2%s\2 (restricted address)",
+		                entity(c->mu)->name, c->mn->nick);
+
+		c->allowed = false;
+	}
+}
+
+static void
+blacklist_can_logout(hook_user_logout_check_t *const restrict c)
+{
+	if (is_restricted_user(c->u))
+	{
+		(void) log_user(c->u, "denied logout (restricted address)");
+
+		c->allowed = false;
+	}
+}
+
+static void
 mod_init(module_t *const restrict m)
 {
-	// We do this to depend on saslserv/main, so that if it is reloaded, we are too
-	const struct sasl_core_functions *sasl_core_functions;
-	MODULE_TRY_REQUEST_SYMBOL(m, sasl_core_functions, "saslserv/main", "sasl_core_functions");
+	// We cache saslsvs and opersvs, so if those are updated we want to be reloaded
+	MODULE_TRY_REQUEST_DEPENDENCY(m, "operserv/main");
+	MODULE_TRY_REQUEST_DEPENDENCY(m, "saslserv/main");
 
 	if (! (saslsvs = service_find("saslserv")))
 	{
 		(void) slog(LG_ERROR, "%s: could not find SASLServ (BUG!)", m->name);
+
+		m->mflags |= MODFLAG_FAIL;
+		return;
+	}
+
+	if (! (opersvs = service_find("operserv")))
+	{
+		(void) slog(LG_ERROR, "%s: could not find OperServ (BUG!)", m->name);
 
 		m->mflags |= MODFLAG_FAIL;
 		return;
@@ -187,6 +254,12 @@ mod_init(module_t *const restrict m)
 
 	(void) hook_add_event("user_can_register");
 	(void) hook_add_user_can_register(&blacklist_can_register);
+
+	(void) hook_add_event("user_can_logout");
+	(void) hook_add_user_can_logout(&blacklist_can_logout);
+
+	(void) hook_add_event("user_can_rename");
+	(void) hook_add_user_can_rename(&blacklist_can_rename);
 
 	(void) add_conf_item("RESTRICTED_HOSTS", &saslsvs->conf_table, &c_restricted_hosts);
 	(void) add_conf_item("PERMITTED_MECHANISMS", &saslsvs->conf_table, &c_permitted_mechanisms);
@@ -200,6 +273,8 @@ mod_deinit(const module_unload_intent_t ATHEME_VATTR_UNUSED intent)
 
 	(void) hook_del_user_can_login(&blacklist_can_login);
 	(void) hook_del_user_can_register(&blacklist_can_register);
+	(void) hook_del_user_can_logout(&blacklist_can_logout);
+	(void) hook_del_user_can_rename(&blacklist_can_rename);
 
 	(void) blacklist_clear_list(&restricted_hosts);
 	(void) blacklist_clear_list(&permitted_mechanisms);

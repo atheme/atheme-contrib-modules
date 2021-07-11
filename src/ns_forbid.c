@@ -22,7 +22,7 @@ make_forbid(sourceinfo_t *si, const char *account, const char *reason)
 		return;
 	}
 
-	if (strchr(account, ' ') || strchr(account, '\n') || strchr(account, '\r') || account[0] == '=' || account[0] == '#' || account[0] == '@' || account[0] == '+' || account[0] == '%' || account[0] == '!' || strchr(account, ','))
+	if (! is_valid_nick(account))
 	{
 		command_fail(si, fault_badparams, "The account name \2%s\2 is invalid.", account);
 		return;

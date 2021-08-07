@@ -179,9 +179,10 @@ typedef char *stringref;
 // This definition was removed in the Atheme 7.3 development series.
 #  define IRCD_RES_HOSTLEN      255
 
-// This is a no-op in at least 7.3+ and were removed.
+// These are a no-op in at least 7.3+ and were removed.
 static inline struct hook *hook_add_event(const char *name) { return NULL; }
 static inline void hook_del_event(struct hook *hook) { }
+static inline void connection_close_all_fds(void) { }
 
 /* These typedefs were removed in the Atheme 7.3 development series,
  * but we can't use the new names because they consist of structures

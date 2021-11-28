@@ -188,8 +188,11 @@ blacklist_can_login(hook_user_login_check_t *const restrict c)
 	}
 	else if (is_restricted_user(c->si->su))
 	{
-		(void) log_user(c->si->su, "denied login to \2%s\2 (restricted address)",
-		                entity(c->mu)->name);
+		if (c->mu != NULL)
+			log_user(c->si->su, "denied login to \2%s\2 (restricted address)",
+				entity(c->mu)->name);
+		else
+			log_user(c->si->su, "denied login (restricted address)");
 
 		c->allowed = false;
 	}

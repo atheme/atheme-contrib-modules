@@ -174,9 +174,13 @@ blacklist_can_login(hook_user_login_check_t *const restrict c)
 
 			if (! is_permitted_mechanism(ssi->sess->mechptr->name))
 			{
-				(void) slog(LG_VERBOSE, "%s %s:%s denied login to \2%s\2 ('%s' not allowed)",
-				            log_target, entity(c->mu)->name, ssi->sess->uid, entity(c->mu)->name,
-				            ssi->sess->mechptr->name);
+				if (c->mu != NULL)
+					slog(LG_VERBOSE, "%s %s:%s denied login to \2%s\2 ('%s' not allowed)",
+						log_target, entity(c->mu)->name, ssi->sess->uid, entity(c->mu)->name,
+						ssi->sess->mechptr->name);
+				else
+					slog(LG_VERBOSE, "%s %s: denied login ('%s' not allowed)",
+						log_target, ssi->sess->uid, ssi->sess->mechptr->name);
 
 				c->allowed = false;
 			}

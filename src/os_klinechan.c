@@ -9,13 +9,15 @@
 
 #include "atheme-compat.h"
 
+static bool public_reasons;
+
 static void
 klinechan_check_join(hook_channel_joinpart_t *hdata)
 {
 	mychan_t *mc;
 	chanuser_t *cu = hdata->cu;
 	service_t *svs;
-	char reason[256];
+	char *reason;
 	const char *khost;
 	kline_t *k;
 
@@ -50,8 +52,15 @@ klinechan_check_join(hook_channel_joinpart_t *hdata)
 		}
 		else
 		{
-			snprintf(reason, sizeof reason, "Joining %s",
-					cu->chan->name);
+			if (public_reasons)
+				reason = metadata_find(mc, "private:klinechan:reason")->value;
+			else
+			{
+				char freason[256];
+				snprintf(freason, sizeof freason, "Joining %s", cu->chan->name);
+				reason = &freason[0];
+			}
+
 			slog(LG_INFO, "klinechan_check_join(): klining \2*@%s\2 (user \2%s!%s@%s\2 joined \2%s\2)",
 					khost, cu->user->nick,
 					cu->user->user, cu->user->host,
@@ -223,6 +232,9 @@ mod_init(module_t *const restrict m)
 
 	hook_add_event("channel_info");
 	hook_add_channel_info(klinechan_show_info);
+
+	service_t *opersvs = service_find("operserv");
+	add_bool_conf_item("KLINECHAN_PUBLIC_REASONS", &opersvs->conf_table, 0, &public_reasons, false);
 }
 
 static void
@@ -233,6 +245,9 @@ mod_deinit(const module_unload_intent_t intent)
 
 	hook_del_channel_join(klinechan_check_join);
 	hook_del_channel_info(klinechan_show_info);
+
+	service_t *opersvs = service_find("operserv");
+	del_conf_item("KLINECHAN_PUBLIC_REASONS", &opersvs->conf_table);
 }
 
 SIMPLE_DECLARE_MODULE_V1("contrib/os_klinechan", MODULE_UNLOAD_CAPABILITY_OK)

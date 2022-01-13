@@ -79,6 +79,7 @@ static mowgli_list_t dnsbl_elist = { NULL, NULL, 0 };
 static mowgli_patricia_t **os_set_cmdtree = NULL;
 static mowgli_dns_t *dns_base = NULL;
 static char *action = NULL;
+static char *vhost_format = NULL;
 
 static inline mowgli_list_t *
 dnsbl_queries(user_t *u)
@@ -109,7 +110,7 @@ os_cmd_set_dnsblaction(sourceinfo_t *si, int parc, char *parv[])
 		return;
 	}
 
-	if (!strcasecmp("SNOOP", act) || !strcasecmp("KLINE", act) || !strcasecmp("NOTIFY", act))
+	if (!strcasecmp("SNOOP", act) || !strcasecmp("KLINE", act) || !strcasecmp("NOTIFY", act) || !strcasecmp("VHOST", act))
 	{
 		action = sstrdup(act);
 		command_success_nodata(si, _("DNSBLACTION successfully set to \2%s\2"), act);
@@ -261,6 +262,14 @@ dnsbl_hit(user_t *u, struct Blacklist *blptr)
 			kline_add(u->user, u->host, "Banned (DNS Blacklist)", 86400, "*");
 			u->flags |= UF_KLINESENT;
 		}
+	}
+	else if (!strcasecmp("VHOST", act))
+	{
+		char vhost[HOSTLEN + 1];
+		snprintf(vhost, sizeof vhost, vhost_format, u->uid);
+		slog(LG_INFO, "DNSBL: vhosting \2%s\2!%s@%s [%s] who is listed in DNS Blacklist %s.",
+		              u->nick, u->user, u->host, u->gecos, blptr->host);
+		user_sethost(svs, u, vhost);
 	}
 }
 
@@ -623,6 +632,7 @@ mod_init(module_t *m)
 	hook_add_operserv_info(osinfo_hook);
 
 	add_dupstr_conf_item("dnsbl_action", &conf_gi_table, 0, &action, NULL);
+	add_dupstr_conf_item("dnsbl_vhost", &conf_gi_table, 0, &vhost_format, "dnsbl.%s");
 	add_conf_item("BLACKLISTS", &conf_gi_table, dnsbl_config_handler);
 	command_add(&os_set_dnsblaction, *os_set_cmdtree);
 }
@@ -640,6 +650,7 @@ mod_deinit(module_unload_intent_t intent)
 	db_unregister_type_handler("BLE");
 
 	del_conf_item("dnsbl_action", &conf_gi_table);
+	del_conf_item("dnsbl_vhost", &conf_gi_table);
 	del_conf_item("BLACKLISTS", &conf_gi_table);
 	command_delete(&os_set_dnsblaction, *os_set_cmdtree);
 	service_named_unbind_command("operserv", &os_dnsblexempt);

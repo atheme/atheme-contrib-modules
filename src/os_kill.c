@@ -12,6 +12,8 @@
 
 #include "atheme-compat.h"
 
+#define PRIV_OPERSERV_KILL "operserv:kill"
+
 static void
 os_cmd_kill(sourceinfo_t *si, int parc, char *parv[])
 {
@@ -38,7 +40,7 @@ os_cmd_kill(sourceinfo_t *si, int parc, char *parv[])
 static command_t os_kill = {
 	.name           = "KILL",
 	.desc           = N_("Kill a user with Services."),
-	.access         = PRIV_OMODE,
+	.access         = PRIV_OPERSERV_KILL,
 	.maxparc        = 2,
 	.cmd            = &os_cmd_kill,
 	.help           = { .path = "contrib/kill" },

@@ -161,6 +161,10 @@ blacklist_can_login(hook_user_login_check_t *const restrict c)
 	if (! c->si)
 		return;
 
+	if (c->si->smu == c->mu)
+		// user is attempting to log in to what they're already logged in to, no need to refuse
+		return;
+
 	if (c->si->service == saslsvs)
 	{
 		const struct sasl_sourceinfo *const ssi = (struct sasl_sourceinfo *) c->si;

@@ -31,8 +31,8 @@ AC_DEFUN([ATHEME_CONTRIB_LIBTEST_RES_QUERY_DRIVER], [
             #ifdef HAVE_RESOLV_H
             #  include <resolv.h>
             #endif
-            #ifndef C_ANY
-            #  define C_ANY ns_c_any
+            #ifndef C_IN
+            #  define C_IN ns_c_in
             #endif
             #ifndef T_MX
             #  define T_MX ns_t_mx
@@ -42,7 +42,7 @@ AC_DEFUN([ATHEME_CONTRIB_LIBTEST_RES_QUERY_DRIVER], [
             #endif
         ]], [[
             ns_msg amsg;
-            const int ret = res_query(NULL, C_ANY, T_MX, NULL, 0);
+            const int ret = res_query(NULL, C_IN, T_MX, NULL, 0);
             (void) ns_initparse(NULL, ret, &amsg);
             const int cnt = ns_msg_count(amsg, S_AN);
         ]])

@@ -18,8 +18,8 @@
 #  include <resolv.h>
 #endif
 
-#ifndef C_ANY
-#  define C_ANY ns_c_any
+#ifndef C_IN
+#  define C_IN ns_c_in
 #endif
 #ifndef T_MX
 #  define T_MX ns_t_mx
@@ -48,7 +48,7 @@ count_mx(const char *host)
 	if (! host || ! *host)
 		return 0;
 
-	const int len = res_query(host, C_ANY, T_MX, nsbuf, sizeof nsbuf);
+	const int len = res_query(host, C_IN, T_MX, nsbuf, sizeof nsbuf);
 
 	if (len < 0)
 		return 0;

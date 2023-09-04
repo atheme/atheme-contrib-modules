@@ -208,18 +208,6 @@ blacklist_can_register(hook_user_register_check_t *const restrict c)
 }
 
 static void
-blacklist_can_rename(hook_user_rename_check_t *const restrict c)
-{
-	if (is_restricted_user(c->si->su))
-	{
-		(void) log_user(c->si->su, "denied account name change from \2%s\2 to \2%s\2 (restricted address)",
-		                entity(c->mu)->name, c->mn->nick);
-
-		c->allowed = false;
-	}
-}
-
-static void
 blacklist_can_logout(hook_user_logout_check_t *const restrict c)
 {
 	if (is_restricted_user(c->u))
@@ -262,9 +250,6 @@ mod_init(module_t *const restrict m)
 	(void) hook_add_event("user_can_logout");
 	(void) hook_add_user_can_logout(&blacklist_can_logout);
 
-	(void) hook_add_event("user_can_rename");
-	(void) hook_add_user_can_rename(&blacklist_can_rename);
-
 	(void) add_conf_item("RESTRICTED_HOSTS", &saslsvs->conf_table, &c_restricted_hosts);
 	(void) add_conf_item("PERMITTED_MECHANISMS", &saslsvs->conf_table, &c_permitted_mechanisms);
 }
@@ -278,7 +263,6 @@ mod_deinit(const module_unload_intent_t ATHEME_VATTR_UNUSED intent)
 	(void) hook_del_user_can_login(&blacklist_can_login);
 	(void) hook_del_user_can_register(&blacklist_can_register);
 	(void) hook_del_user_can_logout(&blacklist_can_logout);
-	(void) hook_del_user_can_rename(&blacklist_can_rename);
 
 	(void) blacklist_clear_list(&restricted_hosts);
 	(void) blacklist_clear_list(&permitted_mechanisms);

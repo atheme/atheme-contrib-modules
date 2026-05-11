@@ -81,7 +81,7 @@ klinechan_show_info(hook_channel_req_t *hdata)
 	md = metadata_find(hdata->mc, "private:klinechan:reason");
 	reason = md != NULL ? md->value : "unknown";
 	md = metadata_find(hdata->mc, "private:klinechan:timestamp");
-	ts = md != NULL ? atoi(md->value) : 0;
+	ts = md != NULL ? atoll(md->value) : 0;
 
 	tm = *localtime(&ts);
 	strftime(strfbuf, sizeof strfbuf, TIME_FORMAT, &tm);
@@ -133,7 +133,7 @@ os_cmd_klinechan(sourceinfo_t *si, int parc, char *parv[])
 
 		metadata_add(mc, "private:klinechan:closer", si->su->nick);
 		metadata_add(mc, "private:klinechan:reason", reason);
-		metadata_add(mc, "private:klinechan:timestamp", number_to_string(CURRTIME));
+		metadata_add(mc, "private:klinechan:timestamp", int64_to_string(CURRTIME));
 
 		wallops("%s enabled automatic klines on the channel \2%s\2 (%s).", get_oper_name(si), target, reason);
 		logcommand(si, CMDLOG_ADMIN, "KLINECHAN:ON: \2%s\2 (reason: \2%s\2)", target, reason);

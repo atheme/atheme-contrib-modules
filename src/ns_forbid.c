@@ -40,7 +40,7 @@ make_forbid(sourceinfo_t *si, const char *account, const char *reason)
 	mu->lastlogin = CURRTIME;
 	metadata_add(mu, "private:freeze:freezer", get_oper_name(si));
 	metadata_add(mu, "private:freeze:reason", reason);
-	metadata_add(mu, "private:freeze:timestamp", number_to_string(CURRTIME));
+	metadata_add(mu, "private:freeze:timestamp", int64_to_string(CURRTIME));
 	if (!nicksvs.no_nick_ownership)
 	{
 		mn = mynick_add(mu, entity(mu)->name);

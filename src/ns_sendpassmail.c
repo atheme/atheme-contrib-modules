@@ -93,7 +93,7 @@ sendpassmail_foreach_cb(myentity_t *mt, void *privdata)
 
 		logcommand(si, CMDLOG_ADMIN, "SENDPASSMAIL: \2%s\2 (\2%s\2) (change key)", entity(mu)->name, mu->email_canonical);
 		metadata_add(mu, "private:sendpass:sender", get_oper_name(si));
-		metadata_add(mu, "private:sendpass:timestamp", number_to_string(time(NULL)));
+		metadata_add(mu, "private:sendpass:timestamp", int64_to_string(time(NULL)));
 		metadata_add(mu, "private:setpass:key", hash);
 	}
 	else

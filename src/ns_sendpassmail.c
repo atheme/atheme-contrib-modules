@@ -76,7 +76,7 @@ sendpassmail_foreach_cb(myentity_t *mt, void *privdata)
 		return 0;
 	}
 
-	key = random_string(12);
+	key = random_string(config_options.default_pass_length);
 
 	const char *const hash = crypt_password(key);
 
